@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102137">
+<title>ReviewCast</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Google review tracker for 27 Parques Reunidos attractions: 12-month, 3-month and 4-week ratings against each park's normal, with the top guest complaints.">
+<style>
+/* Layout: ParkCast family. Navy header with language switch, filter toolbar, colour rules, summary strip, park-by-period matrix of coloured rating tiles (stacked cards on phones), detail panel. Single dark look by design. */
+:root{
+  --bg:#0B1728; --head:#102137; --panel:#162B42; --panel-2:#14263B; --cell-head:#1A2E45; --metric:#1D3550; --metric-2:#213951;
+  --line:#30445C; --line-soft:#263A4F; --ctrl:#172A40; --ctrl-line:#3D546C;
+  --ink:#E9F2FB; --soft:#C5D5E5; --muted:#A9C0D5; --dim:#9FB6CA; --link:#A7D7FF; --accent:#276C9A; --accent-hi:#71C2EE;
+  --good:#117A55; --mid:#EEF3F8; --mid-ink:#0B1728; --bad:#A3303B; --low:#4A5A70; --none:#2C4058;
+  --good-hi:#5FD6A3; --mid-hi:#F4F8FC; --bad-hi:#FF8A92; --amber:#FFCF54;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;font-size:14px;line-height:1.4}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1200px;margin:0 auto}
+header{background:var(--head);border-bottom:1px solid var(--line);padding-block:22px 16px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+header .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+h1{font-size:29px;letter-spacing:-1px;margin:0;display:flex;align-items:center;gap:8px}
+h1 .mark{color:var(--amber);font-size:25px}
+header p{margin:5px 0 0;color:var(--muted);font-size:13px;max-width:62ch}
+.hright{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.fresh{font-size:12.5px;color:var(--muted);text-align:right}
+.fresh b{color:var(--ink);font-weight:650}
+.lang{display:inline-flex;border:1px solid var(--ctrl-line);border-radius:9px;overflow:hidden}
+.lang button{border:0;border-radius:0;min-height:34px;padding:6px 12px;font-size:12.5px;font-weight:700;background:var(--ctrl);color:var(--muted)}
+.lang button[aria-pressed="true"]{background:var(--accent);color:#fff}
+main{padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
+select,button,input{font:inherit}
+select,button{border:1px solid var(--ctrl-line);border-radius:10px;padding:10px 12px;background:var(--ctrl);color:#fff;min-height:44px}
+button{cursor:pointer}
+button:disabled{opacity:.55;cursor:progress}
+button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
+:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;padding:15px 2px 12px;align-items:center}
+.filterpanel{position:relative;min-width:170px;flex:1 1 200px}
+.filterpanel summary{cursor:pointer;list-style:none;border:1px solid var(--ctrl-line);border-radius:10px;padding:12px;background:var(--ctrl);color:#fff;min-height:44px;font-size:14px}
+.filterpanel summary::-webkit-details-marker{display:none}
+.filterpanel summary::after{content:" ▾";float:right}
+.filterpanel[open] summary::after{content:" ▴"}
+.filterbody{position:absolute;top:calc(100% + 4px);left:0;z-index:15;min-width:100%;width:max-content;max-width:min(92vw,330px);max-height:360px;overflow-y:auto;padding:12px;border:1px solid #49617B;border-radius:12px;background:var(--ctrl);box-shadow:0 10px 22px rgba(0,0,0,.47)}
+.filteractions{display:flex;gap:8px;padding-bottom:8px;border-bottom:1px solid #39536B;margin-bottom:5px}
+.filteractions button{min-height:38px;font-size:12px;padding:7px 10px}
+.filteroptions{display:grid;gap:2px}
+.filteroptions label{display:flex;align-items:center;gap:10px;min-height:42px;padding:6px 3px;cursor:pointer;font-size:14px}
+.filteroptions input{width:19px;height:19px;accent-color:#67B8E8}
+.filteroptions .ct{margin-left:auto;color:var(--dim);font-size:12px;padding-left:12px}
+.search{flex:1 1 180px;min-width:0;border:1px solid var(--ctrl-line);border-radius:10px;padding:10px 12px;background:var(--ctrl);color:#fff;min-height:44px}
+.search::placeholder{color:#8BA3BA}
+.toolbar2{display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center;padding:0 2px 12px}
+.check{display:inline-flex;align-items:center;gap:7px;color:#DCE8F4;font-size:13px;padding:0 5px;min-height:40px;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--accent-hi)}
+.spacer{flex:1}
+.btn-ghost{background:transparent}
+.btn-strong{background:var(--accent);border-color:var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;padding:0 4px 14px;font-size:12px;color:#B6C9D9}
+.dot{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;vertical-align:-1px}
+.d-good{background:var(--good)}.d-mid{background:var(--mid)}.d-bad{background:var(--bad)}.d-low{background:var(--low)}.d-none{background:var(--none);box-shadow:inset 0 0 0 1px #3E5672}
+.d-closed{background:repeating-linear-gradient(135deg,#3A4B60 0 3px,#24364B 3px 6px)}
+.banner{margin:0 0 14px;padding:13px 15px;border-radius:10px;background:#4A3424;border:1px solid #DBA653;color:#FFE8BA;font-size:13px;line-height:1.5}
+.banner strong{display:block;margin-bottom:3px}
+.banner.info{background:#17324D;border-color:#3F6C96;color:#D3E7FA}
+
+/* colour rules */
+.rules{margin:0 0 14px;background:var(--panel-2);border:1px solid #2F4760;border-radius:12px}
+.rules summary{cursor:pointer;list-style:none;padding:12px 15px;font-weight:700;font-size:13.5px;display:flex;justify-content:space-between;gap:10px}
+.rules summary::-webkit-details-marker{display:none}
+.rules summary .tg{font-weight:600;font-size:12px;color:var(--link)}
+.rules-body{padding:0 15px 15px;font-size:13px;color:var(--soft);line-height:1.5}
+.rules-intro{margin:0 0 12px;max-width:80ch}
+.rules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:12px 24px}
+.rule-col{min-width:0}
+.rules h4{margin:0 0 6px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim)}
+.rules b{color:var(--ink)}
+.rules b.em-bad{color:var(--bad-hi)}.rules b.em-mid{color:#fff}
+.rule-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.rule-list li{display:flex;gap:9px;align-items:flex-start}
+.rule-list .dot{flex:none;margin:3px 0 0}
+.rules-ex{margin:12px 0 0;max-width:90ch;font-size:12.5px;color:#AFC3D6}
+.t{width:100%;border-collapse:collapse;font-size:13px}
+.t th{text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);padding:6px 8px;border-bottom:1px solid var(--line)}
+.t td{padding:7px 8px;border-bottom:1px solid var(--line-soft)}
+.t tr:last-child td{border-bottom:0}
+
+/* summary strip */
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.35fr) minmax(0,1.35fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--metric);border:1px solid #2C4762;border-radius:12px;padding:12px 13px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.stat .k{font-size:11px;color:#B7C9DA;font-weight:600;letter-spacing:.02em}
+.stat .v{font-size:24px;font-weight:800;letter-spacing:-.5px}
+.stat .v small{font-size:12px;font-weight:600;color:var(--dim);margin-left:2px}
+.stat .d{font-size:12px;font-weight:700}
+.stat .s{font-size:11.5px;color:var(--dim)}
+.stat.good{box-shadow:inset 0 3px 0 var(--good)}.stat.mid{box-shadow:inset 0 3px 0 var(--mid)}.stat.bad{box-shadow:inset 0 3px 0 #C84950}
+.distbar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:#22384F;margin:6px 0 4px}
+.distbar span{display:block;height:100%}
+.distleg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--dim)}
+.distleg b{color:var(--ink)}
+.mini{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:12.5px}
+.mini li{display:flex;gap:8px;justify-content:space-between}
+.mini .c{color:var(--dim);white-space:nowrap}
+.em-good{color:var(--good-hi)}.em-mid{color:var(--mid-hi)}.em-bad{color:var(--bad-hi)}.em-none{color:var(--dim)}
+
+/* matrix */
+.scroll{overflow-x:auto;border:1px solid #33475C;border-radius:13px}
+.matrix{border-collapse:separate;border-spacing:0;min-width:1020px;width:100%;font-size:13px}
+.matrix th,.matrix td{padding:9px 5px;border-bottom:1px solid var(--line-soft);text-align:center;vertical-align:middle}
+.matrix thead th{background:var(--cell-head);font-weight:700;font-size:12.5px}
+.matrix thead th small{display:block;font-weight:500;color:var(--dim);font-size:11px;margin-top:2px}
+.matrix th:first-child,.matrix td:first-child{position:sticky;left:0;text-align:left;min-width:205px;max-width:205px;background:var(--panel-2);padding-left:12px;z-index:2}
+.matrix thead th:first-child{z-index:3;background:var(--cell-head)}
+.matrix tr:last-child td{border-bottom:0}
+.matrix tr.grp td{background:#102033;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;text-align:left}
+.matrix tr.grp td:first-child{background:#102033}
+.matrix tbody tr.row{cursor:pointer}
+.matrix tbody tr.row:hover td{background:#13253A}
+.matrix tbody tr.row:hover td:first-child{background:#18304A}
+.matrix tbody tr.sel td{background:#173049}
+.matrix tbody tr.sel td:first-child{background:#1C3954;box-shadow:inset 3px 0 0 var(--accent-hi)}
+.parkname{font-weight:650;font-size:13.5px}
+.type{font-size:11px;color:var(--dim);margin-top:3px}
+.season{display:inline-block;margin-top:5px;font-size:10.5px;font-weight:700;letter-spacing:.03em;color:#C9D6E3;background:#2A3D52;border-radius:5px;padding:2px 6px}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:86px;border-radius:8px;padding:6px 4px;color:#fff;gap:1px;text-align:center}
+.tile.good{background:var(--good)}.tile.mid{background:var(--mid);color:var(--mid-ink)}.tile.mid .part{color:#8A5A00}.tile.bad{background:var(--bad)}.tile.low{background:var(--low)}
+.tile.none{background:var(--none);color:#A9BDD1;box-shadow:inset 0 0 0 1px #34506D}
+.tile.closed{background:repeating-linear-gradient(135deg,#2E4055 0 6px,#26384C 6px 12px);color:#C3D1DF;box-shadow:inset 0 0 0 1px #3A516A}
+.tile.closed .cl{font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.tile.google{background:#1C3450;box-shadow:inset 0 0 0 1px #35506D}
+.tile .big{font-size:23px;font-weight:800;line-height:1.05;letter-spacing:-.5px}
+.tile .dl{font-size:12.5px;font-weight:750}
+.tile .meta{font-size:11px;font-weight:600;opacity:.9}
+.tile .part{font-size:10.5px;font-weight:700;color:var(--amber)}
+.stars{color:var(--amber);font-size:11.5px;letter-spacing:1px}
+.issues{list-style:none;margin:0;padding:0 6px;display:flex;flex-direction:column;gap:5px;text-align:left;min-width:240px}
+.issues li{display:flex;gap:7px;align-items:baseline;font-size:12.5px;line-height:1.3}
+.issues .rk{flex:none;width:17px;height:17px;border-radius:5px;background:#3A2630;color:#FFB3B8;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+.issues .ct{margin-left:auto;color:var(--dim);font-size:11.5px;white-space:nowrap;padding-left:6px}
+.tr-up{color:var(--bad-hi);font-weight:800}.tr-down{color:var(--good-hi);font-weight:800}.tr-new{color:var(--amber);font-weight:800;font-size:10px;letter-spacing:.04em}
+.issues-empty{color:var(--dim);font-size:12px;text-align:left;padding:0 6px}
+
+/* detail */
+.detail{margin:15px 0 30px;padding:18px;background:var(--panel);border:1px solid #38516A;border-radius:14px;scroll-margin-top:12px}
+.detail .dh{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start}
+.detail h2{font-size:20px;margin:0 0 4px}
+.detail .sub{color:var(--soft);margin:0;font-size:13px}
+.detail h3{font-size:14px;margin:20px 0 9px;color:#DCE8F4}
+.maplink{font-size:13px;white-space:nowrap}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:14px}
+.metric{background:var(--metric-2);border-radius:9px;padding:12px;min-width:0}
+.metric span{font-size:11px;color:#B7C9DA;display:block}
+.metric strong{display:block;font-size:20px;margin:5px 0 2px}
+.metric em{display:block;font-style:normal;font-size:12px;font-weight:700;margin-bottom:2px}
+.metric.good{box-shadow:inset 0 3px 0 var(--good)}.metric.mid{box-shadow:inset 0 3px 0 var(--mid)}.metric.bad{box-shadow:inset 0 3px 0 #C84950}
+.sumtext{background:#1A3249;border:1px solid #2F4D69;border-radius:10px;padding:13px 15px;font-size:14px;line-height:1.55;color:#E1ECF7;max-width:85ch}
+.sumtext p{margin:0}
+.sumtext .sm{display:block;margin-top:8px;font-size:11.5px;color:var(--dim)}
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:#9FB6CA;font-size:11px;font-family:inherit}
+.bars{display:flex;flex-direction:column;gap:10px}
+.barrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;font-size:13px}
+.barrow .track{grid-column:1/3;height:7px;border-radius:4px;background:#22384F;overflow:hidden}
+.barrow .track span{display:block;height:100%;background:#C84950;border-radius:4px}
+.note{font-size:12px;line-height:1.5;color:#AABFD1;margin:8px 0 0}
+.empty{padding:20px;color:#BCD0E0}
+.foot{border-top:1px solid #2D435A;margin-top:10px;padding-block:20px 30px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));color:#9EB2C4;font-size:12px;line-height:1.6}
+.foot .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px 28px}
+.foot p{margin:0}
+.foot b{color:#DCE8F4}
+a{color:var(--link)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:#E9F2FB;color:#0B1728;padding:10px 16px;border-radius:10px;font-size:13.5px;font-weight:600;z-index:40;max-width:calc(100% - 32px)}
+
+@media (max-width:980px){.summary{grid-template-columns:repeat(3,minmax(0,1fr))}.summary .wide{grid-column:span 3}}
+@media (max-width:760px){
+  header{padding-block:18px 13px}
+  .hright{align-items:flex-start}
+  .fresh{text-align:left}
+  .filterpanel{flex:1 1 calc(50% - 8px);min-width:0}
+  .filterbody{width:min(84vw,300px)}
+  #typePanel .filterbody{left:auto;right:0}
+  .summary{gap:6px}
+  .stat{padding:10px}.stat .v{font-size:20px}
+  .scroll{overflow:visible;border:0;border-radius:0}
+  .matrix,.matrix tbody{display:block;min-width:0}
+  .matrix thead{display:none}
+  .matrix tr.row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;background:var(--panel-2);border:1px solid #2F4760;border-radius:12px;padding:10px;margin-bottom:8px}
+  .matrix tr.grp{display:block;margin:12px 0 6px}
+  .matrix tr.grp td{display:block;background:transparent;padding:0 2px}
+  .matrix tr.row td{display:block;border:0;padding:0;position:static;min-width:0;max-width:none;background:transparent!important;box-shadow:none!important}
+  .matrix tr.row td:first-child{grid-column:1/-1;padding:0 2px 2px}
+  .matrix tr.row td.iss{grid-column:1/-1;padding-top:4px}
+  .matrix tr.row td[data-l]::before{content:attr(data-l);display:block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--dim);margin-bottom:4px;text-align:center}
+  .matrix tr.row td.iss::before{text-align:left;padding-left:6px}
+  .matrix tr.sel{border-color:var(--accent-hi)}
+  .tile{min-height:74px;padding:6px 2px}.tile .big{font-size:19px}.tile .dl{font-size:11.5px}.tile .meta{font-size:10px}
+  .issues{min-width:0}
+  .detail{padding:13px}
+}
+@media (max-width:420px){.stat .k{font-size:10.5px}.stat .s{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div>
+    <h1><span class="mark" aria-hidden="true">★</span>ReviewCast</h1>
+    <p data-i="tagline"></p>
+  </div>
+  <div class="hright">
+    <div class="lang" role="group" aria-label="Language / Idioma"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="es" aria-pressed="false">ES</button></div>
+    <div class="fresh" id="fresh"></div>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+  <div class="toolbar">
+    <details class="filterpanel" id="countryPanel"><summary id="countrySum"></summary><div class="filterbody"><div class="filteractions"><button type="button" data-all="country" data-i="selectAll"></button><button type="button" data-none="country" data-i="clear"></button></div><div class="filteroptions" id="countryOpts"></div></div></details>
+    <details class="filterpanel" id="typePanel"><summary id="typeSum"></summary><div class="filterbody"><div class="filteractions"><button type="button" data-all="type" data-i="selectAll"></button><button type="button" data-none="type" data-i="clear"></button></div><div class="filteroptions" id="typeOpts"></div></div></details>
+    <input class="search" id="search" type="search">
+    <select id="mode"></select>
+    <select id="sort"></select>
+  </div>
+  <div class="toolbar2">
+    <label class="check"><input type="checkbox" id="hideEmpty"> <span data-i="hideEmpty"></span></label>
+    <label class="check"><input type="checkbox" id="hideClosed"> <span data-i="hideClosed"></span></label>
+    <span class="spacer"></span>
+    <button type="button" class="btn-ghost" id="csv" data-i="csv"></button>
+    <button type="button" class="btn-strong" id="pdf" data-i="pdf"></button>
+  </div>
+  <div class="legend" id="legend"></div>
+  <details class="rules" id="rules" open><summary><span data-i="rulesTitle"></span><span class="tg" id="rulesTg"></span></summary><div class="rules-body" id="rulesBody"></div></details>
+  <div id="banner"></div>
+  <section class="summary" id="summary"></section>
+  <div class="scroll"><table class="matrix" id="matrix">
+    <thead><tr id="thead"></tr></thead>
+    <tbody id="rows"><tr><td colspan="6" class="empty">Loading review data…</td></tr></tbody>
+  </table></div>
+  <section class="detail" id="detail" aria-live="polite"></section>
+</div></main>
+
+<footer class="foot"><div class="wrap" id="foot"></div></footer>
+
+<script>
+"use strict";
+/* ================= i18n ================= */
+const I18N={
+en:{
+ tagline:"Google review tracker for 27 Parques Reunidos attractions. Each period is compared with the park's own normal.",
+ freshData:"Data up to <b>{d}</b><br>{n}/{t} attractions with reviews · updated weekly",freshNone:"<b>No collection yet</b><br>{t} attractions configured",freshFail:"Data unavailable",
+ countries:"Countries",types:"Attraction types",selectAll:"Select all",clear:"Clear",all:"All",none:"None",
+ search:"Search attractions",sortAria:"Sort attractions",modeAria:"What counts as normal",
+ sort_attention:"Needs attention first",sort_worst:"Lowest 4-week rating",sort_best:"Highest 4-week rating",sort_volume:"Most reviews in 4 weeks",sort_type:"Group by attraction type",sort_list:"Portfolio order",
+ mode_avg:"Normal: accumulated average",mode_ly:"Normal: same period last year",
+ hideEmpty:"Hide parks without recent reviews",hideClosed:"Hide parks closed for the season",csv:"Download CSV",pdf:"Download PDF report",pdfBusy:"Preparing PDF…",
+ lg_good:"Above normal",lg_mid:"Normal",lg_bad:"Below normal",lg_low:"Too few reviews to judge",lg_none:"No data yet",lg_closed:"Closed for the season",lg_part:"Partial history",lg_trend:"Issue rising / falling vs previous 4 weeks",
+ rulesTitle:"How the colours are decided",show:"Show ▾",hide:"Hide ▴",
+ rulesIntro_avg:"Each period is compared with a longer reference period for the same attraction, so every park is judged against its own normal, not against the other parks. The difference in average stars decides the colour.",
+ rulesIntro_ly:"Each period is compared with the same period one year earlier for the same attraction. This removes the seasonal effect: a quiet October is compared with last October, not with the summer.",
+ rulesHCmp:"What each period is compared with",rulesHCol:"Colour rules",thPeriod:"Period shown",thRef:"Reference (“normal”)",
+ p4:"Last 4 weeks",p3:"Last 3 months",p12:"Last 12 months",
+ ref4_avg:"Average of the last 3 months",ref3_avg:"Average of the last 12 months",ref12:"Average of the 12 months before",ref4_ly:"Same 4 weeks last year",ref3_ly:"Same 3 months last year",
+ rGreen:"<b>Green · Above normal.</b> More than <b>{t}</b> stars above its reference.",
+ rWhite:"<b>White · Normal.</b> Within <b>{t}</b> stars of its reference, up or down.",
+ rRed:"<b>Red · Below normal.</b> More than <b>{t}</b> stars below its reference.",
+ rGrey:"<b>Grey · Too few reviews.</b> Fewer than <b>{n}</b> rated reviews in the period, or no reference period yet. The average is shown but not judged.",
+ rClosed:"<b>Striped · Closed for the season.</b> The attraction is normally closed this month, so its last 4 weeks are not judged.",
+ rNone:"<b>Dark · No data.</b> No reviews collected for that period.",
+ rEx:"<b>Example.</b> A park averages {a}★ over the last 4 weeks and {b}★ over its reference. The difference is {d}, more than {t} below, so the tile is <b class=\"em-bad\">red</b>. At {c}★ the difference would be {e} and the tile <b class=\"em-mid\">white</b>.",
+ rNote_avg:"The reference includes the period being judged (the last 3 months contain the last 4 weeks), as “normal” is the accumulated average. For seasonal parks, switch the toolbar to “same period last year”.",
+ rNote_ly:"The 12-month tile is always compared with the 12 months before. Until a full year has been collected, last-year references are marked ◔.",
+ rArrows:"The issue arrows ↑ ↓ use a separate rule: a topic’s share of critical reviews changed by more than 10 points against the previous 4 weeks.",
+ thAttr:"Attraction",thGoogle:"Google rating",thGoogleS:"all-time",th12:"12 months",th12S:"vs prior 12 months",th3:"3 months",th3S_avg:"vs 12 months",th3S_ly:"vs same 3 months last year",th4:"4 weeks",th4S_avg:"vs 3 months",th4S_ly:"vs same 4 weeks last year",thIss:"Top issues",thIssS:"last 4 weeks",
+ l_google:"Google",l_12:"12 months",l_3:"3 months",l_4:"4 weeks",l_iss:"Top issues · 4 weeks",
+ noReviews:"No reviews",collecting:"◔ collecting",since:"◔ since {d}",review:"review",reviews:"reviews",notChecked:"Not checked yet",
+ st_good:"Above normal",st_mid:"Normal",st_bad:"Below normal",st_low:"Too few reviews",st_noref:"No reference yet",st_none:"No data",st_closed:"Closed for the season",
+ closedTile:"Closed",reopens:"Reopens {m}",seasonChip:"Closed for the season · reopens {m}",
+ noRev4:"No reviews in the last 4 weeks",noCrit:"No critical reviews",critNoTopic:"{n} critical, no recurring topic",ofN:"{v} of {n}",isNew:"NEW",
+ tipNew:"Not mentioned in the previous 4 weeks",tipUp:"Mentioned in a larger share of critical reviews than the previous 4 weeks",tipDown:"Mentioned in a smaller share of critical reviews than the previous 4 weeks",
+ sel12:"Selection · 12 months",sel3:"Selection · 3 months",sel4:"Selection · 4 weeks",
+ r_p12:"prior 12 mo",r_12:"12 mo",r_3:"3 mo",r_ly3:"same 3 mo last year",r_ly4:"same 4 wk last year",vs:"vs",
+ rated:"{n} rated reviews",distTitle:"{n} attractions vs their normal · last 4 weeks",d_good:"above",d_mid:"normal",d_bad:"below",d_other:"not enough data",d_closed:"closed for the season",
+ topSel:"Top issues across selection · last 4 weeks",noCritPeriod:"No critical reviews in this period.",
+ demoT:"Example data",demoB:"These ratings and summaries are invented to show how the page looks. They are not real Google reviews.",
+ waitT:"Waiting for the first weekly collection",waitB:"Ratings appear once the collector has read each attraction's newest Google reviews. Until then every period shows “No reviews”.",
+ oldT:"Data is {n} days old",oldB:"The weekly collection has not run since {d}. Figures for the last 4 weeks may be incomplete.",
+ incT:"Collection incomplete",incB:"{n} attractions have no collected reviews yet. They fill in on the next run.",
+ loadT:"The review data could not be loaded",loadB:"Reload the page. If it keeps failing, the files in the data folder are missing from the site.",
+ noMatch:"No attractions match these filters. Use “Select all” in the filters or clear the search.",
+ selTitle:"Select an attraction",selSub:"Click a row to see its written summary, weekly trend, the same period last year and the complaints behind its top issues.",
+ collectedSince:"reviews collected since {d}",openMaps:"Open on Google Maps ↗",openAll:"open all year",openMonths:"normally open {m}",
+ m_google:"Google rating, all time",reviewsChecked:"{n} reviews · checked {d}",m12:"Last 12 months",m3:"Last 3 months",m4:"Last 4 weeks",mLy:"Same 4 weeks last year",thisYear:"{d} this year",noCmp:"No comparison yet",
+ mVol:"Review volume, 4 weeks",pace:"{p}% vs 3-month pace",noPace:"No 3-month pace yet",critLow:"{n} critical (3★ or lower)",
+ sumH:"Summary of critical reviews, last 4 weeks",sumMeta:"Written automatically from the critical Google reviews of {a} – {b}. Guests’ words are not reproduced.",sumNone:"No summary yet. It is written each week when there are enough critical reviews.",
+ weekH:"Weekly average rating, last 52 weeks",weekNote:"Line: average stars per week. Bars: number of rated reviews. Dashed line: 12-month average. Shaded area: the last 4 weeks.",chartRef:"12-month {v}",chartLast:"last 4 weeks",chartNone:"No rated reviews collected in the last 52 weeks yet.",
+ compH:"What guests complain about, last 4 weeks",mention:"mention",mentions:"mentions",pctCrit:"{p}% of critical reviews",prevN:"{n} in previous 4 weeks",unmatched:"{n} critical review(s) did not match any topic.",critNoTopicLong:"Critical reviews were found, but none mention a recurring topic.",noCrit4:"No critical reviews in the last 4 weeks.",
+ foot1:"<b>Periods.</b> 4 weeks is the 28 days up to the data date. 3 months and 12 months are calendar periods ending on the same day, and the prior 12 months are the year before that.",
+ foot2:"<b>Colours.</b> Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",
+ foot3:"<b>Issues.</b> Reviews rated 3★ or lower are scanned for recurring topics in English, Spanish, German, Dutch, Italian, Norwegian and Danish. Arrows compare each topic's mentions with the previous 4 weeks.",
+ foot4:"<b>Source.</b> Public Google Maps reviews, collected weekly. Google shows older reviews with approximate dates (“2 months ago”), so dates beyond a few weeks are estimates. No review text is published here.",
+ csvDone:"CSV with {n} attractions downloaded",dlFail:"The download could not start in this browser.",pdfDone:"PDF report downloaded",pdfFail:"The PDF could not be created. Check your connection and try again.",
+ pdfTitle:"Guest review report",pdfSub:"Google Maps reviews · data up to {d} · {mode}",pdfSel:"Selection: {n} attractions · {c} · {t}",pdfAllC:"all countries",pdfAllT:"all attraction types",pdfNotes:"Attraction notes",pdfPage:"Page {p} of {n}",pdfDemo:"EXAMPLE DATA - NOT REAL REVIEWS",pdfRules:"Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",pdfIssues:"Top issues (4 weeks)",pdfSummary:"Summary",
+ csvHead:["Attraction","Country","Type","Google rating","Google reviews","12m avg","12m reviews","12m vs ref","12m status","3m avg","3m reviews","3m vs ref","3m status","4w avg","4w reviews","4w vs ref","4w status","Critical 4w","Issue 1","Issue 2","Issue 3","Summary"]
+},
+es:{
+ tagline:"Seguimiento de reseñas de Google de 27 atracciones de Parques Reunidos. Cada periodo se compara con la normalidad del propio parque.",
+ freshData:"Datos hasta <b>{d}</b><br>{n}/{t} atracciones con reseñas · actualización semanal",freshNone:"<b>Aún no hay recogida</b><br>{t} atracciones configuradas",freshFail:"Datos no disponibles",
+ countries:"Países",types:"Tipos de atracción",selectAll:"Seleccionar todo",clear:"Borrar",all:"Todos",none:"Ninguno",
+ search:"Buscar atracciones",sortAria:"Ordenar atracciones",modeAria:"Qué se considera normal",
+ sort_attention:"Primero las que necesitan atención",sort_worst:"Peor nota en 4 semanas",sort_best:"Mejor nota en 4 semanas",sort_volume:"Más reseñas en 4 semanas",sort_type:"Agrupar por tipo de atracción",sort_list:"Orden de la cartera",
+ mode_avg:"Normal: media acumulada",mode_ly:"Normal: mismo periodo del año anterior",
+ hideEmpty:"Ocultar parques sin reseñas recientes",hideClosed:"Ocultar parques cerrados por temporada",csv:"Descargar CSV",pdf:"Descargar informe PDF",pdfBusy:"Preparando PDF…",
+ lg_good:"Por encima de lo normal",lg_mid:"Normal",lg_bad:"Por debajo de lo normal",lg_low:"Pocas reseñas para valorar",lg_none:"Sin datos aún",lg_closed:"Cerrado por temporada",lg_part:"Histórico parcial",lg_trend:"Problema que sube / baja frente a las 4 semanas anteriores",
+ rulesTitle:"Cómo se decide cada color",show:"Mostrar ▾",hide:"Ocultar ▴",
+ rulesIntro_avg:"Cada periodo se compara con un periodo de referencia más largo de la misma atracción, así que cada parque se mide contra su propia normalidad y no contra los demás. La diferencia en estrellas de media decide el color.",
+ rulesIntro_ly:"Cada periodo se compara con el mismo periodo del año anterior de la misma atracción. Así se elimina el efecto de la temporada: un octubre tranquilo se compara con el octubre pasado, no con el verano.",
+ rulesHCmp:"Con qué se compara cada periodo",rulesHCol:"Reglas de color",thPeriod:"Periodo",thRef:"Referencia (“normal”)",
+ p4:"Últimas 4 semanas",p3:"Últimos 3 meses",p12:"Últimos 12 meses",
+ ref4_avg:"Media de los últimos 3 meses",ref3_avg:"Media de los últimos 12 meses",ref12:"Media de los 12 meses anteriores",ref4_ly:"Las mismas 4 semanas del año anterior",ref3_ly:"Los mismos 3 meses del año anterior",
+ rGreen:"<b>Verde · Por encima de lo normal.</b> Más de <b>{t}</b> estrellas por encima de su referencia.",
+ rWhite:"<b>Blanco · Normal.</b> A menos de <b>{t}</b> estrellas de su referencia, por arriba o por abajo.",
+ rRed:"<b>Rojo · Por debajo de lo normal.</b> Más de <b>{t}</b> estrellas por debajo de su referencia.",
+ rGrey:"<b>Gris · Pocas reseñas.</b> Menos de <b>{n}</b> reseñas con nota en el periodo, o aún no hay periodo de referencia. Se muestra la media, pero no se valora.",
+ rClosed:"<b>Rayado · Cerrado por temporada.</b> La atracción suele estar cerrada este mes, así que sus últimas 4 semanas no se valoran.",
+ rNone:"<b>Oscuro · Sin datos.</b> No se han recogido reseñas en ese periodo.",
+ rEx:"<b>Ejemplo.</b> Un parque tiene una media de {a}★ en las últimas 4 semanas y {b}★ en su referencia. La diferencia es {d}, más de {t} por debajo, así que la casilla sale <b class=\"em-bad\">roja</b>. Con {c}★ la diferencia sería {e} y la casilla saldría <b class=\"em-mid\">blanca</b>.",
+ rNote_avg:"La referencia incluye el periodo que se valora (los últimos 3 meses contienen las últimas 4 semanas), porque “normal” es la media acumulada. Para parques de temporada, cambia arriba a “mismo periodo del año anterior”.",
+ rNote_ly:"La casilla de 12 meses siempre se compara con los 12 meses anteriores. Hasta tener un año completo recogido, las referencias del año anterior se marcan con ◔.",
+ rArrows:"Las flechas ↑ ↓ de los problemas siguen otra regla: la proporción de reseñas críticas que menciona ese tema ha cambiado más de 10 puntos frente a las 4 semanas anteriores.",
+ thAttr:"Atracción",thGoogle:"Nota en Google",thGoogleS:"histórica",th12:"12 meses",th12S:"vs 12 meses anteriores",th3:"3 meses",th3S_avg:"vs 12 meses",th3S_ly:"vs mismos 3 meses año anterior",th4:"4 semanas",th4S_avg:"vs 3 meses",th4S_ly:"vs mismas 4 semanas año anterior",thIss:"Principales problemas",thIssS:"últimas 4 semanas",
+ l_google:"Google",l_12:"12 meses",l_3:"3 meses",l_4:"4 semanas",l_iss:"Problemas · 4 semanas",
+ noReviews:"Sin reseñas",collecting:"◔ recogiendo",since:"◔ desde {d}",review:"reseña",reviews:"reseñas",notChecked:"Sin comprobar",
+ st_good:"Por encima de lo normal",st_mid:"Normal",st_bad:"Por debajo de lo normal",st_low:"Pocas reseñas",st_noref:"Sin referencia aún",st_none:"Sin datos",st_closed:"Cerrado por temporada",
+ closedTile:"Cerrado",reopens:"Reabre en {m}",seasonChip:"Cerrado por temporada · reabre en {m}",
+ noRev4:"Sin reseñas en las últimas 4 semanas",noCrit:"Sin reseñas críticas",critNoTopic:"{n} críticas, sin tema recurrente",ofN:"{v} de {n}",isNew:"NUEVO",
+ tipNew:"No se mencionaba en las 4 semanas anteriores",tipUp:"Aparece en una proporción mayor de reseñas críticas que en las 4 semanas anteriores",tipDown:"Aparece en una proporción menor de reseñas críticas que en las 4 semanas anteriores",
+ sel12:"Selección · 12 meses",sel3:"Selección · 3 meses",sel4:"Selección · 4 semanas",
+ r_p12:"12 m anteriores",r_12:"12 m",r_3:"3 m",r_ly3:"mismos 3 m año ant.",r_ly4:"mismas 4 sem. año ant.",vs:"vs",
+ rated:"{n} reseñas con nota",distTitle:"{n} atracciones frente a su normalidad · últimas 4 semanas",d_good:"por encima",d_mid:"normal",d_bad:"por debajo",d_other:"sin datos suficientes",d_closed:"cerradas por temporada",
+ topSel:"Principales problemas de la selección · últimas 4 semanas",noCritPeriod:"Sin reseñas críticas en este periodo.",
+ demoT:"Datos de ejemplo",demoB:"Estas notas y resúmenes son inventados para mostrar cómo se ve la página. No son reseñas reales de Google.",
+ waitT:"Esperando la primera recogida semanal",waitB:"Las notas aparecerán cuando el recolector haya leído las reseñas más recientes de Google de cada atracción. Hasta entonces, todos los periodos muestran “Sin reseñas”.",
+ oldT:"Los datos tienen {n} días",oldB:"La recogida semanal no se ejecuta desde el {d}. Las cifras de las últimas 4 semanas pueden estar incompletas.",
+ incT:"Recogida incompleta",incB:"{n} atracciones aún no tienen reseñas recogidas. Se completarán en la próxima ejecución.",
+ loadT:"No se han podido cargar los datos",loadB:"Recarga la página. Si sigue fallando, faltan los archivos de la carpeta data en la web.",
+ noMatch:"Ninguna atracción coincide con estos filtros. Usa “Seleccionar todo” en los filtros o borra la búsqueda.",
+ selTitle:"Selecciona una atracción",selSub:"Pulsa una fila para ver su resumen escrito, la evolución semanal, el mismo periodo del año anterior y las quejas detrás de sus principales problemas.",
+ collectedSince:"reseñas recogidas desde el {d}",openMaps:"Abrir en Google Maps ↗",openAll:"abierto todo el año",openMonths:"abre normalmente {m}",
+ m_google:"Nota en Google, histórica",reviewsChecked:"{n} reseñas · comprobada el {d}",m12:"Últimos 12 meses",m3:"Últimos 3 meses",m4:"Últimas 4 semanas",mLy:"Mismas 4 semanas del año anterior",thisYear:"{d} este año",noCmp:"Aún sin comparación",
+ mVol:"Volumen de reseñas, 4 semanas",pace:"{p}% frente al ritmo de 3 meses",noPace:"Aún sin ritmo de 3 meses",critLow:"{n} críticas (3★ o menos)",
+ sumH:"Resumen de las reseñas críticas, últimas 4 semanas",sumMeta:"Escrito automáticamente a partir de las reseñas críticas de Google del {a} al {b}. No se reproducen las palabras de los visitantes.",sumNone:"Aún no hay resumen. Se escribe cada semana cuando hay suficientes reseñas críticas.",
+ weekH:"Nota media semanal, últimas 52 semanas",weekNote:"Línea: media de estrellas por semana. Barras: número de reseñas con nota. Línea discontinua: media de 12 meses. Zona sombreada: las últimas 4 semanas.",chartRef:"12 meses {v}",chartLast:"últimas 4 semanas",chartNone:"Aún no hay reseñas con nota recogidas en las últimas 52 semanas.",
+ compH:"De qué se quejan los visitantes, últimas 4 semanas",mention:"mención",mentions:"menciones",pctCrit:"{p}% de las reseñas críticas",prevN:"{n} en las 4 semanas anteriores",unmatched:"{n} reseña(s) crítica(s) no coinciden con ningún tema.",critNoTopicLong:"Hay reseñas críticas, pero ninguna menciona un tema recurrente.",noCrit4:"Sin reseñas críticas en las últimas 4 semanas.",
+ foot1:"<b>Periodos.</b> 4 semanas son los 28 días hasta la fecha de los datos. 3 meses y 12 meses son periodos naturales que terminan ese mismo día, y los 12 meses anteriores son el año previo.",
+ foot2:"<b>Colores.</b> Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",
+ foot3:"<b>Problemas.</b> Las reseñas de 3★ o menos se analizan buscando temas recurrentes en inglés, español, alemán, neerlandés, italiano, noruego y danés. Las flechas comparan las menciones de cada tema con las 4 semanas anteriores.",
+ foot4:"<b>Fuente.</b> Reseñas públicas de Google Maps, recogidas cada semana. Google muestra las reseñas antiguas con fechas aproximadas (“hace 2 meses”), así que las fechas de más de unas semanas son estimadas. Aquí no se publica el texto de las reseñas.",
+ csvDone:"CSV con {n} atracciones descargado",dlFail:"La descarga no ha podido empezar en este navegador.",pdfDone:"Informe PDF descargado",pdfFail:"No se ha podido crear el PDF. Comprueba la conexión e inténtalo de nuevo.",
+ pdfTitle:"Informe de reseñas de visitantes",pdfSub:"Reseñas de Google Maps · datos hasta {d} · {mode}",pdfSel:"Selección: {n} atracciones · {c} · {t}",pdfAllC:"todos los países",pdfAllT:"todos los tipos de atracción",pdfNotes:"Notas por atracción",pdfPage:"Página {p} de {n}",pdfDemo:"DATOS DE EJEMPLO - NO SON RESEÑAS REALES",pdfRules:"Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",pdfIssues:"Principales problemas (4 semanas)",pdfSummary:"Resumen",
+ csvHead:["Atracción","País","Tipo","Nota Google","Reseñas Google","Media 12m","Reseñas 12m","12m vs ref","Estado 12m","Media 3m","Reseñas 3m","3m vs ref","Estado 3m","Media 4s","Reseñas 4s","4s vs ref","Estado 4s","Críticas 4s","Problema 1","Problema 2","Problema 3","Resumen"]
+}};
+const TYPE_ONE={en:{theme:"Theme park",water_out:"Outdoor water park",water_in:"Indoor water park",nature:"Zoo, nature & cable car",aquarium:"Indoor aquarium"},es:{theme:"Parque temático",water_out:"Parque acuático exterior",water_in:"Parque acuático interior",nature:"Zoo, naturaleza y teleférico",aquarium:"Acuario interior"}};
+
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+let LANG=lsGet("reviewcast-lang",null)||((navigator.language||"").toLowerCase().startsWith("es")?"es":"en");
+if(!I18N[LANG])LANG="en";
+const LOC=()=>LANG==="es"?"es-ES":"en-GB";
+function t(k,v){let s=(I18N[LANG][k]!=null?I18N[LANG][k]:I18N.en[k]);if(s==null)return k;if(v)for(const x in v)s=s.split("{"+x+"}").join(v[x]);return s;}
+function pd(s){const [y,m,d]=s.split("-").map(Number);return new Date(Date.UTC(y,m-1,d));}
+function fd(d){return d.toISOString().slice(0,10);}
+function addDays(s,n){const d=pd(s);d.setUTCDate(d.getUTCDate()+n);return fd(d);}
+function addMonths(s,n){const d=pd(s);const day=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+n);const last=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate();d.setUTCDate(Math.min(day,last));return fd(d);}
+function daysBetween(a,b){return Math.round((pd(b)-pd(a))/864e5);}
+function nice(s,short){if(!s)return"—";return pd(s).toLocaleDateString(LOC(),short?{day:"numeric",month:"short",timeZone:"UTC"}:{day:"numeric",month:"short",year:"numeric",timeZone:"UTC"});}
+function monthName(m){return new Date(Date.UTC(2026,m-1,1)).toLocaleDateString(LOC(),{month:"long",timeZone:"UTC"});}
+function f2(n){const s=Math.abs(n)<0.005?"0.00":Math.abs(n).toFixed(2);return LANG==="es"?s.replace(".",","):s;}
+function f1(n){const s=Number(n).toFixed(1);return LANG==="es"?s.replace(".",","):s;}
+function av(n){return n==null?"—":(LANG==="es"?n.toFixed(2).replace(".",","):n.toFixed(2));}
+function signed(n){return (n>0.0049?"+":n<-0.0049?"−":"±")+f2(n);}
+function fmtInt(n){return Number(n||0).toLocaleString(LOC());}
+function plural(n){return n===1?t("review"):t("reviews");}
+function today(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+let toastT;function toast(m){let el=$("#toast");if(!el){el=document.createElement("div");el.id="toast";el.className="toast";el.setAttribute("role","status");document.body.appendChild(el);}el.textContent=m;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3500);}
+const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/ø/g,"o");
+
+/* ================= state ================= */
+let META=null,DATA=null,ASOF=today(),CFG={threshold:0.05,minN:5},selected=null;
+const saved=lsGet("reviewcast-filters-v3",{});
+const F={country:null,type:null,q:"",sort:saved.sort||"attention",mode:saved.mode||"avg",hideEmpty:!!saved.hideEmpty,hideClosed:!!saved.hideClosed};
+const KEYCLS=k=>["good","mid","bad"].includes(k)?k:"none";
+const countryName=c=>(LANG==="es"&&META.countries_es?META.countries_es[c]:META.countries[c])||c;
+const typeName=c=>(LANG==="es"&&META.types_es?META.types_es[c]:META.types[c])||c;
+const themeName=k=>(LANG==="es"&&META.themes_es?META.themes_es[k]:META.themes[k])||k;
+const typeOne=k=>TYPE_ONE[LANG][k]||typeName(k);
+
+/* ================= aggregation ================= */
+function windows(a){return{w4:[addDays(a,-27),a],prev4:[addDays(a,-55),addDays(a,-28)],m3:[addDays(addMonths(a,-3),1),a],m12:[addDays(addMonths(a,-12),1),a],p12:[addDays(addMonths(a,-24),1),addMonths(a,-12)],ly4:[addDays(a,-27-364),addDays(a,-364)],ly3:[addDays(addMonths(a,-15),1),addMonths(a,-12)]};}
+function stat(p,[from,to],withThemes){
+  const r={sum:0,n:0,m:0,neg:0,th:{}};if(!p)return r;
+  const days=p.days||{};for(const day in days){if(day<from||day>to)continue;const d=days[day];for(const k in d){const a=d[k];r.sum+=a[0]||0;r.n+=a[1]||0;r.m+=a[2]||0;r.neg+=a[3]||0;}}
+  if(withThemes){const th=p.themes||{};for(const day in th){if(day<from||day>to)continue;for(const k in th[day])for(const x in th[day][k])r.th[x]=(r.th[x]||0)+th[day][k][x];}}
+  r.avg=r.n?r.sum/r.n:null;return r;
+}
+function cmp(cur,ref){
+  if(cur.avg==null)return{key:"none"};
+  const delta=ref.avg!=null?cur.avg-ref.avg:null;
+  if(cur.n<CFG.minN)return{key:"low",delta,why:"low"};
+  if(delta==null)return{key:"low",delta:null,why:"noref"};
+  const th=CFG.threshold;return{key:delta>th?"good":delta<-th?"bad":"mid",delta};
+}
+function stLabel(c){if(c.key==="low")return t(c.why==="noref"?"st_noref":"st_low");return t("st_"+c.key);}
+function season(park){
+  const om=park&&park.openMonths;if(!om||!om.length)return{closed:false};
+  const m=+ASOF.slice(5,7);if(om.includes(m))return{closed:false};
+  let r=m;for(let i=0;i<12;i++){r=r%12+1;if(om.includes(r))break;}return{closed:true,reopen:r};
+}
+const MCACHE=new Map();
+function metrics(pid){
+  const key=pid+"|"+F.mode;if(MCACHE.has(key))return MCACHE.get(key);
+  const park=META.parks.find(x=>x.id===pid);const p=DATA.parks[pid];const W=windows(ASOF);
+  const w4=stat(p,W.w4,true),prev4=stat(p,W.prev4,true),m3=stat(p,W.m3),m12=stat(p,W.m12),p12=stat(p,W.p12),ly4=stat(p,W.ly4),ly3=stat(p,W.ly3);
+  const cov=p&&p.coverageFrom;const part=w=>!!cov&&cov>W[w][0];
+  const ly=F.mode==="ly";const ss=season(park);
+  let c4=ly?cmp(w4,ly4):cmp(w4,m3);if(ss.closed)c4={key:"closed",delta:null};
+  const r={park,p,w4,prev4,m3,m12,p12,ly4,ly3,season:ss,c4,c3:ly?cmp(m3,ly3):cmp(m3,m12),c12:cmp(m12,p12),
+    part:{w4:part("w4")||(ly&&part("ly4")),m3:part("m3")||(ly&&part("ly3")),m12:part("m12")||part("p12"),ly4:part("ly4")}};
+  MCACHE.set(key,r);return r;
+}
+function topIssues(th,n){return Object.entries(th).filter(([k])=>k!=="x").sort((a,b)=>b[1]-a[1]).slice(0,n||3);}
+function trendKey(k,cur,prev){
+  if(!prev.neg||prev.neg<3||!cur.neg)return"";
+  if(!prev.th[k])return"new";
+  const a=(cur.th[k]||0)/cur.neg,b=prev.th[k]/prev.neg;
+  return a-b>0.1?"up":b-a>0.1?"down":"";
+}
+function trend(k,cur,prev){const x=trendKey(k,cur,prev);
+  return x==="new"?`<span class="tr-new" title="${esc(t("tipNew"))}">${t("isNew")}</span>`:x==="up"?`<span class="tr-up" title="${esc(t("tipUp"))}">↑</span>`:x==="down"?`<span class="tr-down" title="${esc(t("tipDown"))}">↓</span>`:"";}
+
+/* ================= static text ================= */
+function applyStatic(){
+  document.documentElement.lang=LANG;
+  document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t(e.dataset.i));
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===LANG)));
+  $("#search").placeholder=t("search");$("#search").setAttribute("aria-label",t("search"));
+  $("#sort").setAttribute("aria-label",t("sortAria"));$("#mode").setAttribute("aria-label",t("modeAria"));
+  $("#sort").innerHTML=["attention","worst","best","volume","type","list"].map(k=>`<option value="${k}">${esc(t("sort_"+k))}</option>`).join("");$("#sort").value=F.sort;
+  $("#mode").innerHTML=["avg","ly"].map(k=>`<option value="${k}">${esc(t("mode_"+k))}</option>`).join("");$("#mode").value=F.mode;
+  $("#legend").innerHTML=[["d-good","lg_good"],["d-mid","lg_mid"],["d-bad","lg_bad"],["d-low","lg_low"],["d-none","lg_none"],["d-closed","lg_closed"]].map(([c,k])=>`<span><span class="dot ${c}"></span>${esc(t(k))}</span>`).join("")+
+    `<span><span style="color:var(--amber);font-weight:800">◔</span> ${esc(t("lg_part"))}</span><span><span class="tr-up">↑</span>/<span class="tr-down">↓</span> ${esc(t("lg_trend"))}</span>`;
+  const ly=F.mode==="ly";
+  $("#thead").innerHTML=`<th scope="col">${t("thAttr")}</th><th scope="col">${t("thGoogle")}<small>${t("thGoogleS")}</small></th><th scope="col">${t("th12")}<small>${t("th12S")}</small></th><th scope="col">${t("th3")}<small>${t(ly?"th3S_ly":"th3S_avg")}</small></th><th scope="col">${t("th4")}<small>${t(ly?"th4S_ly":"th4S_avg")}</small></th><th scope="col">${t("thIss")}<small>${t("thIssS")}</small></th>`;
+  const T=f2(CFG.threshold),N=CFG.minN;
+  $("#rulesBody").innerHTML=`<p class="rules-intro">${t(ly?"rulesIntro_ly":"rulesIntro_avg")}</p>
+   <div class="rules-grid"><div class="rule-col"><h4>${t("rulesHCmp")}</h4><table class="t"><thead><tr><th>${t("thPeriod")}</th><th>${t("thRef")}</th></tr></thead><tbody>
+     <tr><td><b>${t("p4")}</b></td><td>${t(ly?"ref4_ly":"ref4_avg")}</td></tr><tr><td><b>${t("p3")}</b></td><td>${t(ly?"ref3_ly":"ref3_avg")}</td></tr><tr><td><b>${t("p12")}</b></td><td>${t("ref12")}</td></tr></tbody></table></div>
+   <div class="rule-col"><h4>${t("rulesHCol")}</h4><ul class="rule-list">
+     <li><span class="dot d-good"></span><span>${t("rGreen",{t:T})}</span></li><li><span class="dot d-mid"></span><span>${t("rWhite",{t:T})}</span></li><li><span class="dot d-bad"></span><span>${t("rRed",{t:T})}</span></li>
+     <li><span class="dot d-low"></span><span>${t("rGrey",{n:N})}</span></li><li><span class="dot d-closed"></span><span>${t("rClosed")}</span></li><li><span class="dot d-none"></span><span>${t("rNone")}</span></li></ul></div></div>
+   <p class="rules-ex">${t("rEx",{a:av(4.21),b:av(4.30),c:av(4.27),d:"−"+f2(0.09),e:"−"+f2(0.03),t:T})}</p>
+   <p class="rules-ex">${t(ly?"rNote_ly":"rNote_avg")} ${t("rArrows")}</p>`;
+  $("#rulesTg").textContent=$("#rules").open?t("hide"):t("show");
+  $("#foot").innerHTML=["foot1","foot2","foot3","foot4"].map(k=>`<p>${t(k,{t:T,n:N})}</p>`).join("");
+  if(META)buildFilters();
+}
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>{LANG=b.dataset.lang;lsSet("reviewcast-lang",LANG);applyStatic();if(DATA){setStatus();render();}}));
+(()=>{const r=$("#rules");if(lsGet("reviewcast-rules-open",null)===false)r.open=false;r.addEventListener("toggle",()=>{lsSet("reviewcast-rules-open",r.open);$("#rulesTg").textContent=r.open?t("hide"):t("show");});})();
+
+/* ================= filters ================= */
+function buildFilters(){
+  const counts=key=>META.parks.reduce((o,p)=>(o[p[key]]=(o[p[key]]||0)+1,o),{});
+  const cc=counts("country"),tc=counts("type");
+  const opt=(g,val,label,on,ct)=>`<label><input type="checkbox" data-g="${g}" value="${esc(val)}"${on?" checked":""}> ${esc(label)}<span class="ct">${ct}</span></label>`;
+  $("#countryOpts").innerHTML=Object.keys(META.countries).map(k=>opt("country",k,countryName(k),F.country.has(k),cc[k]||0)).join("");
+  $("#typeOpts").innerHTML=Object.keys(META.types).map(k=>opt("type",k,typeName(k),F.type.has(k),tc[k]||0)).join("");
+  sums();
+}
+function sums(){
+  const lab=(k,set,all)=>`${t(k)} · ${set.size===all?`${t("all")} (${all})`:set.size===0?t("none"):set.size}`;
+  $("#countrySum").textContent=lab("countries",F.country,Object.keys(META.countries).length);
+  $("#typeSum").textContent=lab("types",F.type,Object.keys(META.types).length);
+}
+function saveF(){lsSet("reviewcast-filters-v3",{country:[...F.country],type:[...F.type],sort:F.sort,mode:F.mode,hideEmpty:F.hideEmpty,hideClosed:F.hideClosed});}
+document.addEventListener("change",e=>{const g=e.target.dataset&&e.target.dataset.g;if(!g)return;e.target.checked?F[g].add(e.target.value):F[g].delete(e.target.value);sums();saveF();render();});
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-all]"),n=e.target.closest("[data-none]");
+  if(a){const g=a.dataset.all;F[g]=new Set(Object.keys(g==="country"?META.countries:META.types));buildFilters();saveF();render();}
+  if(n){F[n.dataset.none]=new Set();buildFilters();saveF();render();}
+  if(!e.target.closest(".filterpanel"))document.querySelectorAll(".filterpanel[open]").forEach(d=>d.open=false);
+});
+document.querySelectorAll(".filterpanel").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)document.querySelectorAll(".filterpanel[open]").forEach(o=>{if(o!==d)o.open=false;});}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".filterpanel[open]").forEach(d=>{d.open=false;d.querySelector("summary").focus();});});
+$("#sort").addEventListener("change",e=>{F.sort=e.target.value;saveF();render();});
+$("#mode").addEventListener("change",e=>{F.mode=e.target.value;saveF();applyStatic();render();});
+$("#hideEmpty").addEventListener("change",e=>{F.hideEmpty=e.target.checked;saveF();render();});
+$("#hideClosed").addEventListener("change",e=>{F.hideClosed=e.target.checked;saveF();render();});
+$("#search").addEventListener("input",e=>{F.q=e.target.value;render();});
+
+/* ================= table ================= */
+function tile(st,c,part,cov){
+  if(c.key==="none")return `<div class="tile none"><span class="meta">${t("noReviews")}</span>${part?`<span class="part">${t("collecting")}</span>`:""}</div>`;
+  const arrow=c.key==="good"?" ▲":c.key==="bad"?" ▼":"";
+  return `<div class="tile ${c.key}" title="${esc(stLabel(c))}"><span class="big num">${av(st.avg)}</span>
+    <span class="dl num">${c.delta!=null?signed(c.delta)+arrow:esc(stLabel(c))}</span>
+    <span class="meta num">${fmtInt(st.n)} ${plural(st.n)}</span>${part?`<span class="part">${t("since",{d:nice(cov,true)})}</span>`:""}</div>`;
+}
+function closedTile(st,ss){
+  return `<div class="tile closed" title="${esc(t("st_closed"))}"><span class="cl">${t("closedTile")}</span><span class="meta">${t("reopens",{m:monthName(ss.reopen)})}</span>${st.n?`<span class="meta num">${av(st.avg)} · ${fmtInt(st.n)} ${plural(st.n)}</span>`:""}</div>`;
+}
+function googleTile(g){
+  if(!g||g.rating==null)return `<div class="tile none"><span class="meta">${t("notChecked")}</span></div>`;
+  const r=Number(g.rating),full=Math.round(r);
+  return `<div class="tile google"><span class="big num">${f1(r)}</span><span class="stars" aria-label="${f1(r)} / 5">${"★".repeat(full)}${"☆".repeat(5-full)}</span><span class="meta num">${fmtInt(g.count)} ${t("reviews")}</span></div>`;
+}
+function issuesCell(m){
+  const w4=m.w4;
+  if(!w4.m)return `<div class="issues-empty">${t("noRev4")}</div>`;
+  if(!w4.neg)return `<div class="issues-empty">${t("noCrit")}</div>`;
+  const top=topIssues(w4.th);if(!top.length)return `<div class="issues-empty">${t("critNoTopic",{n:w4.neg})}</div>`;
+  return `<ol class="issues">${top.map(([k,v],i)=>`<li><span class="rk">${i+1}</span><span>${esc(themeName(k))} ${trend(k,w4,m.prev4)}</span><span class="ct num">${t("ofN",{v,n:w4.neg})}</span></li>`).join("")}</ol>`;
+}
+function visibleRows(){
+  const q=norm(F.q.trim());
+  let rows=META.parks.filter(p=>F.country.has(p.country)&&F.type.has(p.type)&&(!q||norm(p.name).includes(q)||norm(countryName(p.country)).includes(q))).map(p=>({p,m:metrics(p.id)}));
+  if(F.hideEmpty)rows=rows.filter(r=>r.m.w4.m>0);
+  if(F.hideClosed)rows=rows.filter(r=>!r.m.season.closed);
+  const order=META.parks.map(p=>p.id),typeOrder=Object.keys(META.types),s=F.sort,a4=r=>r.m.season.closed?null:r.m.w4.avg;
+  const attention=(a,b)=>{const ca=a.m.season.closed?1:0,cb=b.m.season.closed?1:0;if(ca!==cb)return ca-cb;
+    const ka=a.m.c4.key==="bad"?0:1,kb=b.m.c4.key==="bad"?0:1;if(ka!==kb)return ka-kb;const da=a.m.c4.delta,db=b.m.c4.delta;if((da==null)!==(db==null))return da==null?1:-1;return (da||0)-(db||0)||order.indexOf(a.p.id)-order.indexOf(b.p.id);};
+  rows.sort((a,b)=>{
+    if(s==="list")return order.indexOf(a.p.id)-order.indexOf(b.p.id);
+    if(s==="type")return typeOrder.indexOf(a.p.type)-typeOrder.indexOf(b.p.type)||attention(a,b);
+    if(s==="volume")return b.m.w4.m-a.m.w4.m;
+    if((a4(a)==null)!==(a4(b)==null))return a4(a)==null?1:-1;
+    if(s==="best")return a4(b)-a4(a);
+    if(s==="worst")return a4(a)-a4(b);
+    return attention(a,b);
+  });
+  return rows;
+}
+function render(){
+  if(!META||!DATA)return;
+  const rows=visibleRows();
+  renderSummary(rows);
+  let html="",lastType=null;
+  for(const {p,m} of rows){
+    if(F.sort==="type"&&p.type!==lastType){html+=`<tr class="grp"><td colspan="6">${esc(typeName(p.type))}</td></tr>`;lastType=p.type;}
+    const cov=m.p&&m.p.coverageFrom;
+    html+=`<tr class="row${selected===p.id?" sel":""}" data-id="${p.id}" tabindex="0" aria-label="${esc(p.name)}: ${esc(m.season.closed?t("st_closed"):stLabel(m.c4))}">
+      <td><div class="parkname">${esc(p.name)}</div><div class="type">${esc(countryName(p.country))} · ${esc(typeOne(p.type))}</div>${m.season.closed?`<span class="season">${esc(t("seasonChip",{m:monthName(m.season.reopen)}))}</span>`:""}</td>
+      <td data-l="${t("l_google")}">${googleTile(m.p&&m.p.google)}</td>
+      <td data-l="${t("l_12")}">${tile(m.m12,m.c12,m.part.m12,cov)}</td>
+      <td data-l="${t("l_3")}">${tile(m.m3,m.c3,m.part.m3,cov)}</td>
+      <td data-l="${t("l_4")}">${m.season.closed?closedTile(m.w4,m.season):tile(m.w4,m.c4,m.part.w4,cov)}</td>
+      <td class="iss" data-l="${t("l_iss")}">${issuesCell(m)}</td></tr>`;
+  }
+  $("#rows").innerHTML=html||`<tr><td colspan="6" class="empty">${t("noMatch")}</td></tr>`;
+  renderDetail(selected);
+}
+function aggregate(rows){
+  const g={w4:{sum:0,n:0,m:0,neg:0,th:{}},prev4:{neg:0,th:{}},m3:{sum:0,n:0},m12:{sum:0,n:0},p12:{sum:0,n:0},ly4:{sum:0,n:0},ly3:{sum:0,n:0}};const dist={good:0,mid:0,bad:0,other:0,closed:0};
+  for(const {m} of rows){
+    if(m.season.closed){dist.closed++;}else{dist[["good","mid","bad"].includes(m.c4.key)?m.c4.key:"other"]++;for(const k of ["w4","ly4"]){g[k].sum+=m[k].sum;g[k].n+=m[k].n;}g.w4.m+=m.w4.m;}
+    for(const k of ["m3","m12","p12","ly3"]){g[k].sum+=m[k].sum;g[k].n+=m[k].n;}
+    g.w4.neg+=m.w4.neg;g.prev4.neg+=m.prev4.neg;for(const k in m.w4.th)g.w4.th[k]=(g.w4.th[k]||0)+m.w4.th[k];for(const k in m.prev4.th)g.prev4.th[k]=(g.prev4.th[k]||0)+m.prev4.th[k];
+  }
+  for(const k of ["w4","m3","m12","p12","ly4","ly3"])g[k].avg=g[k].n?g[k].sum/g[k].n:null;
+  const ly=F.mode==="ly";
+  // 4-week selection average uses open parks only; its reference is the 3-month average of the same open parks
+  let ref4=g.ly4;if(!ly){const o={sum:0,n:0};for(const {m} of rows)if(!m.season.closed){o.sum+=m.m3.sum;o.n+=m.m3.n;}o.avg=o.n?o.sum/o.n:null;ref4=o;}
+  return{g,dist,c12:cmp(g.m12,g.p12),c3:ly?cmp(g.m3,g.ly3):cmp(g.m3,g.m12),c4:cmp(g.w4,ref4)};
+}
+function renderSummary(rows){
+  const {g,dist,c12,c3,c4}=aggregate(rows);const ly=F.mode==="ly";
+  const box=(label,st,c,ref)=>`<div class="stat ${KEYCLS(c.key)}"><span class="k">${label}</span><span class="v num">${av(st.avg)}<small>${st.avg==null?"":"★"}</small></span><span class="d num em-${KEYCLS(c.key)}">${c.delta!=null?signed(c.delta)+" "+t("vs")+" "+ref:esc(c.key==="none"?t("st_none"):stLabel(c))}</span><span class="s num">${t("rated",{n:fmtInt(st.n)})}</span></div>`;
+  const tot=rows.length||1;const ti=topIssues(g.w4.th,3);
+  $("#summary").innerHTML=box(t("sel12"),g.m12,c12,t("r_p12"))+box(t("sel3"),g.m3,c3,t(ly?"r_ly3":"r_12"))+box(t("sel4"),g.w4,c4,t(ly?"r_ly4":"r_3"))+
+   `<div class="stat wide"><span class="k">${t("distTitle",{n:rows.length})}</span>
+     <div class="distbar" role="img" aria-label="${dist.good} ${t("d_good")}, ${dist.mid} ${t("d_mid")}, ${dist.bad} ${t("d_bad")}, ${dist.other} ${t("d_other")}, ${dist.closed} ${t("d_closed")}">${[["good","var(--good)"],["mid","var(--mid)"],["bad","var(--bad)"],["other","var(--low)"],["closed","repeating-linear-gradient(135deg,#3A4B60 0 3px,#24364B 3px 6px)"]].map(([k,v])=>dist[k]?`<span style="width:${dist[k]/tot*100}%;background:${v}"></span>`:"").join("")}</div>
+     <div class="distleg"><span><b>${dist.good}</b> ${t("d_good")}</span><span><b>${dist.mid}</b> ${t("d_mid")}</span><span><b>${dist.bad}</b> ${t("d_bad")}</span><span><b>${dist.other}</b> ${t("d_other")}</span>${dist.closed?`<span><b>${dist.closed}</b> ${t("d_closed")}</span>`:""}</div></div>
+   <div class="stat wide"><span class="k">${t("topSel")}</span>${ti.length?`<ul class="mini">${ti.map(([k,v])=>`<li><span>${esc(themeName(k))} ${trend(k,g.w4,g.prev4)}</span><span class="c num">${t("ofN",{v,n:g.w4.neg})}</span></li>`).join("")}</ul>`:`<span class="s">${t("noCritPeriod")}</span>`}</div>`;
+}
+function setStatus(){
+  const parks=DATA.parks;const withRev=META.parks.filter(p=>parks[p.id]&&parks[p.id].days&&Object.keys(parks[p.id].days).length).length;
+  const age=DATA.asOf?daysBetween(DATA.asOf,today()):null;
+  $("#fresh").innerHTML=DATA.generated?t("freshData",{d:nice(ASOF),n:withRev,t:META.parks.length}):t("freshNone",{t:META.parks.length});
+  let b="";
+  if(DATA.demo)b+=`<div class="banner info"><strong>${t("demoT")}</strong>${t("demoB")}</div>`;
+  if(!DATA.generated)b+=`<div class="banner"><strong>${t("waitT")}</strong>${t("waitB")}</div>`;
+  else if(age!=null&&age>10)b+=`<div class="banner"><strong>${t("oldT",{n:age})}</strong>${t("oldB",{d:nice(DATA.asOf)})}</div>`;
+  else if(withRev<META.parks.length)b+=`<div class="banner info"><strong>${t("incT")}</strong>${t("incB",{n:META.parks.length-withRev})}</div>`;
+  $("#banner").innerHTML=b;
+}
+
+/* ================= detail ================= */
+function weekly(p,weeks){const out=[];for(let i=weeks-1;i>=0;i--){const to=addDays(ASOF,-7*i),from=addDays(to,-6);const s=stat(p,[from,to]);out.push({to,avg:s.avg,n:s.n});}return out;}
+function chart(series,ref){
+  const W=720,H=210,L=34,R=12,T=14,B=26;const pts=series.filter(s=>s.avg!=null);
+  if(!pts.length)return `<p class="note">${t("chartNone")}</p>`;
+  let lo=Math.min(...pts.map(s=>s.avg),ref==null?5:ref);lo=Math.max(1,Math.floor((lo-0.1)*2)/2);const hi=5;
+  const x=i=>L+(W-L-R)*i/(series.length-1),y=v=>T+(H-T-B)*(hi-v)/(hi-lo||1);
+  const step=hi-lo>2?1:0.5;const ticks=[];for(let v=Math.ceil(lo/step-1e-9)*step;v<=hi+1e-9;v+=step)ticks.push(v);
+  let path="",on=false;series.forEach((s,i)=>{if(s.avg==null){on=false;return;}path+=(on?"L":"M")+x(i).toFixed(1)+" "+y(s.avg).toFixed(1)+" ";on=true;});
+  const maxN=Math.max(...series.map(s=>s.n),1);const labs=[];series.forEach((s,i)=>{if(i%13===0||i===series.length-1)labs.push([i,s.to]);});
+  const x4=x(series.length-4)-6;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("weekH"))}">
+    <rect x="${x4}" y="${T}" width="${W-R-x4}" height="${H-T-B}" fill="#1B3550"/>
+    ${ticks.map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#2A3F55"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${f1(v)}</text>`).join("")}
+    ${series.map((s,i)=>s.n?`<rect x="${(x(i)-3.5).toFixed(1)}" y="${(H-B-(s.n/maxN)*28).toFixed(1)}" width="7" height="${((s.n/maxN)*28).toFixed(1)}" fill="#2E5072"/>`:"").join("")}
+    ${ref!=null?`<line x1="${L}" x2="${W-R}" y1="${y(ref)}" y2="${y(ref)}" stroke="#8FA8BF" stroke-dasharray="4 4"/><text x="${L+6}" y="${y(ref)-5}">${t("chartRef",{v:av(ref)})}</text>`:""}
+    <path d="${path}" fill="none" stroke="#71C2EE" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${series.map((s,i)=>s.avg==null?"":`<circle cx="${x(i).toFixed(1)}" cy="${y(s.avg).toFixed(1)}" r="${i>=series.length-4?4:2.4}" fill="${i>=series.length-4?"#71C2EE":"#162B42"}" stroke="#71C2EE" stroke-width="1.5"><title>${nice(s.to)}: ${av(s.avg)} · ${s.n} ${plural(s.n)}</title></circle>`).join("")}
+    <text x="${W-R-4}" y="${T+14}" text-anchor="end">${t("chartLast")}</text>
+    ${labs.map(([i,d])=>`<text x="${x(i)}" y="${H-7}" text-anchor="${i===0?"start":i===series.length-1?"end":"middle"}">${pd(d).toLocaleDateString(LOC(),{month:"short",year:"2-digit",timeZone:"UTC"})}</text>`).join("")}
+  </svg>`;
+}
+function metricBox(label,st,c,ref,part){
+  return `<div class="metric ${KEYCLS(c.key)}"><span>${label}${part?' <span style="color:var(--amber)">◔</span>':""}</span><strong class="num">${st.avg==null?"—":av(st.avg)+" ★"}</strong><em class="num em-${KEYCLS(c.key)}">${c.delta!=null?signed(c.delta)+" "+t("vs")+" "+ref:esc(c.key==="none"?t("st_none"):stLabel(c))}</em><span class="num">${t("rated",{n:fmtInt(st.n)})}</span></div>`;
+}
+function summaryText(p){const s=p&&p.summary;if(!s)return null;return (LANG==="es"?s.es||s.en:s.en||s.es)||null;}
+function renderDetail(pid){
+  const box=$("#detail");
+  if(!pid){box.innerHTML=`<h2>${t("selTitle")}</h2><p class="sub">${t("selSub")}</p>`;return;}
+  const park=META.parks.find(p=>p.id===pid);if(!park)return;const m=metrics(pid);const p=m.p;const ly=F.mode==="ly";
+  const top=topIssues(m.w4.th,6);const maxT=top.length?top[0][1]:1;
+  const lyc=m.ly4.avg==null||m.w4.avg==null?null:m.w4.avg-m.ly4.avg;
+  const days3=daysBetween(windows(ASOF).m3[0],ASOF)+1;const pace=m.m3.m?m.m3.m/days3*28:0;
+  const maps="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(park.mapsQuery||park.name);
+  const om=park.openMonths;const open=!om||!om.length?t("openAll"):t("openMonths",{m:monthName(om[0])+" – "+monthName(om[om.length-1])});
+  const st=summaryText(p);
+  box.innerHTML=`<div class="dh"><div><h2>${esc(park.name)}</h2><p class="sub">${esc(countryName(park.country))} · ${esc(typeOne(park.type))} · ${esc(open)}${p&&p.coverageFrom?` · ${t("collectedSince",{d:nice(p.coverageFrom)})}`:""}</p></div><a class="maplink" href="${maps}" target="_blank" rel="noopener">${t("openMaps")}</a></div>
+   <div class="metrics">
+     <div class="metric"><span>${t("m_google")}</span><strong class="num">${p&&p.google&&p.google.rating!=null?f1(p.google.rating)+" ★":"—"}</strong><span class="num">${p&&p.google?t("reviewsChecked",{n:fmtInt(p.google.count),d:nice(p.google.checked,true)}):t("notChecked")}</span></div>
+     ${metricBox(t("m12"),m.m12,m.c12,t("r_p12"),m.part.m12)}${metricBox(t("m3"),m.m3,m.c3,t(ly?"r_ly3":"r_12"),m.part.m3)}
+     ${m.season.closed?`<div class="metric"><span>${t("m4")}</span><strong class="num">${m.w4.avg==null?"—":av(m.w4.avg)+" ★"}</strong><em class="em-none">${t("st_closed")}</em><span class="num">${t("rated",{n:fmtInt(m.w4.n)})}</span></div>`:metricBox(t("m4"),m.w4,m.c4,t(ly?"r_ly4":"r_3"),m.part.w4)}
+     <div class="metric ${lyc==null?"":lyc>CFG.threshold?"good":lyc<-CFG.threshold?"bad":"mid"}"><span>${t("mLy")}${m.part.ly4?' <span style="color:var(--amber)">◔</span>':""}</span><strong class="num">${m.ly4.avg==null?"—":av(m.ly4.avg)+" ★"}</strong><em class="num em-${lyc==null?"none":lyc>CFG.threshold?"good":lyc<-CFG.threshold?"bad":"mid"}">${lyc==null?t("noCmp"):t("thisYear",{d:signed(lyc)})}</em><span class="num">${t("rated",{n:fmtInt(m.ly4.n)})}</span></div>
+     <div class="metric"><span>${t("mVol")}</span><strong class="num">${fmtInt(m.w4.m)}</strong><em class="num em-none">${pace?t("pace",{p:(m.w4.m>=pace?"+":"−")+Math.abs(Math.round((m.w4.m/pace-1)*100))}):t("noPace")}</em><span class="num">${t("critLow",{n:m.w4.neg})}</span></div>
+   </div>
+   <h3>${t("sumH")}</h3>${st?`<div class="sumtext"><p>${esc(st)}</p><span class="sm">${t("sumMeta",{a:nice(p.summary.from,true),b:nice(p.summary.to)})}</span></div>`:`<p class="note">${t("sumNone")}</p>`}
+   <h3>${t("weekH")}</h3>${chart(weekly(p,52),m.m12.avg)}<p class="note">${t("weekNote")}</p>
+   <h3>${t("compH")}</h3>${top.length?`<div class="bars">${top.map(([k,v])=>`<div class="barrow"><span>${esc(themeName(k))} ${trend(k,m.w4,m.prev4)}</span><span class="num" style="color:var(--dim)">${v} ${v===1?t("mention"):t("mentions")} · ${t("pctCrit",{p:Math.round(v/m.w4.neg*100)})}${m.prev4.neg?" · "+t("prevN",{n:m.prev4.th[k]||0}):""}</span><div class="track"><span style="width:${Math.max(4,v/maxT*100)}%"></span></div></div>`).join("")}</div>${m.w4.th.x?`<p class="note">${t("unmatched",{n:m.w4.th.x})}</p>`:""}`:`<p class="note">${m.w4.neg?t("critNoTopicLong"):t("noCrit4")}</p>`}`;
+}
+function select(pid,scroll){
+  selected=pid;document.querySelectorAll("#rows tr.row").forEach(r=>r.classList.toggle("sel",r.dataset.id===pid));renderDetail(pid);
+  try{history.replaceState(null,"","#"+pid);}catch(e){}
+  if(scroll!==false)$("#detail").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+}
+$("#rows").addEventListener("click",e=>{const tr=e.target.closest("tr.row");if(tr)select(tr.dataset.id);});
+$("#rows").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("tr.row")){e.preventDefault();select(e.target.dataset.id);}});
+
+/* ================= downloads ================= */
+function saveBlob(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800);}
+function statusText(m,which){const c=m[which];if(which==="c4"&&m.season.closed)return t("st_closed");return c.key==="none"?t("st_none"):stLabel(c);}
+$("#csv").addEventListener("click",()=>{
+  if(!META||!DATA)return;
+  const rows=visibleRows();const q=v=>{const s=v==null?"":String(v);return /[",\n;]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;};
+  const n2=v=>v==null?"":(LANG==="es"?v.toFixed(2).replace(".",","):v.toFixed(2));const sep=LANG==="es"?";":",";
+  const lines=[t("csvHead").map(q).join(sep)].concat(rows.map(({p,m})=>{const g=m.p&&m.p.google||{};const ti=topIssues(m.w4.th).map(([k,v])=>`${themeName(k)} (${v})`);
+    return [p.name,countryName(p.country),typeOne(p.type),g.rating!=null?n2(g.rating):"",g.count,n2(m.m12.avg),m.m12.n,n2(m.c12.delta),statusText(m,"c12"),n2(m.m3.avg),m.m3.n,n2(m.c3.delta),statusText(m,"c3"),n2(m.w4.avg),m.w4.n,n2(m.season.closed?null:m.c4.delta),statusText(m,"c4"),m.w4.neg,ti[0],ti[1],ti[2],summaryText(m.p)||""].map(q).join(sep);}));
+  try{saveBlob(new Blob(["﻿"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),`reviewcast-${ASOF}.csv`);toast(t("csvDone",{n:rows.length}));}catch(e){toast(t("dlFail"));}
+});
+function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>rej(new Error(src));document.head.appendChild(s);});}
+const pdfSafe=s=>String(s==null?"":s).replace(/[−–—]/g,"-").replace(/★/g,"").replace(/☆/g,"").replace(/◔/g,"").replace(/↑/g,"(+)").replace(/↓/g,"(-)").replace(/▲/g,"").replace(/▼/g,"").replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/ø/g,"ø").trim();
+async function buildPdf(){
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js");
+  const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+  const W=297,M=12;const rows=visibleRows();const {g,dist,c12,c3,c4}=aggregate(rows);const ly=F.mode==="ly";
+  const COL={good:[17,122,85],mid:[255,255,255],bad:[163,48,59],low:[203,211,221],none:[238,241,244],closed:[226,231,237],navy:[16,33,55],ink:[20,32,48],dim:[96,112,130]};
+  // header band
+  doc.setFillColor(...COL.navy);doc.rect(0,0,W,24,"F");
+  doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(18);doc.text("ReviewCast",M,11);
+  doc.setFont("helvetica","normal");doc.setFontSize(12);doc.text(pdfSafe(t("pdfTitle")),M+38,11);
+  doc.setFontSize(9);doc.setTextColor(200,214,228);
+  doc.text(pdfSafe(t("pdfSub",{d:nice(ASOF),mode:t("mode_"+F.mode)})),M,18);
+  const allC=F.country.size===Object.keys(META.countries).length,allT=F.type.size===Object.keys(META.types).length;
+  doc.text(pdfSafe(t("pdfSel",{n:rows.length,c:allC?t("pdfAllC"):[...F.country].map(countryName).join(", "),t:allT?t("pdfAllT"):[...F.type].map(typeName).join(", ")})),W-M,18,{align:"right",maxWidth:150});
+  let y=30;
+  if(DATA.demo){doc.setFillColor(255,236,200);doc.rect(M,y-4,W-2*M,7,"F");doc.setTextColor(120,70,0);doc.setFont("helvetica","bold");doc.setFontSize(9);doc.text(t("pdfDemo"),W/2,y+0.8,{align:"center"});y+=8;}
+  // summary boxes
+  const boxes=[[t("sel12"),g.m12,c12,t("r_p12")],[t("sel3"),g.m3,c3,t(ly?"r_ly3":"r_12")],[t("sel4"),g.w4,c4,t(ly?"r_ly4":"r_3")]];
+  const bw=(W-2*M-3*4)/4;
+  boxes.forEach(([lab,st,c,ref],i)=>{const x=M+i*(bw+4);doc.setDrawColor(210,218,228);doc.setFillColor(247,249,251);doc.roundedRect(x,y,bw,22,2,2,"FD");
+    const col=c.key==="good"?COL.good:c.key==="bad"?COL.bad:c.key==="mid"?[150,160,172]:COL.low;doc.setFillColor(...col);doc.rect(x,y,bw,1.6,"F");
+    doc.setTextColor(...COL.dim);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.text(pdfSafe(lab),x+4,y+6);
+    doc.setTextColor(...COL.ink);doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text(st.avg==null?"-":av(st.avg),x+4,y+14);
+    doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(...(c.key==="good"?COL.good:c.key==="bad"?COL.bad:COL.dim));
+    doc.text(pdfSafe(c.delta!=null?signed(c.delta)+" "+t("vs")+" "+ref:(c.key==="none"?t("st_none"):stLabel(c))),x+4,y+19);
+    doc.setTextColor(...COL.dim);doc.text(pdfSafe(t("rated",{n:fmtInt(st.n)})),x+bw-4,y+14,{align:"right"});});
+  {const x=M+3*(bw+4);doc.setDrawColor(210,218,228);doc.setFillColor(247,249,251);doc.roundedRect(x,y,bw,22,2,2,"FD");
+    doc.setTextColor(...COL.dim);doc.setFontSize(8);doc.text(pdfSafe(t("distTitle",{n:rows.length})),x+4,y+6,{maxWidth:bw-8});
+    doc.setFontSize(9);doc.setTextColor(...COL.ink);
+    const parts=[[dist.good,t("d_good"),COL.good],[dist.mid,t("d_mid"),[150,160,172]],[dist.bad,t("d_bad"),COL.bad],[dist.other,t("d_other"),COL.low],[dist.closed,t("d_closed"),[170,180,192]]].filter(p=>p[0]);
+    let yy=y+12;parts.forEach(([n,l,c],i)=>{const cx=x+4+(i%2)*(bw/2-2),cy=yy+Math.floor(i/2)*4.5;doc.setFillColor(...c);doc.rect(cx,cy-2.4,2.6,2.6,"F");doc.setDrawColor(150,160,172);if(c===COL.mid)doc.rect(cx,cy-2.4,2.6,2.6,"S");doc.text(pdfSafe(n+" "+l),cx+4,cy);});}
+  y+=27;
+  const ti=topIssues(g.w4.th,3);
+  if(ti.length){doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(...COL.ink);doc.text(pdfSafe(t("topSel")),M,y);doc.setFont("helvetica","normal");
+    doc.text(pdfSafe(ti.map(([k,v],i)=>`${i+1}. ${themeName(k)} (${t("ofN",{v,n:g.w4.neg})})${trendKey(k,g.w4,g.prev4)==="up"?" (+)":trendKey(k,g.w4,g.prev4)==="new"?" ("+t("isNew")+")":""}`).join("    ")),M,y+5);y+=9;}
+  // main table
+  const cell=(st,c,part)=>c.key==="none"?t("noReviews"):`${av(st.avg)}\n${c.delta!=null?signed(c.delta):stLabel(c)} · ${fmtInt(st.n)}${part?" *":""}`;
+  const body=rows.map(({p,m})=>{const gg=m.p&&m.p.google;return[
+    {content:`${p.name}\n${countryName(p.country)} · ${typeOne(p.type)}`},
+    gg&&gg.rating!=null?`${f1(gg.rating)}\n${fmtInt(gg.count)}`:"-",
+    {content:cell(m.m12,m.c12,m.part.m12),k:m.c12.key},{content:cell(m.m3,m.c3,m.part.m3),k:m.c3.key},
+    m.season.closed?{content:`${t("closedTile")}\n${t("reopens",{m:monthName(m.season.reopen)})}`,k:"closed"}:{content:cell(m.w4,m.c4,m.part.w4),k:m.c4.key},
+    !m.w4.m?t("noRev4"):!m.w4.neg?t("noCrit"):topIssues(m.w4.th).map(([k,v],i)=>`${i+1}. ${themeName(k)} (${t("ofN",{v,n:m.w4.neg})})${trendKey(k,m.w4,m.prev4)==="up"?" (+)":trendKey(k,m.w4,m.prev4)==="down"?" (-)":trendKey(k,m.w4,m.prev4)==="new"?" ("+t("isNew")+")":""}`).join("\n")||t("critNoTopic",{n:m.w4.neg})
+  ].map(c=>typeof c==="string"?{content:pdfSafe(c)}:Object.assign(c,{content:pdfSafe(c.content)}));});
+  doc.autoTable({startY:y,margin:{left:M,right:M,bottom:16},theme:"grid",rowPageBreak:"avoid",showHead:"everyPage",
+    head:[[t("thAttr"),t("thGoogle"),`${t("th12")}\n${t("th12S")}`,`${t("th3")}\n${t(ly?"th3S_ly":"th3S_avg")}`,`${t("th4")}\n${t(ly?"th4S_ly":"th4S_avg")}`,t("pdfIssues")].map(pdfSafe)],
+    body,styles:{font:"helvetica",fontSize:8,cellPadding:1.8,lineColor:[214,221,230],lineWidth:0.2,textColor:COL.ink,valign:"middle"},
+    headStyles:{fillColor:COL.navy,textColor:255,fontStyle:"bold",fontSize:8},
+    columnStyles:{0:{cellWidth:58,fontStyle:"bold"},1:{cellWidth:22,halign:"center"},2:{cellWidth:30,halign:"center"},3:{cellWidth:30,halign:"center"},4:{cellWidth:30,halign:"center"},5:{cellWidth:"auto"}},
+    didParseCell:d=>{if(d.section!=="body")return;const k=d.cell.raw&&d.cell.raw.k;if(!k)return;const s=d.cell.styles;
+      if(k==="good"){s.fillColor=COL.good;s.textColor=255;s.fontStyle="bold";}else if(k==="bad"){s.fillColor=COL.bad;s.textColor=255;s.fontStyle="bold";}
+      else if(k==="mid"){s.fillColor=COL.mid;s.textColor=COL.ink;s.fontStyle="bold";}else if(k==="low"){s.fillColor=COL.low;s.textColor=COL.ink;}else if(k==="closed"){s.fillColor=COL.closed;s.textColor=COL.dim;s.fontStyle="italic";}else{s.fillColor=COL.none;s.textColor=COL.dim;}}
+  });
+  // notes page
+  const notes=rows.filter(({m})=>summaryText(m.p)||m.w4.neg);
+  if(notes.length){doc.addPage();doc.setFillColor(...COL.navy);doc.rect(0,0,W,14,"F");doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(13);doc.text(pdfSafe(t("pdfNotes")),M,9.5);
+    doc.autoTable({startY:20,margin:{left:M,right:M,bottom:16},theme:"plain",rowPageBreak:"avoid",
+      head:[[t("thAttr"),t("pdfSummary"),t("pdfIssues")].map(pdfSafe)],
+      body:notes.map(({p,m})=>[pdfSafe(`${p.name}\n${m.season.closed?t("st_closed"):t("m4")+": "+(m.w4.avg==null?"-":av(m.w4.avg))+(m.c4.delta!=null?" ("+signed(m.c4.delta)+")":"")+" · "+statusText(m,"c4")}`),pdfSafe(summaryText(m.p)||t("sumNone")),pdfSafe(topIssues(m.w4.th).map(([k,v])=>`${themeName(k)} (${v})`).join("\n")||"-")]),
+      styles:{font:"helvetica",fontSize:8.5,cellPadding:2.2,textColor:COL.ink,valign:"top"},headStyles:{textColor:COL.dim,fontStyle:"bold",fontSize:8},
+      columnStyles:{0:{cellWidth:62,fontStyle:"bold"},1:{cellWidth:"auto"},2:{cellWidth:62}},
+      didDrawCell:d=>{if(d.section==="body"&&d.column.index===0){doc.setDrawColor(222,228,236);doc.line(M,d.cell.y,W-M,d.cell.y);}}});}
+  // footers
+  const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(...COL.dim);
+    doc.text(pdfSafe(t("pdfRules",{t:f2(CFG.threshold),n:CFG.minN})+"  * "+t("lg_part")+"."),M,203,{maxWidth:220});
+    doc.text(pdfSafe(t("pdfPage",{p:i,n})),W-M,203,{align:"right"});}
+  return doc;
+}
+$("#pdf").addEventListener("click",async()=>{
+  if(!META||!DATA)return;const b=$("#pdf");b.disabled=true;b.textContent=t("pdfBusy");
+  try{const doc=await buildPdf();saveBlob(doc.output("blob"),`reviewcast-report-${ASOF}-${LANG}.pdf`);toast(t("pdfDone"));}
+  catch(e){console.error(e);toast(t("pdfFail"));}
+  finally{b.disabled=false;b.textContent=t("pdf");}
+});
+
+/* ================= boot ================= */
+applyStatic();
+(async()=>{
+  try{
+    const get=u=>fetch(u,{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error(u);return r.json();});
+    const [m,d]=await Promise.all([get("data/parks.json"),get("data/reviews.json")]);
+    META=m;DATA=d;DATA.parks=DATA.parks||{};
+    if(DATA.asOf)ASOF=DATA.asOf;
+    if(DATA.settings)CFG={threshold:+DATA.settings.threshold||0.05,minN:+DATA.settings.minN||5};
+    const valid=(arr,src)=>{const s=new Set((arr||[]).filter(k=>k in src));return s.size?s:new Set(Object.keys(src));};
+    F.country=valid(saved.country,META.countries);F.type=valid(saved.type,META.types);
+    $("#hideEmpty").checked=F.hideEmpty;$("#hideClosed").checked=F.hideClosed;
+    applyStatic();setStatus();render();
+    const hash=location.hash.slice(1);if(hash&&META.parks.some(p=>p.id===hash))select(hash,true);
+  }catch(e){
+    $("#fresh").textContent=t("freshFail");
+    $("#banner").innerHTML=`<div class="banner"><strong>${t("loadT")}</strong>${t("loadB")}</div>`;
+    $("#rows").innerHTML=`<tr><td colspan="6" class="empty">—</td></tr>`;
+  }
+})();
+</script>
+</body>
+</html>
