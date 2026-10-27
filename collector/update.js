@@ -102,7 +102,9 @@ function build() {
   const out = { generated: new Date().toISOString(), asOf: null, source: "Google Maps reviews", settings: prev.settings || { threshold: 0.05, minN: 5 }, parks: {} };
   for (const id of PARKS) {
     const rows = loadHistory(id);
-    const P = { days: {}, themes: {} };
+    // Park not archived yet (e.g. during the first backfill): keep its previously published figures.
+    if (!rows.length && prev.parks && prev.parks[id] && !prev.parks[id].fromArchive) { out.parks[id] = prev.parks[id]; continue; }
+    const P = { days: {}, themes: {}, fromArchive: true };
     let first = null, lastSeen = null;
     for (const r of rows) {
       if (!r.date) continue;
