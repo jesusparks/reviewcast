@@ -29,20 +29,24 @@ A toolbar switch changes what counts as normal: the accumulated average (above) 
 | `index.html` | The whole site. Static, no build step. |
 | `data/parks.json` | Parks, countries, attraction types, issue topic names. Edit here to add or rename a park. |
 | `data/reviews.json` | Aggregated daily ratings and issue counts per park. Written by the collector, read by the site. Contains no review text. |
-| `collector/scrape-page.js` | Runs inside a signed-in Google Maps page and returns the newest reviews of one park. |
+| `collector/browser-run.js` | Runs inside the signed-in Google Maps tab: visits every park, reads the newest reviews and tags complaint topics. |
+| `collector/build-browser.js` | Fills the topic lists into `browser-run.js` before it is injected. |
+| `collector/scrape-page.js` | Older single-park version, kept for manual checks. |
 | `collector/process.js` | Merges one raw scrape into `data/reviews.json`, skipping reviews already counted. |
 | `collector/state.json` | Review ids already counted (created on first run). |
 
 ## Weekly update
 
-A scheduled Claude task runs once a week on the computer where the Claude desktop app is signed in to Google:
+A scheduled Claude task runs once a week. It uses the built-in browser of the Claude desktop app on the computer where that browser is signed in to Google, and does the processing and the GitHub push from the cloud:
 
-1. For each park in `data/parks.json`, open `https://www.google.com/maps/search/<mapsQuery>?hl=en`, then start `collector/scrape-page.js` **without awaiting it** (`window.__rc=null; (<script>)("5 weeks",1500).then(r=>window.__rc=r)`), because a browser tool call times out after 45 s and a busy park takes several minutes. Poll `window.__rc` until it is set, then save the results to `collector/raw/YYYY-MM-DD.json`. Reviews of 4★ and 5★ only need id, stars and date; keep the text of 3★ and lower.
-   For each park with at least 3 critical reviews (3★ or lower) in the last 4 weeks, add `"summary": {"en": "...", "es": "..."}`: 2–3 sentences on what guests complain about, in Claude's own words, never quoting reviewers.
-2. Run `node collector/process.js collector/raw/YYYY-MM-DD.json`.
-3. Commit `data/reviews.json` and `collector/state.json` and push. GitHub Pages republishes the site.
+1. Build the browser script: `node collector/build-browser.js > /tmp/rc-inject.js`.
+2. In the built-in browser open `https://www.google.com/maps/search/Parque+Warner+Madrid?hl=en` and run the contents of `/tmp/rc-inject.js` with the JavaScript tool (it defines `window.RC`).
+3. Start the run without waiting for it: `RC.runAll(list, "5 weeks", 1500)`, where `list` is `[{id, q: mapsQuery}]` from `data/parks.json`. It moves from park to park with the Maps search box, so the page is never reloaded. A browser tool call times out after about 45 s, so poll `RC.state` until `finished` is true (roughly 15–30 minutes for 27 parks).
+4. For each park read `RC.pack(id)` (compact list: review hash, stars, relative date, complaint topics) and `RC.crit(id)` (critical reviews of the last 4 weeks). Write `collector/raw/YYYY-MM-DD.json` as `{"collectedAt": "YYYY-MM-DD", "parks": {"<id>": <pack> + "summary": {"en", "es"}}}`. The summary is 2–3 sentences per park, in Claude's own words, written from `RC.crit(id)`; never quote reviewers.
+5. Run `node collector/process.js collector/raw/YYYY-MM-DD.json`.
+6. Commit `data/reviews.json` and `collector/state.json` and push. GitHub Pages republishes the site.
 
-Raw scrapes (which contain review text) are not committed: `collector/raw/` is in `.gitignore`.
+Raw scrapes are not committed: `collector/raw/` is in `.gitignore`. Review hashes in `collector/state.json` make re-runs and overlapping weeks safe: a review is only counted once.
 
 ## Publishing on GitHub Pages
 

@@ -42,7 +42,7 @@ const NUM = { a: 1, an: 1, one: 1, un: 1, una: 1, uno: 1, ein: 1, eine: 1, einem
 function relDate(when, ref) {
   const s = String(when || "").toLowerCase().replace(/^(edited|editado|bearbeitet|bewerkt)\s*:?\s*/, "").trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  if (/(just now|minute|hour|ahora|minuto|hora|minute|stunde|uur|minuut)/.test(s)) return ref;
+  if (/(just now|today|minute|hour|ahora|minuto|hora|minute|stunde|uur|minuut)/.test(s)) return ref;
   if (/^(yesterday|ayer|gestern|gisteren)$/.test(s)) return addDays(ref, -1);
   const m = s.match(/(\d+|an?|one|una?|uno|eine?[mr]?|een)\s+(day|days|week|weeks|month|months|year|years|d[ií]as?|semanas?|mes|meses|años?|anos?|tag|tagen|tage|woche|wochen|monat|monaten|jahr|jahren|dag|dagen|weken|week|maand|maanden|jaar)/);
   if (!m) return null;
@@ -69,6 +69,7 @@ const THEMES = {
   v: ["parking","car park","traffic","shuttle","aparcamiento","aparcar","trafico","autobus","parkplatz","parken","parkgebuhr","parkgebuhren","anfahrt","parkeren","parkeerplaats","parkeerkosten","parcheggio","navetta","parkering"],
   z: ["animals","enclosure","enclosures","cage","cages","welfare","cruel","animales","jaula","jaulas","recinto","recintos","maltrato","tiere","gehege","kafig","tierqualerei","dieren","kooi","kooien","verblijven","animali","gabbia","gabbie","recinti","maltrattati","dyrene","bur"],
   d: ["wheelchair","wheelchairs","disability","disabilities","disabled","accessibility","accessible","reduced mobility","height restriction","height limit","silla de ruedas","discapacidad","discapacitado","discapacitada","discapacitados","movilidad reducida","accesibilidad","rollstuhl","behinderung","behindert","barrierefrei","rolstoel","handicap","beperking","toegankelijk","sedia a rotelle","disabilita","disabile","disabili","accessibilita","rullestol","funksjonshemmet","korestol","handicappet"],
+  e: ["small","tiny","too small","quite small","very small","not much to see","not much to do","nothing to do","little to see","little to do","not worth the price","only took","in an hour","half an hour","short visit","pequeno","pequena","muy pequeno","poco que ver","poco que hacer","nada que hacer","klein","zu klein","wenig zu sehen","wenig zu tun","nicht viel","weinig te zien","weinig te doen","te klein","piccolo","piccola","poco da vedere","poco da fare","lite a se","lite a gjore","for lite","lidt at se","for lidt"],
   y: ["unsafe","dangerous","accident","injured","injury","security","peligroso","peligrosa","accidente","herido","herida","seguridad","gefahrlich","unfall","verletzt","sicherheit","gevaarlijk","ongeluk","gewond","veiligheid","pericoloso","incidente","ferito","sicurezza","farlig","ulykke","skadet"]
 };
 const norm = s => String(s == null ? "" : s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ø/g, "o").replace(/æ/g, "ae").replace(/ß/g, "ss");
@@ -112,7 +113,13 @@ function main() {
     }
 
     let added = 0, dup = 0, undated = 0, oldest = null;
-    for (const r of pr.reviews || []) {
+    // Compact format from collector/browser-run.js: "hash,stars,when,topics;..."
+    const UNIT = { d: "day", w: "week", m: "month", y: "year" };
+    const list = typeof pr.items === "string" && pr.items
+      ? pr.items.split(";").map(s => { const [id, st, wc, tp] = s.split(","); const m = /^(\d+)([dwmy])$/.exec(wc || "");
+          return { id: "h:" + id, stars: st === "" ? null : +st, when: m ? (m[1] === "0" ? "today" : m[1] + " " + UNIT[m[2]] + (m[1] === "1" ? "" : "s") + " ago") : "", topics: tp ? tp.split("") : null }; })
+      : (pr.reviews || []);
+    for (const r of list) {
       const id = r.id || norm((r.author || "") + "|" + (r.when || "") + "|" + (r.text || "").slice(0, 120));
       if (seen.has(id)) { dup++; continue; }
       const day = relDate(r.when, ref);
@@ -129,7 +136,7 @@ function main() {
         a[3]++;
         const t = (P.themes[day] = P.themes[day] || {});
         const tp = (t[plat] = t[plat] || {});
-        for (const k of topicsOf(r.text || "")) tp[k] = (tp[k] || 0) + 1;
+        for (const k of (r.topics && r.topics.length ? r.topics : topicsOf(r.text || ""))) tp[k] = (tp[k] || 0) + 1;
       }
     }
     if (oldest && (!P.coverageFrom || oldest < P.coverageFrom)) P.coverageFrom = oldest;
@@ -146,4 +153,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { relDate, topicsOf };
+module.exports = { relDate, topicsOf, THEMES };

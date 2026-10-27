@@ -79,6 +79,7 @@
     "v": "Parking & access",
     "z": "Animal welfare & enclosures",
     "d": "Accessibility & disabled access",
+    "e": "Too small or not enough to do",
     "y": "Safety & security",
     "x": "Other complaints"
   },
@@ -96,6 +97,7 @@
     "v": "Aparcamiento y acceso",
     "z": "Bienestar animal e instalaciones",
     "d": "Accesibilidad y personas con discapacidad",
+    "e": "Pequeño o con poco que hacer",
     "y": "Seguridad",
     "x": "Otras quejas"
   }
