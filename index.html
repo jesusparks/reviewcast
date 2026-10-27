@@ -286,12 +286,12 @@ en:{
  hideEmpty:"Hide parks without recent reviews",hideClosed:"Hide parks closed for the season",pdf:"Download PDF report",pdfBusy:"Preparing PDF…",
  lg_good:"Above normal",lg_mid:"Normal",lg_bad:"Below normal",lg_low:"Too few reviews to judge",lg_none:"No data yet",lg_closed:"Closed for the season",lg_part:"Partial history",lg_trend:"Issue rising / falling vs previous 4 weeks",
  rulesTitle:"How the colours are decided",
- rulesCmp_avg:"Each park is compared with its own average: <b>4 weeks</b> vs 3 months · <b>3 months</b> vs 12 months The 12-month column is the reference average, not judged.",
- rulesCmp_ly:"Each park is compared with itself a year earlier: <b>4 weeks</b> and <b>3 months</b> vs the same period last year. The 12-month column is the reference average, not judged.",
+ rulesCmp_avg:"Each park is compared with its own figures: <b>12 months</b> vs its all-time Google rating · <b>3 months</b> vs 12 months · <b>4 weeks</b> vs 3 months.",
+ rulesCmp_ly:"Each park is compared with itself a year earlier: <b>4 weeks</b> and <b>3 months</b> vs the same period last year · <b>12 months</b> vs its all-time Google rating.",
  rGreen:"<b>Green</b> more than {t}★ above",rWhite:"<b>White</b> within ±{t}★",rRed:"<b>Red</b> more than {t}★ below",
  rGrey:"<b>Grey</b> fewer than {n} reviews or no reference yet",rClosed:"<b>Striped</b> closed for the season",
  rArrows:"Issue arrows ↑ ↓: the topic's share of critical reviews moved more than 10 points vs the previous 4 weeks. ◔ = reference period not fully collected yet.",
- thAttr:"Park",thGoogle:"Google rating",thGoogleS:"all-time",th12:"12 months",th12S:"reference average",th3:"3 months",th3S_avg:"vs 12 months",th3S_ly:"vs same 3 months last year",th4:"4 weeks",th4S_avg:"vs 3 months",th4S_ly:"vs same 4 weeks last year",thIss:"Top issues",thIssS:"last 4 weeks",
+ thAttr:"Park",thGoogle:"Google rating",thGoogleS:"all-time",th12:"12 months",th12S:"vs Google rating",th3:"3 months",th3S_avg:"vs 12 months",th3S_ly:"vs same 3 months last year",th4:"4 weeks",th4S_avg:"vs 3 months",th4S_ly:"vs same 4 weeks last year",thIss:"Top issues",thIssS:"last 4 weeks",
  l_google:"Google",l_12:"12 months",l_3:"3 months",l_4:"4 weeks",l_iss:"Top issues · 4 weeks",
  noReviews:"No reviews",collecting:"◔ collecting",since:"◔ since {d}",review:"review",reviews:"reviews",notChecked:"Not checked yet",
  st_good:"Above normal",st_mid:"Normal",st_bad:"Below normal",st_low:"Too few reviews",st_noref:"No reference yet",st_none:"No data",st_closed:"Closed for the season",st_ref:"Average",
@@ -299,7 +299,7 @@ en:{
  noRev4:"No reviews in the last 4 weeks",noCrit:"No critical reviews",critNoTopic:"{n} critical, no recurring topic",ofN:"{v} of {n}",isNew:"NEW",
  tipNew:"Not mentioned in the previous 4 weeks",tipUp:"Mentioned in a larger share of critical reviews than the previous 4 weeks",tipDown:"Mentioned in a smaller share of critical reviews than the previous 4 weeks",
  sel12:"Selection · 12 months",sel3:"Selection · 3 months",sel4:"Selection · 4 weeks",
- r_p12:"prior 12 mo",r_12:"12 mo",r_3:"3 mo",r_ly3:"same 3 mo last year",r_ly4:"same 4 wk last year",vs:"vs",
+ r_p12:"prior 12 mo",r_g:"Google",r_12:"12 mo",r_3:"3 mo",r_ly3:"same 3 mo last year",r_ly4:"same 4 wk last year",vs:"vs",
  rated:"{n} rated reviews",distTitle:"{n} parks vs their normal · last 4 weeks",d_good:"above",d_mid:"normal",d_bad:"below",d_other:"not enough data",d_closed:"closed for the season",
  topSel:"Top issues across selection · last 4 weeks",noCritPeriod:"No critical reviews in this period.",
  demoT:"Example data",demoB:"These ratings and summaries are invented to show how the page looks. They are not real Google reviews.",
@@ -315,7 +315,7 @@ en:{
  sumH:"Summary of critical reviews, last 4 weeks",sumMeta:"Written automatically from the critical Google reviews of {a} – {b}. Guests’ words are not reproduced.",sumNone:"No summary yet. It is written each week when there are enough critical reviews.",
  weekH:"Weekly average rating, last 52 weeks",weekNote:"Line: average stars per week. Bars: number of rated reviews. Dashed line: 12-month average. Shaded area: the last 4 weeks.",chartRef:"12-month {v}",chartLast:"last 4 weeks",chartNone:"No rated reviews collected in the last 52 weeks yet.",
  compH:"What guests complain about, last 4 weeks",mention:"mention",mentions:"mentions",pctCrit:"{p}% of critical reviews",prevN:"{n} in previous 4 weeks",unmatched:"{n} critical review(s) did not match any topic.",critNoTopicLong:"Critical reviews were found, but none mention a recurring topic.",noCrit4:"No critical reviews in the last 4 weeks.",
- foot1:"<b>Periods.</b> 4 weeks is the 28 days up to the data date. 3 months and 12 months are calendar periods ending on the same day. The 12-month average is shown as the reference and is not coloured; the comparison with the previous 12 months will be added once a full year of history is archived.",
+ foot1:"<b>Periods.</b> 4 weeks is the 28 days up to the data date. 3 months and 12 months are calendar periods ending on the same day. The 12-month average is compared with the park's all-time Google rating, which Google shows with one decimal only.",
  foot2:"<b>Colours.</b> Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",
  foot3:"<b>Issues.</b> Reviews rated 3★ or lower are scanned for recurring topics in English, Spanish, German, Dutch, Italian, Norwegian and Danish. Arrows compare each topic's mentions with the previous 4 weeks.",
  foot4:"<b>Source.</b> Public Google Maps reviews, collected weekly. Google shows older reviews with approximate dates (“2 months ago”), so dates beyond a few weeks are estimates. No review text is published here.",
@@ -332,12 +332,12 @@ es:{
  hideEmpty:"Ocultar parques sin reseñas recientes",hideClosed:"Ocultar parques cerrados por temporada",pdf:"Descargar informe PDF",pdfBusy:"Preparando PDF…",
  lg_good:"Por encima de lo normal",lg_mid:"Normal",lg_bad:"Por debajo de lo normal",lg_low:"Pocas reseñas para valorar",lg_none:"Sin datos aún",lg_closed:"Cerrado por temporada",lg_part:"Histórico parcial",lg_trend:"Problema que sube / baja frente a las 4 semanas anteriores",
  rulesTitle:"Cómo se deciden los colores",
- rulesCmp_avg:"Cada parque se compara con su propia media: <b>4 semanas</b> vs 3 meses · <b>3 meses</b> vs 12 meses La columna de 12 meses es la media de referencia y no se colorea.",
- rulesCmp_ly:"Cada parque se compara consigo mismo un año antes: <b>4 semanas</b> y <b>3 meses</b> vs el mismo periodo del año anterior. La columna de 12 meses es la media de referencia y no se colorea.",
+ rulesCmp_avg:"Cada parque se compara con sus propias cifras: <b>12 meses</b> vs su nota total de Google · <b>3 meses</b> vs 12 meses · <b>4 semanas</b> vs 3 meses.",
+ rulesCmp_ly:"Cada parque se compara consigo mismo un año antes: <b>4 semanas</b> y <b>3 meses</b> vs el mismo periodo del año anterior · <b>12 meses</b> vs su nota total de Google.",
  rGreen:"<b>Verde</b> más de {t}★ por encima",rWhite:"<b>Blanco</b> a ±{t}★ o menos",rRed:"<b>Rojo</b> más de {t}★ por debajo",
  rGrey:"<b>Gris</b> menos de {n} reseñas o sin referencia aún",rClosed:"<b>Rayado</b> cerrado por temporada",
  rArrows:"Flechas ↑ ↓ de los problemas: la proporción de reseñas críticas con ese tema ha cambiado más de 10 puntos frente a las 4 semanas anteriores. ◔ = periodo de referencia aún sin recoger completo.",
- thAttr:"Parque",thGoogle:"Nota en Google",thGoogleS:"histórica",th12:"12 meses",th12S:"media de referencia",th3:"3 meses",th3S_avg:"vs 12 meses",th3S_ly:"vs mismos 3 meses año anterior",th4:"4 semanas",th4S_avg:"vs 3 meses",th4S_ly:"vs mismas 4 semanas año anterior",thIss:"Principales problemas",thIssS:"últimas 4 semanas",
+ thAttr:"Parque",thGoogle:"Nota en Google",thGoogleS:"histórica",th12:"12 meses",th12S:"vs nota de Google",th3:"3 meses",th3S_avg:"vs 12 meses",th3S_ly:"vs mismos 3 meses año anterior",th4:"4 semanas",th4S_avg:"vs 3 meses",th4S_ly:"vs mismas 4 semanas año anterior",thIss:"Principales problemas",thIssS:"últimas 4 semanas",
  l_google:"Google",l_12:"12 meses",l_3:"3 meses",l_4:"4 semanas",l_iss:"Problemas · 4 semanas",
  noReviews:"Sin reseñas",collecting:"◔ recogiendo",since:"◔ desde {d}",review:"reseña",reviews:"reseñas",notChecked:"Sin comprobar",
  st_good:"Por encima de lo normal",st_mid:"Normal",st_bad:"Por debajo de lo normal",st_low:"Pocas reseñas",st_noref:"Sin referencia aún",st_none:"Sin datos",st_closed:"Cerrado por temporada",st_ref:"Media",
@@ -345,7 +345,7 @@ es:{
  noRev4:"Sin reseñas en las últimas 4 semanas",noCrit:"Sin reseñas críticas",critNoTopic:"{n} críticas, sin tema recurrente",ofN:"{v} de {n}",isNew:"NUEVO",
  tipNew:"No se mencionaba en las 4 semanas anteriores",tipUp:"Aparece en una proporción mayor de reseñas críticas que en las 4 semanas anteriores",tipDown:"Aparece en una proporción menor de reseñas críticas que en las 4 semanas anteriores",
  sel12:"Selección · 12 meses",sel3:"Selección · 3 meses",sel4:"Selección · 4 semanas",
- r_p12:"12 m anteriores",r_12:"12 m",r_3:"3 m",r_ly3:"mismos 3 m año ant.",r_ly4:"mismas 4 sem. año ant.",vs:"vs",
+ r_p12:"12 m anteriores",r_g:"Google",r_12:"12 m",r_3:"3 m",r_ly3:"mismos 3 m año ant.",r_ly4:"mismas 4 sem. año ant.",vs:"vs",
  rated:"{n} reseñas con nota",distTitle:"{n} parques frente a su normalidad · últimas 4 semanas",d_good:"por encima",d_mid:"normal",d_bad:"por debajo",d_other:"sin datos suficientes",d_closed:"cerrados por temporada",
  topSel:"Principales problemas de la selección · últimas 4 semanas",noCritPeriod:"Sin reseñas críticas en este periodo.",
  demoT:"Datos de ejemplo",demoB:"Estas notas y resúmenes son inventados para mostrar cómo se ve la página. No son reseñas reales de Google.",
@@ -361,7 +361,7 @@ es:{
  sumH:"Resumen de las reseñas críticas, últimas 4 semanas",sumMeta:"Escrito automáticamente a partir de las reseñas críticas de Google del {a} al {b}. No se reproducen las palabras de los visitantes.",sumNone:"Aún no hay resumen. Se escribe cada semana cuando hay suficientes reseñas críticas.",
  weekH:"Nota media semanal, últimas 52 semanas",weekNote:"Línea: media de estrellas por semana. Barras: número de reseñas con nota. Línea discontinua: media de 12 meses. Zona sombreada: las últimas 4 semanas.",chartRef:"12 meses {v}",chartLast:"últimas 4 semanas",chartNone:"Aún no hay reseñas con nota recogidas en las últimas 52 semanas.",
  compH:"De qué se quejan los visitantes, últimas 4 semanas",mention:"mención",mentions:"menciones",pctCrit:"{p}% de las reseñas críticas",prevN:"{n} en las 4 semanas anteriores",unmatched:"{n} reseña(s) crítica(s) no coinciden con ningún tema.",critNoTopicLong:"Hay reseñas críticas, pero ninguna menciona un tema recurrente.",noCrit4:"Sin reseñas críticas en las últimas 4 semanas.",
- foot1:"<b>Periodos.</b> 4 semanas son los 28 días hasta la fecha de los datos. 3 meses y 12 meses son periodos naturales que terminan ese mismo día. La media de 12 meses se muestra como referencia y no se colorea; la comparación con los 12 meses anteriores se añadirá cuando haya un año completo de historial.",
+ foot1:"<b>Periodos.</b> 4 semanas son los 28 días hasta la fecha de los datos. 3 meses y 12 meses son periodos naturales que terminan ese mismo día. La media de 12 meses se compara con la nota total del parque en Google, que Google solo muestra con un decimal.",
  foot2:"<b>Colores.</b> Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",
  foot3:"<b>Problemas.</b> Las reseñas de 3★ o menos se analizan buscando temas recurrentes en inglés, español, alemán, neerlandés, italiano, noruego y danés. Las flechas comparan las menciones de cada tema con las 4 semanas anteriores.",
  foot4:"<b>Fuente.</b> Reseñas públicas de Google Maps, recogidas cada semana. Google muestra las reseñas antiguas con fechas aproximadas (“hace 2 meses”), así que las fechas de más de unas semanas son estimadas. Aquí no se publica el texto de las reseñas.",
@@ -443,7 +443,7 @@ function metrics(pid){
   const okRef=(cur,ref)=>!cov||extra(cur,ref)>=30;
   const judge=(cur,ref,a,b)=>okRef(cur,ref)?cmp(a,b):(a.avg==null?{key:"none"}:{key:"low",delta:null,why:"noref"});
   let c4=ly?judge("w4","ly4",w4,ly4):judge("w4","m3",w4,m3);if(ss.closed)c4={key:"closed",delta:null};
-  const r={park,p,w4,prev4,m3,m12,p12,ly4,ly3,season:ss,c4,c3:ly?judge("m3","ly3",m3,ly3):judge("m3","m12",m3,m12),c12:m12.avg==null?{key:"none"}:{key:"ref",delta:null},
+  const r={park,p,w4,prev4,m3,m12,p12,ly4,ly3,season:ss,c4,c3:ly?judge("m3","ly3",m3,ly3):judge("m3","m12",m3,m12),c12:cmp(m12,{avg:p&&p.google&&p.google.rating!=null?+p.google.rating:null}),
     part:{w4:part("w4")||(ly&&part("ly4")),m3:part("m3")||(ly&&part("ly3")),m12:part("m12"),ly4:part("ly4")}};
   MCACHE.set(key,r);return r;
 }
@@ -598,13 +598,13 @@ function aggregate(rows){
   // Use the same "enough reference data" rule as the rows: judge only if most rows could be judged.
   const ok=k=>rows.filter(({m})=>m[k].key!=="low"||m[k].why!=="noref").length>=rows.length/2;
   const nr={key:"low",delta:null,why:"noref"};
-  return{g,dist,c12:g.m12.avg==null?{key:"none"}:{key:"ref",delta:null},c3:ok("c3")?(ly?cmp(g.m3,g.ly3):cmp(g.m3,g.m12)):(g.m3.avg==null?{key:"none"}:nr),c4:cmp(g.w4,ref4)};
+  return{g,dist,c12:cmp(g.m12,(()=>{let a=0,n=0;for(const {m} of rows){const gg=m.p&&m.p.google;if(gg&&gg.rating!=null&&gg.count){a+=gg.rating*gg.count;n+=gg.count;}}return{avg:n?a/n:null};})()),c3:ok("c3")?(ly?cmp(g.m3,g.ly3):cmp(g.m3,g.m12)):(g.m3.avg==null?{key:"none"}:nr),c4:cmp(g.w4,ref4)};
 }
 function renderSummary(rows){
   const {g,dist,c12,c3,c4}=aggregate(rows);const ly=F.mode==="ly";
   const box=(label,st,c,ref)=>`<div class="stat ${KEYCLS(c.key)}"><span class="k">${label}</span><span class="v num">${av(st.avg)}<small>${st.avg==null?"":"★"}</small></span><span class="d num em-${KEYCLS(c.key)}">${c.delta!=null?signed(c.delta)+" "+t("vs")+" "+ref:esc(c.key==="none"?t("st_none"):stLabel(c))}</span><span class="s num">${t("rated",{n:fmtInt(st.n)})}</span></div>`;
   const tot=rows.length||1;const ti=topIssues(g.w4.th,3);
-  $("#summary").innerHTML=box(t("sel12"),g.m12,c12,"")+box(t("sel3"),g.m3,c3,t(ly?"r_ly3":"r_12"))+box(t("sel4"),g.w4,c4,t(ly?"r_ly4":"r_3"))+
+  $("#summary").innerHTML=box(t("sel12"),g.m12,c12,t("r_g"))+box(t("sel3"),g.m3,c3,t(ly?"r_ly3":"r_12"))+box(t("sel4"),g.w4,c4,t(ly?"r_ly4":"r_3"))+
    `<div class="stat wide"><span class="k">${t("distTitle",{n:rows.length})}</span>
      <div class="distbar" role="img" aria-label="${dist.good} ${t("d_good")}, ${dist.mid} ${t("d_mid")}, ${dist.bad} ${t("d_bad")}, ${dist.other} ${t("d_other")}, ${dist.closed} ${t("d_closed")}">${[["good","var(--good)"],["mid","var(--mid)"],["bad","var(--bad)"],["other","var(--low)"],["closed","repeating-linear-gradient(135deg,#3A4B60 0 3px,#24364B 3px 6px)"]].map(([k,v])=>dist[k]?`<span style="width:${dist[k]/tot*100}%;background:${v}"></span>`:"").join("")}</div>
      <div class="distleg"><span><b>${dist.good}</b> ${t("d_good")}</span><span><b>${dist.mid}</b> ${t("d_mid")}</span><span><b>${dist.bad}</b> ${t("d_bad")}</span><span><b>${dist.other}</b> ${t("d_other")}</span>${dist.closed?`<span><b>${dist.closed}</b> ${t("d_closed")}</span>`:""}</div></div>
@@ -661,7 +661,7 @@ function renderDetail(pid){
   box.innerHTML=`<div class="dh"><div><h2>${esc(park.name)}</h2><p class="sub">${esc(countryName(park.country))} · ${esc(typeOne(park.type))} · ${esc(open)}${p&&p.coverageFrom?` · ${t("collectedSince",{d:nice(p.coverageFrom)})}`:""}</p></div><a class="maplink" href="${maps}" target="_blank" rel="noopener">${t("openMaps")}</a></div>
    <div class="metrics">
      <div class="metric"><span>${t("m_google")}</span><strong class="num">${p&&p.google&&p.google.rating!=null?f1(p.google.rating)+" ★":"—"}</strong><span class="num">${p&&p.google?t("reviewsChecked",{n:fmtInt(p.google.count),d:nice(p.google.checked,true)}):t("notChecked")}</span></div>
-     ${metricBox(t("m12"),m.m12,m.c12,"",m.part.m12)}${metricBox(t("m3"),m.m3,m.c3,t(ly?"r_ly3":"r_12"),m.part.m3)}
+     ${metricBox(t("m12"),m.m12,m.c12,t("r_g"),m.part.m12)}${metricBox(t("m3"),m.m3,m.c3,t(ly?"r_ly3":"r_12"),m.part.m3)}
      ${m.season.closed?`<div class="metric"><span>${t("m4")}</span><strong class="num">${m.w4.avg==null?"—":av(m.w4.avg)+" ★"}</strong><em class="em-none">${t("st_closed")}</em><span class="num">${t("rated",{n:fmtInt(m.w4.n)})}</span></div>`:metricBox(t("m4"),m.w4,m.c4,t(ly?"r_ly4":"r_3"),m.part.w4)}
      <div class="metric ${lyc==null?"":lyc>CFG.threshold?"good":lyc<-CFG.threshold?"bad":"mid"}"><span>${t("mLy")}${m.part.ly4?' <span style="color:var(--amber)">◔</span>':""}</span><strong class="num">${m.ly4.avg==null?"—":av(m.ly4.avg)+" ★"}</strong><em class="num em-${lyc==null?"none":lyc>CFG.threshold?"good":lyc<-CFG.threshold?"bad":"mid"}">${lyc==null?t("noCmp"):t("thisYear",{d:signed(lyc)})}</em><span class="num">${t("rated",{n:fmtInt(m.ly4.n)})}</span></div>
      <div class="metric"><span>${t("mVol")}</span><strong class="num">${fmtInt(m.w4.m)}</strong><em class="num em-none">${pace?t("pace",{p:(m.w4.m>=pace?"+":"−")+Math.abs(Math.round((m.w4.m/pace-1)*100))}):t("noPace")}</em><span class="num">${t("critLow",{n:m.w4.neg})}</span></div>
@@ -699,7 +699,7 @@ async function buildPdf(){
   let y=30;
   if(DATA.demo){doc.setFillColor(255,236,200);doc.rect(M,y-4,W-2*M,7,"F");doc.setTextColor(120,70,0);doc.setFont("helvetica","bold");doc.setFontSize(9);doc.text(t("pdfDemo"),W/2,y+0.8,{align:"center"});y+=8;}
   // summary boxes
-  const boxes=[[t("sel12"),g.m12,c12,""],[t("sel3"),g.m3,c3,t(ly?"r_ly3":"r_12")],[t("sel4"),g.w4,c4,t(ly?"r_ly4":"r_3")]];
+  const boxes=[[t("sel12"),g.m12,c12,t("r_g")],[t("sel3"),g.m3,c3,t(ly?"r_ly3":"r_12")],[t("sel4"),g.w4,c4,t(ly?"r_ly4":"r_3")]];
   const bw=(W-2*M-3*4)/4;
   boxes.forEach(([lab,st,c,ref],i)=>{const x=M+i*(bw+4);doc.setDrawColor(210,218,228);doc.setFillColor(247,249,251);doc.roundedRect(x,y,bw,22,2,2,"FD");
     const col=c.key==="good"?COL.good:c.key==="bad"?COL.bad:c.key==="mid"?[150,160,172]:COL.low;doc.setFillColor(...col);doc.rect(x,y,bw,1.6,"F");
