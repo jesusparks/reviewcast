@@ -1,6 +1,6 @@
-# ReviewCast
+# GuestPulse
 
-Guest review tracker for 27 Parques Reunidos attractions. For each park it shows the average Google rating for the last 12 months, 3 months and 4 weeks, coloured against that park's own normal, plus the three most repeated complaints of the last 4 weeks.
+Guest review tracker for 27 Parques Reunidos parks. For each park it shows the average Google rating for the last 12 months, 3 months and 4 weeks, coloured against that park's own normal, plus the three most repeated complaints of the last 4 weeks.
 
 ## How the colours work
 
@@ -16,10 +16,9 @@ A toolbar switch changes what counts as normal: the accumulated average (above) 
 
 ## Other features
 
-- **Season mode.** `openMonths` in `data/parks.json` lists the months each attraction normally operates (null = all year). Outside those months the 4-week tile shows "Closed for the season" and is not judged. The values are approximate: adjust them to each year's calendar.
-- **Written summaries.** Each week the collector writes a 2–3 sentence summary of the critical reviews per park, in English and Spanish, without quoting guests. Stored in `data/reviews.json` → `parks.<id>.summary`.
-- **PDF report.** "Download PDF report" builds an A4 landscape report of the current selection (summary, colour table, notes per attraction) in the chosen language.
-- **CSV export** of the current selection.
+- **Season mode.** `openMonths` in `data/parks.json` lists the months each park normally operates (null = all year). Outside those months the 4-week tile shows "Closed for the season" and is not judged. Checked against the 2026 calendars in October 2026; review them each season.
+- **Written summaries.** Each week the collector writes a 2–3 sentence summary of the critical reviews per park, in English and Spanish, without quoting guests. Stored in `data/meta.json` → `summaries`.
+- **PDF report.** "Download PDF report" builds an A4 landscape report of the current selection (summary, colour table, notes per park) in the chosen language.
 - **English / Spanish** switch in the header; the choice is remembered per browser.
 
 ## Files
@@ -27,26 +26,32 @@ A toolbar switch changes what counts as normal: the accumulated average (above) 
 | Path | What it is |
 |---|---|
 | `index.html` | The whole site. Static, no build step. |
-| `data/parks.json` | Parks, countries, attraction types, issue topic names. Edit here to add or rename a park. |
-| `data/reviews.json` | Aggregated daily ratings and issue counts per park. Written by the collector, read by the site. Contains no review text. |
+| `data/parks.json` | Parks, countries, park types, issue topic names. Edit here to add or rename a park. |
+| `data/history/<park>.csv` | **The archive.** One row per review ever collected: anonymous hash, date first seen, Google's relative date, estimated date, stars, complaint topics. No review text, no reviewer names. Only grows. |
+| `data/meta.json` | Latest Google rating per park and the written summaries. |
+| `data/reviews.json` | What the site reads: daily ratings and issue counts per park, rebuilt from the archive on every update. |
+| `collector/update.js` | Adds a collection to the archive (skipping reviews already there) and rebuilds `data/reviews.json`. `--rebuild` only rebuilds. |
 | `collector/browser-run.js` | Runs inside the signed-in Google Maps tab: visits every park, reads the newest reviews and tags complaint topics. |
 | `collector/build-browser.js` | Fills the topic lists into `browser-run.js` before it is injected. |
+| `collector/process.js` | Date and topic helpers used by `update.js` (and the first, pre-archive pipeline). |
 | `collector/scrape-page.js` | Older single-park version, kept for manual checks. |
-| `collector/process.js` | Merges one raw scrape into `data/reviews.json`, skipping reviews already counted. |
-| `collector/state.json` | Review ids already counted (created on first run). |
+
+Everything the site needs lives in this repository, so the page works from any device even when the collecting computer is off.
 
 ## Weekly update
 
-A scheduled Claude task runs once a week. It uses the built-in browser of the Claude desktop app on the computer where that browser is signed in to Google, and does the processing and the GitHub push from the cloud:
+A scheduled Claude task runs every Monday. It uses the built-in browser of the Claude desktop app on the computer where that browser is signed in to Google, and does the processing and the GitHub push from the cloud:
 
 1. Build the browser script: `node collector/build-browser.js > /tmp/rc-inject.js`.
 2. In the built-in browser open `https://www.google.com/maps/search/Parque+Warner+Madrid?hl=en` and run the contents of `/tmp/rc-inject.js` with the JavaScript tool (it defines `window.RC`).
-3. Start the run without waiting for it: `RC.runAll(list, "5 weeks", 1500)`, where `list` is `[{id, q: mapsQuery}]` from `data/parks.json`. It moves from park to park with the Maps search box, so the page is never reloaded. A browser tool call times out after about 45 s, so poll `RC.state` until `finished` is true (roughly 15–30 minutes for 27 parks).
-4. For each park read `RC.pack(id)` (compact list: review hash, stars, relative date, complaint topics) and `RC.crit(id)` (critical reviews of the last 4 weeks). Write `collector/raw/YYYY-MM-DD.json` as `{"collectedAt": "YYYY-MM-DD", "parks": {"<id>": <pack> + "summary": {"en", "es"}}}`. The summary is 2–3 sentences per park, in Claude's own words, written from `RC.crit(id)`; never quote reviewers.
-5. Run `node collector/process.js collector/raw/YYYY-MM-DD.json`.
-6. Commit `data/reviews.json` and `collector/state.json` and push. GitHub Pages republishes the site.
+3. Start the run without waiting for it: `RC.runAll(list, "5 weeks", 1500)`, where `list` is `[{id, q: mapsQuery}]` from `data/parks.json`. A browser tool call times out after about 45 s, so poll `RC.state` until `finished` is true.
+4. For each park read `RC.pack(id)` (review hash, stars, relative date, complaint topics) and `RC.crit(id)` (critical reviews of the last 4 weeks). Write `collector/raw/YYYY-MM-DD.json` as `{"collectedAt": "YYYY-MM-DD", "parks": {"<id>": {"google", "items", "summary": {"en", "es"}}}}`. The summary is 2–3 sentences in Claude's own words; never quote reviewers.
+5. `node collector/update.js collector/raw/YYYY-MM-DD.json`: only reviews not yet in the archive are added.
+6. Commit `data/history/`, `data/meta.json` and `data/reviews.json`, and push. GitHub Pages republishes the site.
 
-Raw scrapes are not committed: `collector/raw/` is in `.gitignore`. Review hashes in `collector/state.json` make re-runs and overlapping weeks safe: a review is only counted once.
+**Long backfills.** `RC.runAll(list, "11 months", 12000, {save: true, tag: "backfill12m"})` reads back to about a year per park and, after each park, saves a `guestpulse-<tag>-<id>-<date>.json` file through the browser's downloads. Pass those files to `update.js`.
+
+Raw scrapes are not committed: `collector/raw/` is in `.gitignore`.
 
 ## Publishing on GitHub Pages
 
@@ -56,4 +61,4 @@ Repository → Settings → Pages → Source: *Deploy from a branch*, branch `ma
 
 - Google only. Tripadvisor, Facebook and Instagram block automated reading; Trustpilot has too few park reviews to be useful.
 - Google shows older reviews with relative dates ("2 months ago"). Dates within the last few weeks are close to exact; older ones are estimates.
-- History starts when collection starts. Periods that begin before the first collection are marked ◔ until enough weeks have accumulated.
+- Google dates anything older than 11 months as "a year ago", so the archive starts about 11½ months back. The "12 months vs prior 12 months" comparison becomes available as the archive grows; until then it shows "No reference yet".
