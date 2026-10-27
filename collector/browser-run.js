@@ -5,7 +5,8 @@
  *
  *   RC.runAll([{id, q}, ...], "5 weeks", 1500)   start; runs in the background
  *   RC.state                                      progress: {current, done, total, finished, log}
- *   RC.pack(id)                                   compact JSON for collector/process.js
+ *   RC.packNew(id)                                compact JSON of reviews not sent before, for collector/process.js
+ *   RC.pack(id)                                   the same for every review read
  *   RC.crit(id)                                   critical review texts of the last 4 weeks (for the written summary)
  *
  * The weekly job builds the injected text with `node collector/build-browser.js`, which fills
@@ -13,7 +14,11 @@
  */
 (() => {
   const THEMES = __THEMES__;
-  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  // Timers in a hidden tab are throttled to about once a minute; a worker-based timer is not.
+  const timerWorker = new Worker(URL.createObjectURL(new Blob(["onmessage=e=>setTimeout(()=>postMessage(e.data.id),e.data.ms)"], { type: "text/javascript" })));
+  const waiting = new Map(); let tid = 0;
+  timerWorker.onmessage = e => { const f = waiting.get(e.data); waiting.delete(e.data); if (f) f(); };
+  const sleep = ms => new Promise(r => { const id = ++tid; waiting.set(id, r); timerWorker.postMessage({ id, ms }); });
   const norm = s => String(s == null ? "" : s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ø/g, "o").replace(/æ/g, "ae").replace(/ß/g, "ss");
   const RE = Object.fromEntries(Object.entries(THEMES).map(([k, list]) => {
     const alt = [...new Set(list.map(norm))].sort((a, b) => b.length - a.length).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+")).join("|");
@@ -53,10 +58,10 @@
       const first = document.querySelector('[role="feed"] a[href*="/maps/place/"]');
       if (first) return "list";
       return null;
-    }, 15000);
+    }, 40000);
     if (got === "list") {
       document.querySelector('[role="feed"] a[href*="/maps/place/"]').click();
-      if (!await until(() => document.querySelector('button[role="tab"]') && title() !== before, 12000)) throw new Error("place page did not open");
+      if (!await until(() => document.querySelector('button[role="tab"]') && title() !== before, 30000)) throw new Error("place page did not open");
     } else if (!got) throw new Error("search gave no place");
     await sleep(1500);
     return title();
@@ -72,7 +77,8 @@
     const tab = [...document.querySelectorAll('button[role="tab"]')].find(b => /review/i.test((b.getAttribute("aria-label") || "") + b.innerText));
     if (!tab) return { error: "no Reviews tab", google, reviews: [] };
     if (tab.getAttribute("aria-selected") !== "true") { tab.click(); await sleep(2500); }
-    const sortBtn = await until(() => [...document.querySelectorAll("button")].find(b => /^sort/i.test(((b.getAttribute("aria-label") || "") + " " + (b.innerText || "")).trim()) && b.offsetParent), 8000);
+    // Attractions show a "Sort" button; places Google lists as lodging (Tropical Islands, Slagharen) show a "Most relevant" dropdown.
+    const sortBtn = await until(() => [...document.querySelectorAll("button")].find(b => b.offsetParent && (/^sort/i.test(((b.getAttribute("aria-label") || "") + " " + (b.innerText || "")).trim()) || /^most relevant$/i.test((b.getAttribute("aria-label") || "").trim()))), 10000);
     if (!sortBtn) return { error: "no Sort button (signed out?)", google, reviews: [] };
     sortBtn.click(); await sleep(1500);
     const opt = [...document.querySelectorAll('[role="menuitemradio"],[role="menuitem"],[role="option"]')].find(e => /newest/i.test(e.innerText));
@@ -87,13 +93,18 @@
         if (!id || seen.has(id)) return;
         const card = el.closest(".jJc9Ad");
         if (!card) return;
+        let stars = null;
         const starEl = card.querySelector('[role="img"][aria-label*="star" i]');
-        if (!starEl) return;
-        const whenEl = card.querySelector(".rsqaWe");
-        const body = card.querySelector(".wiI7pd");
-        seen.set(id, { id, stars: parseFloat(starEl.getAttribute("aria-label")) || null, when: whenEl ? whenEl.textContent.trim() : "", text: body ? body.textContent.trim().slice(0, 1200) : "" });
+        if (starEl) stars = parseFloat(starEl.getAttribute("aria-label"));
+        else { const f = card.querySelector(".fzvQIb"); const m = f && f.textContent.match(/([\d.]+)\s*\/\s*(\d+)/); if (m) stars = Math.round(+m[1] * 5 / +m[2] * 100) / 100; }
+        if (stars == null || isNaN(stars)) return;
+        const whenEl = card.querySelector(".rsqaWe") || card.querySelector(".xRkPPb");
+        const whenRaw = whenEl ? whenEl.textContent.trim() : "";
+        if (/ on /.test(whenRaw) && !/ on Google/i.test(whenRaw)) { seen.set(id, null); return; } // lodging pages mix in other travel sites
+        const body = card.querySelector(".MyEned .wiI7pd"); // review text only, not the owner reply
+        seen.set(id, { id, stars, when: whenRaw.replace(/ on .*/, ""), text: body ? body.textContent.trim().slice(0, 1200) : "" });
       });
-      return [...seen.values()];
+      return [...seen.values()].filter(Boolean);
     };
     let last = -1, still = 0, reachedEnd = false, reviews = [];
     for (let i = 0; i < 4000; i++) {
@@ -102,7 +113,8 @@
       reviews = read();
       const oldest = reviews.length ? ageDays(reviews[reviews.length - 1].when) : 0;
       if (reviews.length >= MAX_REVIEWS || (oldest != null && oldest > stopDays)) break;
-      if (reviews.length === last) { if (++still >= 8) { reachedEnd = true; break; } } else { still = 0; last = reviews.length; }
+      // Google sometimes stops loading; nudge the list up and down before giving up.
+      if (seen.size === last) { still++; if (still % 5 === 0) { feed.scrollTop = Math.max(0, feed.scrollTop - 1500); await sleep(1500); } if (still >= 25) { reachedEnd = true; break; } } else { still = 0; last = seen.size; }
     }
     reviews = read();
     // drop the cards Google keeps for the previous place, if any slipped in
@@ -144,6 +156,17 @@
         return [fnv(x.id), x.stars == null ? "" : x.stars, wc, t].join(",");
       }).join(";");
       return JSON.stringify({ place: r.place, error: r.error, google: r.google, reachedEnd: r.reachedEnd, items });
+    },
+    // Hashes of reviews already sent are kept in this browser profile, so each weekly run only sends new reviews.
+    seen(id) { try { return new Set((localStorage.getItem("reviewcast-seen-" + id) || "").split(" ").filter(Boolean)); } catch (e) { return new Set(); } },
+    packNew(id) {
+      const raw = RC.pack(id); if (!raw) return null;
+      const o = JSON.parse(raw); const seen = RC.seen(id); const all = o.items ? o.items.split(";") : [];
+      const fresh = all.filter(s => !seen.has(s.split(",")[0]));
+      all.forEach(s => seen.add(s.split(",")[0]));
+      try { localStorage.setItem("reviewcast-seen-" + id, [...seen].slice(-20000).join(" ")); } catch (e) {}
+      o.items = fresh.join(";"); o.read = all.length; o.fresh = fresh.length;
+      return JSON.stringify(o);
     },
     crit(id, max = 40) {
       const r = RC.results[id];
