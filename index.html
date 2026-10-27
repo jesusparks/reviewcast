@@ -431,8 +431,15 @@ function metrics(pid){
   const w4=stat(p,W.w4,true),prev4=stat(p,W.prev4,true),m3=stat(p,W.m3),m12=stat(p,W.m12),p12=stat(p,W.p12),ly4=stat(p,W.ly4),ly3=stat(p,W.ly3);
   const cov=p&&p.coverageFrom;const part=w=>!!cov&&cov>W[w][0];
   const ly=F.mode==="ly";const ss=season(park);
-  let c4=ly?cmp(w4,ly4):cmp(w4,m3);if(ss.closed)c4={key:"closed",delta:null};
-  const r={park,p,w4,prev4,m3,m12,p12,ly4,ly3,season:ss,c4,c3:ly?cmp(m3,ly3):cmp(m3,m12),c12:cmp(m12,p12),
+  // A reference only counts if it holds at least 30 days of collected data beyond the period being judged;
+  // otherwise (short history) the two averages are nearly the same reviews and the colour would mislead.
+  const extra=(cur,ref)=>{const refStart=W[ref][0],start=cov&&cov>refStart?cov:refStart;
+    // disjoint reference (last year, prior 12 months): days of it we have; nested reference: days before the current period
+    return W[ref][1]<W[cur][0]?daysBetween(start,W[ref][1]):daysBetween(start,W[cur][0]);};
+  const okRef=(cur,ref)=>!cov||extra(cur,ref)>=30;
+  const judge=(cur,ref,a,b)=>okRef(cur,ref)?cmp(a,b):(a.avg==null?{key:"none"}:{key:"low",delta:null,why:"noref"});
+  let c4=ly?judge("w4","ly4",w4,ly4):judge("w4","m3",w4,m3);if(ss.closed)c4={key:"closed",delta:null};
+  const r={park,p,w4,prev4,m3,m12,p12,ly4,ly3,season:ss,c4,c3:ly?judge("m3","ly3",m3,ly3):judge("m3","m12",m3,m12),c12:judge("m12","p12",m12,p12),
     part:{w4:part("w4")||(ly&&part("ly4")),m3:part("m3")||(ly&&part("ly3")),m12:part("m12")||part("p12"),ly4:part("ly4")}};
   MCACHE.set(key,r);return r;
 }
@@ -577,7 +584,10 @@ function aggregate(rows){
   const ly=F.mode==="ly";
   // 4-week selection average uses open parks only; its reference is the 3-month average of the same open parks
   let ref4=g.ly4;if(!ly){const o={sum:0,n:0};for(const {m} of rows)if(!m.season.closed){o.sum+=m.m3.sum;o.n+=m.m3.n;}o.avg=o.n?o.sum/o.n:null;ref4=o;}
-  return{g,dist,c12:cmp(g.m12,g.p12),c3:ly?cmp(g.m3,g.ly3):cmp(g.m3,g.m12),c4:cmp(g.w4,ref4)};
+  // Use the same "enough reference data" rule as the rows: judge only if most rows could be judged.
+  const ok=k=>rows.filter(({m})=>m[k].key!=="low"||m[k].why!=="noref").length>=rows.length/2;
+  const nr={key:"low",delta:null,why:"noref"};
+  return{g,dist,c12:ok("c12")?cmp(g.m12,g.p12):(g.m12.avg==null?{key:"none"}:nr),c3:ok("c3")?(ly?cmp(g.m3,g.ly3):cmp(g.m3,g.m12)):(g.m3.avg==null?{key:"none"}:nr),c4:cmp(g.w4,ref4)};
 }
 function renderSummary(rows){
   const {g,dist,c12,c3,c4}=aggregate(rows);const ly=F.mode==="ly";
