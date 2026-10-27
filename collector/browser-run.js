@@ -1,5 +1,5 @@
 /*
- * ReviewCast browser collector. Injected ONCE into a signed-in Google Maps tab opened with ?hl=en.
+ * GuestPulse browser collector. Injected ONCE into a signed-in Google Maps tab opened with ?hl=en.
  * It stays alive across parks because it moves between places with the Maps search box
  * instead of reloading the page.
  *
@@ -138,7 +138,7 @@
           r.place = name;
           RC.results[p.id] = r;
           RC.state.log.push(`${p.id}: ${r.error || r.reviews.length + " reviews"} (${name}, ${Math.round((Date.now() - t0) / 1000)}s)`);
-          if (opts.save && !r.error) { RC.save(p.id, opts.tag || "backfill"); RC.state.saved = (RC.state.saved || 0) + 1; }
+          if (opts.save && !r.error) { RC.save(p.id, opts.tag || "backfill"); RC.state.saved = (RC.state.saved || 0) + 1; r.reviews = []; } // saved: free the memory
         } catch (e) {
           RC.results[p.id] = { error: String(e && e.message || e), reviews: [] };
           RC.state.log.push(`${p.id}: ERROR ${e && e.message || e}`);
