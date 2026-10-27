@@ -61,4 +61,4 @@ Repository → Settings → Pages → Source: *Deploy from a branch*, branch `ma
 
 - Google only. Tripadvisor, Facebook and Instagram block automated reading; Trustpilot has too few park reviews to be useful.
 - Google shows older reviews with relative dates ("2 months ago"). Dates within the last few weeks are close to exact; older ones are estimates.
-- Google dates anything older than 11 months as "a year ago", so the archive starts about 11½ months back. The "12 months vs prior 12 months" comparison becomes available as the archive grows; until then it shows "No reference yet".
+- Google dates anything older than 11 months as "a year ago", so the archive starts about 11½ months back. The 12-month column therefore shows the plain average (the reference for the 3-month tile) and is not coloured. Once the archive holds two full years (from late 2027), re-enable the "12 months vs prior 12 months" comparison: in `index.html`, `metrics()` and `aggregate()` set `c12` to the reference key, and the prior-12-month figures (`p12`) are already computed.
