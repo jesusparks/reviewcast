@@ -30,7 +30,7 @@ const ROOT = path.resolve(__dirname, "..");
 const OUT = path.join(ROOT, "data", "reviews.json");
 const STATE = path.join(ROOT, "collector", "state.json");
 const PARKS = JSON.parse(fs.readFileSync(path.join(ROOT, "data", "parks.json"), "utf8")).parks.map(p => p.id);
-const MAX_SEEN = 20000;
+const MAX_SEEN = 60000;
 
 /* ---------- dates ---------- */
 const pd = s => { const [y, m, d] = s.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)); };
@@ -119,7 +119,47 @@ function main() {
       ? pr.items.split(";").map(s => { const [id, st, wc, tp] = s.split(","); const m = /^(\d+)([dwmy])$/.exec(wc || "");
           return { id: "h:" + id, stars: st === "" ? null : +st, when: m ? (m[1] === "0" ? "today" : m[1] + " " + UNIT[m[2]] + (m[1] === "1" ? "" : "s") + " ago") : "", topics: tp ? tp.split("") : null }; })
       : (pr.reviews || []);
+    // Grouped format (first backfill): "when,stars,topics,count;..." plus the hashes of recent reviews,
+    // which are only stored so the next weekly run does not count them again.
+    if (typeof pr.groups === "string" && pr.groups) {
+      for (const g of pr.groups.split(";")) {
+        const [wc, st, tp, n] = g.split(","); const m = /^(\d+)([dwmy])$/.exec(wc || ""); const cnt = +n || 0;
+        if (!m || !cnt) continue;
+        const day = relDate(m[1] === "0" ? "today" : m[1] + " " + UNIT[m[2]] + (m[1] === "1" ? "" : "s") + " ago", ref);
+        if (!day) { undated += cnt; continue; }
+        if (!oldest || day < oldest) oldest = day;
+        const stars = st === "" ? null : Math.min(5, Math.max(1, +st));
+        const a = ((P.days[day] = P.days[day] || {}).g = (P.days[day].g || [0, 0, 0, 0]));
+        if (stars != null) { a[0] = Math.round((a[0] + stars * cnt) * 100) / 100; a[1] += cnt; }
+        a[2] += cnt; added += cnt;
+        if (stars != null && stars <= 3) {
+          a[3] += cnt;
+          const tpo = ((P.themes[day] = P.themes[day] || {}).g = (P.themes[day].g || {}));
+          for (const k of (tp ? tp.split("") : ["x"])) tpo[k] = (tpo[k] || 0) + cnt;
+        }
+      }
+      for (const h of String(pr.ids || "").split(/\s+/).filter(Boolean)) if (!seen.has("h:" + h)) { seen.add("h:" + h); st.seen.push("h:" + h); }
+    }
+    // Aggregated format: s = "when,n1,n2,n3,n4,n5;..." (count per star), t = "when,q3p1x2;..." (topic mentions in 3-star-or-lower reviews)
+    const whenStr = wc => { const m = /^(\d+)([dwmy])$/.exec(wc || ""); return m ? (m[1] === "0" ? "today" : m[1] + " " + UNIT[m[2]] + (m[1] === "1" ? "" : "s") + " ago") : ""; };
+    if (typeof pr.s === "string" && pr.s) {
+      for (const g of pr.s.split(";")) {
+        const [wc, ...c] = g.split(","); const day = relDate(whenStr(wc), ref); const cnt = c.map(Number);
+        const tot = cnt.reduce((x, y) => x + y, 0); if (!tot) continue;
+        if (!day) { undated += tot; continue; }
+        if (!oldest || day < oldest) oldest = day;
+        const a = ((P.days[day] = P.days[day] || {}).g = (P.days[day].g || [0, 0, 0, 0]));
+        a[0] = Math.round((a[0] + cnt.reduce((x, y, i) => x + y * (i + 1), 0)) * 100) / 100; a[1] += tot; a[2] += tot; a[3] += cnt[0] + cnt[1] + cnt[2]; added += tot;
+      }
+      for (const g of String(pr.t || "").split(";").filter(Boolean)) {
+        const [wc, codes] = g.split(","); const day = relDate(whenStr(wc), ref); if (!day) continue;
+        const tpo = ((P.themes[day] = P.themes[day] || {}).g = (P.themes[day].g || {}));
+        for (const m of String(codes || "").matchAll(/([a-z])(\d+)/g)) tpo[m[1]] = (tpo[m[1]] || 0) + +m[2];
+      }
+    }
     for (const r of list) {
+      // Weekly runs read a little past 5 weeks; anything Google dates "2 months ago" or older was already counted.
+      if (pr.items && /\b([2-9]|1\d) months? ago|years? ago/.test(r.when)) continue;
       const id = r.id || norm((r.author || "") + "|" + (r.when || "") + "|" + (r.text || "").slice(0, 120));
       if (seen.has(id)) { dup++; continue; }
       const day = relDate(r.when, ref);
