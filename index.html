@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#102137">
-<title>ReviewCast</title>
+<title>GuestPulse</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Google review tracker for 27 Parques Reunidos attractions: 12-month, 3-month and 4-week ratings against each park's normal, with the top guest complaints.">
+<meta name="description" content="Google review tracker for 27 Parques Reunidos parks: 12-month, 3-month and 4-week ratings against each park's normal, with the top guest complaints.">
 <style>
 /* Layout: ParkCast family. Navy header with language switch, filter toolbar, colour rules, summary strip, park-by-period matrix of coloured rating tiles (stacked cards on phones), detail panel. Single dark look by design. */
 :root{
@@ -14,7 +14,7 @@
   --line:#30445C; --line-soft:#263A4F; --ctrl:#172A40; --ctrl-line:#3D546C;
   --ink:#E9F2FB; --soft:#C5D5E5; --muted:#A9C0D5; --dim:#9FB6CA; --link:#A7D7FF; --accent:#276C9A; --accent-hi:#71C2EE;
   --good:#117A55; --mid:#EEF3F8; --mid-ink:#0B1728; --bad:#A3303B; --low:#4A5A70; --none:#2C4058;
-  --good-hi:#5FD6A3; --mid-hi:#F4F8FC; --bad-hi:#FF8A92; --amber:#FFCF54;
+  --good-hi:#5FD6A3; --mid-hi:#F4F8FC; --bad-hi:#FF8A92; --amber:#FBBC04;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -22,11 +22,19 @@ html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;font-size:14px;line-height:1.4}
 .num{font-variant-numeric:tabular-nums}
 .wrap{max-width:1200px;margin:0 auto}
-header{background:var(--head);border-bottom:1px solid var(--line);padding-block:22px 16px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+header{background:var(--head);border-bottom:1px solid var(--line);padding-block:26px 20px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
 header .wrap{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
-h1{font-size:29px;letter-spacing:-1px;margin:0;display:flex;align-items:center;gap:8px}
-h1 .mark{color:var(--amber);font-size:25px}
-header p{margin:5px 0 0;color:var(--muted);font-size:13px;max-width:62ch}
+header{position:relative;overflow:hidden;background:radial-gradient(900px 260px at 92% -40%,rgba(251,188,4,.20),transparent 60%),radial-gradient(700px 300px at 0% 120%,rgba(39,108,154,.45),transparent 65%),linear-gradient(135deg,#0E2340 0%,#123456 100%)!important}
+header::after{content:"";position:absolute;right:-20px;bottom:6px;width:520px;height:70px;opacity:.16;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 70'%3E%3Cpolyline points='0,40 120,40 140,40 160,12 182,62 204,22 222,40 330,40 350,28 366,52 382,40 520,40' fill='none' stroke='%23FBBC04' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right bottom/contain}
+header .wrap{position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{display:block;width:48px;height:48px;border-radius:13px;box-shadow:0 6px 18px rgba(251,188,4,.28)}
+.logo svg{display:block}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9FC4E4;margin-bottom:2px}
+h1{font-size:34px;line-height:1;letter-spacing:-1.2px;margin:0;font-weight:800;color:#fff}
+h1 .pulse{color:var(--amber)}
+@media (max-width:520px){h1{font-size:28px}.logo,.logo svg{width:40px;height:40px}header::after{width:300px}}
+header p{margin:10px 0 0;color:var(--muted);font-size:13px;max-width:62ch}
 .hright{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .fresh{font-size:12.5px;color:var(--muted);text-align:right}
 .fresh b{color:var(--ink);font-weight:650}
@@ -71,7 +79,11 @@ button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
 
 /* colour rules */
 .rules{margin:0 0 14px;background:var(--panel-2);border:1px solid #2F4760;border-radius:12px}
-.rules summary{cursor:pointer;list-style:none;padding:12px 15px;font-weight:700;font-size:13.5px;display:flex;justify-content:space-between;gap:10px}
+.rules summary{cursor:pointer;list-style:none;padding:11px 15px;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:9px}
+.rules .rarrow{display:inline-block;color:var(--link);transition:transform .15s}
+.rules[open] .rarrow{transform:rotate(90deg)}
+.rule-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+.rule-chips li{display:flex;align-items:center;gap:2px}
 .rules summary::-webkit-details-marker{display:none}
 .rules summary .tg{font-weight:600;font-size:12px;color:var(--link)}
 .rules-body{padding:0 15px 15px;font-size:13px;color:var(--soft);line-height:1.5}
@@ -137,6 +149,7 @@ button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
 .tile .dl{font-size:12.5px;font-weight:750}
 .tile .meta{font-size:11px;font-weight:600;opacity:.9}
 .tile .part{font-size:10.5px;font-weight:700;color:var(--amber)}
+span.gs,.gs{color:var(--amber);display:inline!important;margin:0!important;padding:0!important;font-size:inherit!important;font-weight:inherit}
 .stars{color:var(--amber);font-size:11.5px;letter-spacing:1px}
 .issues{list-style:none;margin:0;padding:0 6px;display:flex;flex-direction:column;gap:5px;text-align:left;min-width:240px}
 .issues li{display:flex;gap:7px;align-items:baseline;font-size:12.5px;line-height:1.3}
@@ -209,7 +222,13 @@ a{color:var(--link)}
 <body>
 <header><div class="wrap">
   <div>
-    <h1><span class="mark" aria-hidden="true">★</span>ReviewCast</h1>
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" width="48" height="48"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FDD663"/><stop offset="1" stop-color="#F29900"/></linearGradient></defs><rect width="48" height="48" rx="13" fill="url(#lg)"/><polyline points="6,27 15,27 19,17 25,35 30,21 33,27 42,27" fill="none" stroke="#0B1728" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div>
+        <div class="eyebrow">Parques Reunidos · Google reviews</div>
+        <h1>Guest<span class="pulse">Pulse</span></h1>
+      </div>
+    </div>
     <p data-i="tagline"></p>
   </div>
   <div class="hright">
@@ -230,11 +249,10 @@ a{color:var(--link)}
     <label class="check"><input type="checkbox" id="hideEmpty"> <span data-i="hideEmpty"></span></label>
     <label class="check"><input type="checkbox" id="hideClosed"> <span data-i="hideClosed"></span></label>
     <span class="spacer"></span>
-    <button type="button" class="btn-ghost" id="csv" data-i="csv"></button>
     <button type="button" class="btn-strong" id="pdf" data-i="pdf"></button>
   </div>
   <div class="legend" id="legend"></div>
-  <details class="rules" id="rules" open><summary><span data-i="rulesTitle"></span><span class="tg" id="rulesTg"></span></summary><div class="rules-body" id="rulesBody"></div></details>
+  <details class="rules" id="rules"><summary><span class="rarrow" aria-hidden="true">▸</span><span data-i="rulesTitle"></span></summary><div class="rules-body" id="rulesBody"></div></details>
   <div id="banner"></div>
   <section class="summary" id="summary"></section>
   <div class="scroll"><table class="matrix" id="matrix">
@@ -251,31 +269,21 @@ a{color:var(--link)}
 /* ================= i18n ================= */
 const I18N={
 en:{
- tagline:"Google review tracker for 27 Parques Reunidos attractions. Each period is compared with the park's own normal.",
- freshData:"Data up to <b>{d}</b><br>{n}/{t} attractions with reviews · updated weekly",freshNone:"<b>No collection yet</b><br>{t} attractions configured",freshFail:"Data unavailable",
- countries:"Countries",types:"Attraction types",selectAll:"Select all",clear:"Clear",all:"All",none:"None",
- search:"Search attractions",sortAria:"Sort attractions",modeAria:"What counts as normal",
- sort_attention:"Needs attention first",sort_worst:"Lowest 4-week rating",sort_best:"Highest 4-week rating",sort_volume:"Most reviews in 4 weeks",sort_type:"Group by attraction type",sort_list:"Portfolio order",
+ tagline:"How guests rate 27 Parques Reunidos parks on Google, week by week. Each period is compared with the park's own normal.",
+ freshData:"Data up to <b>{d}</b><br>{n}/{t} parks with reviews · updated weekly",freshNone:"<b>No collection yet</b><br>{t} parks configured",freshFail:"Data unavailable",
+ countries:"Countries",types:"Park types",selectAll:"Select all",clear:"Clear",all:"All",none:"None",
+ search:"Search parks",sortAria:"Sort parks",modeAria:"What counts as normal",
+ sort_attention:"Needs attention first",sort_worst:"Lowest 4-week rating",sort_best:"Highest 4-week rating",sort_volume:"Most reviews in 4 weeks",sort_type:"Group by park type",sort_list:"Portfolio order",
  mode_avg:"Normal: accumulated average",mode_ly:"Normal: same period last year",
- hideEmpty:"Hide parks without recent reviews",hideClosed:"Hide parks closed for the season",csv:"Download CSV",pdf:"Download PDF report",pdfBusy:"Preparing PDF…",
+ hideEmpty:"Hide parks without recent reviews",hideClosed:"Hide parks closed for the season",pdf:"Download PDF report",pdfBusy:"Preparing PDF…",
  lg_good:"Above normal",lg_mid:"Normal",lg_bad:"Below normal",lg_low:"Too few reviews to judge",lg_none:"No data yet",lg_closed:"Closed for the season",lg_part:"Partial history",lg_trend:"Issue rising / falling vs previous 4 weeks",
- rulesTitle:"How the colours are decided",show:"Show ▾",hide:"Hide ▴",
- rulesIntro_avg:"Each period is compared with a longer reference period for the same attraction, so every park is judged against its own normal, not against the other parks. The difference in average stars decides the colour.",
- rulesIntro_ly:"Each period is compared with the same period one year earlier for the same attraction. This removes the seasonal effect: a quiet October is compared with last October, not with the summer.",
- rulesHCmp:"What each period is compared with",rulesHCol:"Colour rules",thPeriod:"Period shown",thRef:"Reference (“normal”)",
- p4:"Last 4 weeks",p3:"Last 3 months",p12:"Last 12 months",
- ref4_avg:"Average of the last 3 months",ref3_avg:"Average of the last 12 months",ref12:"Average of the 12 months before",ref4_ly:"Same 4 weeks last year",ref3_ly:"Same 3 months last year",
- rGreen:"<b>Green · Above normal.</b> More than <b>{t}</b> stars above its reference.",
- rWhite:"<b>White · Normal.</b> Within <b>{t}</b> stars of its reference, up or down.",
- rRed:"<b>Red · Below normal.</b> More than <b>{t}</b> stars below its reference.",
- rGrey:"<b>Grey · Too few reviews.</b> Fewer than <b>{n}</b> rated reviews in the period, or no reference period yet. The average is shown but not judged.",
- rClosed:"<b>Striped · Closed for the season.</b> The attraction is normally closed this month, so its last 4 weeks are not judged.",
- rNone:"<b>Dark · No data.</b> No reviews collected for that period.",
- rEx:"<b>Example.</b> A park averages {a}★ over the last 4 weeks and {b}★ over its reference. The difference is {d}, more than {t} below, so the tile is <b class=\"em-bad\">red</b>. At {c}★ the difference would be {e} and the tile <b class=\"em-mid\">white</b>.",
- rNote_avg:"The reference includes the period being judged (the last 3 months contain the last 4 weeks), as “normal” is the accumulated average. For seasonal parks, switch the toolbar to “same period last year”.",
- rNote_ly:"The 12-month tile is always compared with the 12 months before. Until a full year has been collected, last-year references are marked ◔.",
- rArrows:"The issue arrows ↑ ↓ use a separate rule: a topic’s share of critical reviews changed by more than 10 points against the previous 4 weeks.",
- thAttr:"Attraction",thGoogle:"Google rating",thGoogleS:"all-time",th12:"12 months",th12S:"vs prior 12 months",th3:"3 months",th3S_avg:"vs 12 months",th3S_ly:"vs same 3 months last year",th4:"4 weeks",th4S_avg:"vs 3 months",th4S_ly:"vs same 4 weeks last year",thIss:"Top issues",thIssS:"last 4 weeks",
+ rulesTitle:"How the colours are decided",
+ rulesCmp_avg:"Each park is compared with its own average: <b>4 weeks</b> vs 3 months · <b>3 months</b> vs 12 months · <b>12 months</b> vs the 12 months before.",
+ rulesCmp_ly:"Each park is compared with itself a year earlier: <b>4 weeks</b> and <b>3 months</b> vs the same period last year · <b>12 months</b> vs the 12 months before.",
+ rGreen:"<b>Green</b> more than {t}★ above",rWhite:"<b>White</b> within ±{t}★",rRed:"<b>Red</b> more than {t}★ below",
+ rGrey:"<b>Grey</b> fewer than {n} reviews or no reference yet",rClosed:"<b>Striped</b> closed for the season",
+ rArrows:"Issue arrows ↑ ↓: the topic's share of critical reviews moved more than 10 points vs the previous 4 weeks. ◔ = reference period not fully collected yet.",
+ thAttr:"Park",thGoogle:"Google rating",thGoogleS:"all-time",th12:"12 months",th12S:"vs prior 12 months",th3:"3 months",th3S_avg:"vs 12 months",th3S_ly:"vs same 3 months last year",th4:"4 weeks",th4S_avg:"vs 3 months",th4S_ly:"vs same 4 weeks last year",thIss:"Top issues",thIssS:"last 4 weeks",
  l_google:"Google",l_12:"12 months",l_3:"3 months",l_4:"4 weeks",l_iss:"Top issues · 4 weeks",
  noReviews:"No reviews",collecting:"◔ collecting",since:"◔ since {d}",review:"review",reviews:"reviews",notChecked:"Not checked yet",
  st_good:"Above normal",st_mid:"Normal",st_bad:"Below normal",st_low:"Too few reviews",st_noref:"No reference yet",st_none:"No data",st_closed:"Closed for the season",
@@ -284,15 +292,15 @@ en:{
  tipNew:"Not mentioned in the previous 4 weeks",tipUp:"Mentioned in a larger share of critical reviews than the previous 4 weeks",tipDown:"Mentioned in a smaller share of critical reviews than the previous 4 weeks",
  sel12:"Selection · 12 months",sel3:"Selection · 3 months",sel4:"Selection · 4 weeks",
  r_p12:"prior 12 mo",r_12:"12 mo",r_3:"3 mo",r_ly3:"same 3 mo last year",r_ly4:"same 4 wk last year",vs:"vs",
- rated:"{n} rated reviews",distTitle:"{n} attractions vs their normal · last 4 weeks",d_good:"above",d_mid:"normal",d_bad:"below",d_other:"not enough data",d_closed:"closed for the season",
+ rated:"{n} rated reviews",distTitle:"{n} parks vs their normal · last 4 weeks",d_good:"above",d_mid:"normal",d_bad:"below",d_other:"not enough data",d_closed:"closed for the season",
  topSel:"Top issues across selection · last 4 weeks",noCritPeriod:"No critical reviews in this period.",
  demoT:"Example data",demoB:"These ratings and summaries are invented to show how the page looks. They are not real Google reviews.",
- waitT:"Waiting for the first weekly collection",waitB:"Ratings appear once the collector has read each attraction's newest Google reviews. Until then every period shows “No reviews”.",
+ waitT:"Waiting for the first weekly collection",waitB:"Ratings appear once the collector has read each park's newest Google reviews. Until then every period shows “No reviews”.",
  oldT:"Data is {n} days old",oldB:"The weekly collection has not run since {d}. Figures for the last 4 weeks may be incomplete.",
- incT:"Collection incomplete",incB:"{n} attractions have no collected reviews yet. They fill in on the next run.",
+ incT:"Collection incomplete",incB:"{n} parks have no collected reviews yet. They fill in on the next run.",
  loadT:"The review data could not be loaded",loadB:"Reload the page. If it keeps failing, the files in the data folder are missing from the site.",
- noMatch:"No attractions match these filters. Use “Select all” in the filters or clear the search.",
- selTitle:"Select an attraction",selSub:"Click a row to see its written summary, weekly trend, the same period last year and the complaints behind its top issues.",
+ noMatch:"No parks match these filters. Use “Select all” in the filters or clear the search.",
+ selTitle:"Select a park",selSub:"Click a row to see its written summary, weekly trend, the same period last year and the complaints behind its top issues.",
  collectedSince:"reviews collected since {d}",openMaps:"Open on Google Maps ↗",openAll:"open all year",openMonths:"normally open {m}",
  m_google:"Google rating, all time",reviewsChecked:"{n} reviews · checked {d}",m12:"Last 12 months",m3:"Last 3 months",m4:"Last 4 weeks",mLy:"Same 4 weeks last year",thisYear:"{d} this year",noCmp:"No comparison yet",
  mVol:"Review volume, 4 weeks",pace:"{p}% vs 3-month pace",noPace:"No 3-month pace yet",critLow:"{n} critical (3★ or lower)",
@@ -303,36 +311,25 @@ en:{
  foot2:"<b>Colours.</b> Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",
  foot3:"<b>Issues.</b> Reviews rated 3★ or lower are scanned for recurring topics in English, Spanish, German, Dutch, Italian, Norwegian and Danish. Arrows compare each topic's mentions with the previous 4 weeks.",
  foot4:"<b>Source.</b> Public Google Maps reviews, collected weekly. Google shows older reviews with approximate dates (“2 months ago”), so dates beyond a few weeks are estimates. No review text is published here.",
- csvDone:"CSV with {n} attractions downloaded",dlFail:"The download could not start in this browser.",pdfDone:"PDF report downloaded",pdfFail:"The PDF could not be created. Check your connection and try again.",
- pdfTitle:"Guest review report",pdfSub:"Google Maps reviews · data up to {d} · {mode}",pdfSel:"Selection: {n} attractions · {c} · {t}",pdfAllC:"all countries",pdfAllT:"all attraction types",pdfNotes:"Attraction notes",pdfPage:"Page {p} of {n}",pdfDemo:"EXAMPLE DATA - NOT REAL REVIEWS",pdfRules:"Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",pdfIssues:"Top issues (4 weeks)",pdfSummary:"Summary",
- csvHead:["Attraction","Country","Type","Google rating","Google reviews","12m avg","12m reviews","12m vs ref","12m status","3m avg","3m reviews","3m vs ref","3m status","4w avg","4w reviews","4w vs ref","4w status","Critical 4w","Issue 1","Issue 2","Issue 3","Summary"]
+ dlFail:"The download could not start in this browser.",pdfDone:"PDF report downloaded",pdfFail:"The PDF could not be created. Check your connection and try again.",
+ pdfTitle:"Guest review report",pdfSub:"Google Maps reviews · data up to {d} · {mode}",pdfSel:"Selection: {n} parks · {c} · {t}",pdfAllC:"all countries",pdfAllT:"all park types",pdfNotes:"Park notes",pdfPage:"Page {p} of {n}",pdfDemo:"EXAMPLE DATA - NOT REAL REVIEWS",pdfRules:"Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",pdfIssues:"Top issues (4 weeks)",pdfSummary:"Summary"
 },
 es:{
- tagline:"Seguimiento de reseñas de Google de 27 atracciones de Parques Reunidos. Cada periodo se compara con la normalidad del propio parque.",
- freshData:"Datos hasta <b>{d}</b><br>{n}/{t} atracciones con reseñas · actualización semanal",freshNone:"<b>Aún no hay recogida</b><br>{t} atracciones configuradas",freshFail:"Datos no disponibles",
- countries:"Países",types:"Tipos de atracción",selectAll:"Seleccionar todo",clear:"Borrar",all:"Todos",none:"Ninguno",
- search:"Buscar atracciones",sortAria:"Ordenar atracciones",modeAria:"Qué se considera normal",
- sort_attention:"Primero las que necesitan atención",sort_worst:"Peor nota en 4 semanas",sort_best:"Mejor nota en 4 semanas",sort_volume:"Más reseñas en 4 semanas",sort_type:"Agrupar por tipo de atracción",sort_list:"Orden de la cartera",
+ tagline:"Cómo valoran los visitantes en Google 27 parques de Parques Reunidos, semana a semana. Cada periodo se compara con la normalidad del propio parque.",
+ freshData:"Datos hasta <b>{d}</b><br>{n}/{t} parques con reseñas · actualización semanal",freshNone:"<b>Aún no hay recogida</b><br>{t} parques configurados",freshFail:"Datos no disponibles",
+ countries:"Países",types:"Tipos de parque",selectAll:"Seleccionar todo",clear:"Borrar",all:"Todos",none:"Ninguno",
+ search:"Buscar parques",sortAria:"Ordenar parques",modeAria:"Qué se considera normal",
+ sort_attention:"Primero los que necesitan atención",sort_worst:"Peor nota en 4 semanas",sort_best:"Mejor nota en 4 semanas",sort_volume:"Más reseñas en 4 semanas",sort_type:"Agrupar por tipo de parque",sort_list:"Orden de la cartera",
  mode_avg:"Normal: media acumulada",mode_ly:"Normal: mismo periodo del año anterior",
- hideEmpty:"Ocultar parques sin reseñas recientes",hideClosed:"Ocultar parques cerrados por temporada",csv:"Descargar CSV",pdf:"Descargar informe PDF",pdfBusy:"Preparando PDF…",
+ hideEmpty:"Ocultar parques sin reseñas recientes",hideClosed:"Ocultar parques cerrados por temporada",pdf:"Descargar informe PDF",pdfBusy:"Preparando PDF…",
  lg_good:"Por encima de lo normal",lg_mid:"Normal",lg_bad:"Por debajo de lo normal",lg_low:"Pocas reseñas para valorar",lg_none:"Sin datos aún",lg_closed:"Cerrado por temporada",lg_part:"Histórico parcial",lg_trend:"Problema que sube / baja frente a las 4 semanas anteriores",
- rulesTitle:"Cómo se decide cada color",show:"Mostrar ▾",hide:"Ocultar ▴",
- rulesIntro_avg:"Cada periodo se compara con un periodo de referencia más largo de la misma atracción, así que cada parque se mide contra su propia normalidad y no contra los demás. La diferencia en estrellas de media decide el color.",
- rulesIntro_ly:"Cada periodo se compara con el mismo periodo del año anterior de la misma atracción. Así se elimina el efecto de la temporada: un octubre tranquilo se compara con el octubre pasado, no con el verano.",
- rulesHCmp:"Con qué se compara cada periodo",rulesHCol:"Reglas de color",thPeriod:"Periodo",thRef:"Referencia (“normal”)",
- p4:"Últimas 4 semanas",p3:"Últimos 3 meses",p12:"Últimos 12 meses",
- ref4_avg:"Media de los últimos 3 meses",ref3_avg:"Media de los últimos 12 meses",ref12:"Media de los 12 meses anteriores",ref4_ly:"Las mismas 4 semanas del año anterior",ref3_ly:"Los mismos 3 meses del año anterior",
- rGreen:"<b>Verde · Por encima de lo normal.</b> Más de <b>{t}</b> estrellas por encima de su referencia.",
- rWhite:"<b>Blanco · Normal.</b> A menos de <b>{t}</b> estrellas de su referencia, por arriba o por abajo.",
- rRed:"<b>Rojo · Por debajo de lo normal.</b> Más de <b>{t}</b> estrellas por debajo de su referencia.",
- rGrey:"<b>Gris · Pocas reseñas.</b> Menos de <b>{n}</b> reseñas con nota en el periodo, o aún no hay periodo de referencia. Se muestra la media, pero no se valora.",
- rClosed:"<b>Rayado · Cerrado por temporada.</b> La atracción suele estar cerrada este mes, así que sus últimas 4 semanas no se valoran.",
- rNone:"<b>Oscuro · Sin datos.</b> No se han recogido reseñas en ese periodo.",
- rEx:"<b>Ejemplo.</b> Un parque tiene una media de {a}★ en las últimas 4 semanas y {b}★ en su referencia. La diferencia es {d}, más de {t} por debajo, así que la casilla sale <b class=\"em-bad\">roja</b>. Con {c}★ la diferencia sería {e} y la casilla saldría <b class=\"em-mid\">blanca</b>.",
- rNote_avg:"La referencia incluye el periodo que se valora (los últimos 3 meses contienen las últimas 4 semanas), porque “normal” es la media acumulada. Para parques de temporada, cambia arriba a “mismo periodo del año anterior”.",
- rNote_ly:"La casilla de 12 meses siempre se compara con los 12 meses anteriores. Hasta tener un año completo recogido, las referencias del año anterior se marcan con ◔.",
- rArrows:"Las flechas ↑ ↓ de los problemas siguen otra regla: la proporción de reseñas críticas que menciona ese tema ha cambiado más de 10 puntos frente a las 4 semanas anteriores.",
- thAttr:"Atracción",thGoogle:"Nota en Google",thGoogleS:"histórica",th12:"12 meses",th12S:"vs 12 meses anteriores",th3:"3 meses",th3S_avg:"vs 12 meses",th3S_ly:"vs mismos 3 meses año anterior",th4:"4 semanas",th4S_avg:"vs 3 meses",th4S_ly:"vs mismas 4 semanas año anterior",thIss:"Principales problemas",thIssS:"últimas 4 semanas",
+ rulesTitle:"Cómo se deciden los colores",
+ rulesCmp_avg:"Cada parque se compara con su propia media: <b>4 semanas</b> vs 3 meses · <b>3 meses</b> vs 12 meses · <b>12 meses</b> vs los 12 meses anteriores.",
+ rulesCmp_ly:"Cada parque se compara consigo mismo un año antes: <b>4 semanas</b> y <b>3 meses</b> vs el mismo periodo del año anterior · <b>12 meses</b> vs los 12 meses anteriores.",
+ rGreen:"<b>Verde</b> más de {t}★ por encima",rWhite:"<b>Blanco</b> a ±{t}★ o menos",rRed:"<b>Rojo</b> más de {t}★ por debajo",
+ rGrey:"<b>Gris</b> menos de {n} reseñas o sin referencia aún",rClosed:"<b>Rayado</b> cerrado por temporada",
+ rArrows:"Flechas ↑ ↓ de los problemas: la proporción de reseñas críticas con ese tema ha cambiado más de 10 puntos frente a las 4 semanas anteriores. ◔ = periodo de referencia aún sin recoger completo.",
+ thAttr:"Parque",thGoogle:"Nota en Google",thGoogleS:"histórica",th12:"12 meses",th12S:"vs 12 meses anteriores",th3:"3 meses",th3S_avg:"vs 12 meses",th3S_ly:"vs mismos 3 meses año anterior",th4:"4 semanas",th4S_avg:"vs 3 meses",th4S_ly:"vs mismas 4 semanas año anterior",thIss:"Principales problemas",thIssS:"últimas 4 semanas",
  l_google:"Google",l_12:"12 meses",l_3:"3 meses",l_4:"4 semanas",l_iss:"Problemas · 4 semanas",
  noReviews:"Sin reseñas",collecting:"◔ recogiendo",since:"◔ desde {d}",review:"reseña",reviews:"reseñas",notChecked:"Sin comprobar",
  st_good:"Por encima de lo normal",st_mid:"Normal",st_bad:"Por debajo de lo normal",st_low:"Pocas reseñas",st_noref:"Sin referencia aún",st_none:"Sin datos",st_closed:"Cerrado por temporada",
@@ -341,15 +338,15 @@ es:{
  tipNew:"No se mencionaba en las 4 semanas anteriores",tipUp:"Aparece en una proporción mayor de reseñas críticas que en las 4 semanas anteriores",tipDown:"Aparece en una proporción menor de reseñas críticas que en las 4 semanas anteriores",
  sel12:"Selección · 12 meses",sel3:"Selección · 3 meses",sel4:"Selección · 4 semanas",
  r_p12:"12 m anteriores",r_12:"12 m",r_3:"3 m",r_ly3:"mismos 3 m año ant.",r_ly4:"mismas 4 sem. año ant.",vs:"vs",
- rated:"{n} reseñas con nota",distTitle:"{n} atracciones frente a su normalidad · últimas 4 semanas",d_good:"por encima",d_mid:"normal",d_bad:"por debajo",d_other:"sin datos suficientes",d_closed:"cerradas por temporada",
+ rated:"{n} reseñas con nota",distTitle:"{n} parques frente a su normalidad · últimas 4 semanas",d_good:"por encima",d_mid:"normal",d_bad:"por debajo",d_other:"sin datos suficientes",d_closed:"cerrados por temporada",
  topSel:"Principales problemas de la selección · últimas 4 semanas",noCritPeriod:"Sin reseñas críticas en este periodo.",
  demoT:"Datos de ejemplo",demoB:"Estas notas y resúmenes son inventados para mostrar cómo se ve la página. No son reseñas reales de Google.",
- waitT:"Esperando la primera recogida semanal",waitB:"Las notas aparecerán cuando el recolector haya leído las reseñas más recientes de Google de cada atracción. Hasta entonces, todos los periodos muestran “Sin reseñas”.",
+ waitT:"Esperando la primera recogida semanal",waitB:"Las notas aparecerán cuando el recolector haya leído las reseñas más recientes de Google de cada parque. Hasta entonces, todos los periodos muestran “Sin reseñas”.",
  oldT:"Los datos tienen {n} días",oldB:"La recogida semanal no se ejecuta desde el {d}. Las cifras de las últimas 4 semanas pueden estar incompletas.",
- incT:"Recogida incompleta",incB:"{n} atracciones aún no tienen reseñas recogidas. Se completarán en la próxima ejecución.",
+ incT:"Recogida incompleta",incB:"{n} parques aún no tienen reseñas recogidas. Se completarán en la próxima ejecución.",
  loadT:"No se han podido cargar los datos",loadB:"Recarga la página. Si sigue fallando, faltan los archivos de la carpeta data en la web.",
- noMatch:"Ninguna atracción coincide con estos filtros. Usa “Seleccionar todo” en los filtros o borra la búsqueda.",
- selTitle:"Selecciona una atracción",selSub:"Pulsa una fila para ver su resumen escrito, la evolución semanal, el mismo periodo del año anterior y las quejas detrás de sus principales problemas.",
+ noMatch:"Ningún parque coincide con estos filtros. Usa “Seleccionar todo” en los filtros o borra la búsqueda.",
+ selTitle:"Selecciona un parque",selSub:"Pulsa una fila para ver su resumen escrito, la evolución semanal, el mismo periodo del año anterior y las quejas detrás de sus principales problemas.",
  collectedSince:"reseñas recogidas desde el {d}",openMaps:"Abrir en Google Maps ↗",openAll:"abierto todo el año",openMonths:"abre normalmente {m}",
  m_google:"Nota en Google, histórica",reviewsChecked:"{n} reseñas · comprobada el {d}",m12:"Últimos 12 meses",m3:"Últimos 3 meses",m4:"Últimas 4 semanas",mLy:"Mismas 4 semanas del año anterior",thisYear:"{d} este año",noCmp:"Aún sin comparación",
  mVol:"Volumen de reseñas, 4 semanas",pace:"{p}% frente al ritmo de 3 meses",noPace:"Aún sin ritmo de 3 meses",critLow:"{n} críticas (3★ o menos)",
@@ -360,9 +357,8 @@ es:{
  foot2:"<b>Colores.</b> Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",
  foot3:"<b>Problemas.</b> Las reseñas de 3★ o menos se analizan buscando temas recurrentes en inglés, español, alemán, neerlandés, italiano, noruego y danés. Las flechas comparan las menciones de cada tema con las 4 semanas anteriores.",
  foot4:"<b>Fuente.</b> Reseñas públicas de Google Maps, recogidas cada semana. Google muestra las reseñas antiguas con fechas aproximadas (“hace 2 meses”), así que las fechas de más de unas semanas son estimadas. Aquí no se publica el texto de las reseñas.",
- csvDone:"CSV con {n} atracciones descargado",dlFail:"La descarga no ha podido empezar en este navegador.",pdfDone:"Informe PDF descargado",pdfFail:"No se ha podido crear el PDF. Comprueba la conexión e inténtalo de nuevo.",
- pdfTitle:"Informe de reseñas de visitantes",pdfSub:"Reseñas de Google Maps · datos hasta {d} · {mode}",pdfSel:"Selección: {n} atracciones · {c} · {t}",pdfAllC:"todos los países",pdfAllT:"todos los tipos de atracción",pdfNotes:"Notas por atracción",pdfPage:"Página {p} de {n}",pdfDemo:"DATOS DE EJEMPLO - NO SON RESEÑAS REALES",pdfRules:"Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",pdfIssues:"Principales problemas (4 semanas)",pdfSummary:"Resumen",
- csvHead:["Atracción","País","Tipo","Nota Google","Reseñas Google","Media 12m","Reseñas 12m","12m vs ref","Estado 12m","Media 3m","Reseñas 3m","3m vs ref","Estado 3m","Media 4s","Reseñas 4s","4s vs ref","Estado 4s","Críticas 4s","Problema 1","Problema 2","Problema 3","Resumen"]
+ dlFail:"La descarga no ha podido empezar en este navegador.",pdfDone:"Informe PDF descargado",pdfFail:"No se ha podido crear el PDF. Comprueba la conexión e inténtalo de nuevo.",
+ pdfTitle:"Informe de reseñas de visitantes",pdfSub:"Reseñas de Google Maps · datos hasta {d} · {mode}",pdfSel:"Selección: {n} parques · {c} · {t}",pdfAllC:"todos los países",pdfAllT:"todos los tipos de parque",pdfNotes:"Notas por parque",pdfPage:"Página {p} de {n}",pdfDemo:"DATOS DE EJEMPLO - NO SON RESEÑAS REALES",pdfRules:"Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",pdfIssues:"Principales problemas (4 semanas)",pdfSummary:"Resumen"
 }};
 const TYPE_ONE={en:{theme:"Theme park",water_out:"Outdoor water park",water_in:"Indoor water park",nature:"Zoo, nature & cable car",aquarium:"Indoor aquarium"},es:{theme:"Parque temático",water_out:"Parque acuático exterior",water_in:"Parque acuático interior",nature:"Zoo, naturaleza y teleférico",aquarium:"Acuario interior"}};
 
@@ -467,20 +463,18 @@ function applyStatic(){
   const ly=F.mode==="ly";
   $("#thead").innerHTML=`<th scope="col">${t("thAttr")}</th><th scope="col">${t("thGoogle")}<small>${t("thGoogleS")}</small></th><th scope="col">${t("th12")}<small>${t("th12S")}</small></th><th scope="col">${t("th3")}<small>${t(ly?"th3S_ly":"th3S_avg")}</small></th><th scope="col">${t("th4")}<small>${t(ly?"th4S_ly":"th4S_avg")}</small></th><th scope="col">${t("thIss")}<small>${t("thIssS")}</small></th>`;
   const T=f2(CFG.threshold),N=CFG.minN;
-  $("#rulesBody").innerHTML=`<p class="rules-intro">${t(ly?"rulesIntro_ly":"rulesIntro_avg")}</p>
-   <div class="rules-grid"><div class="rule-col"><h4>${t("rulesHCmp")}</h4><table class="t"><thead><tr><th>${t("thPeriod")}</th><th>${t("thRef")}</th></tr></thead><tbody>
-     <tr><td><b>${t("p4")}</b></td><td>${t(ly?"ref4_ly":"ref4_avg")}</td></tr><tr><td><b>${t("p3")}</b></td><td>${t(ly?"ref3_ly":"ref3_avg")}</td></tr><tr><td><b>${t("p12")}</b></td><td>${t("ref12")}</td></tr></tbody></table></div>
-   <div class="rule-col"><h4>${t("rulesHCol")}</h4><ul class="rule-list">
-     <li><span class="dot d-good"></span><span>${t("rGreen",{t:T})}</span></li><li><span class="dot d-mid"></span><span>${t("rWhite",{t:T})}</span></li><li><span class="dot d-bad"></span><span>${t("rRed",{t:T})}</span></li>
-     <li><span class="dot d-low"></span><span>${t("rGrey",{n:N})}</span></li><li><span class="dot d-closed"></span><span>${t("rClosed")}</span></li><li><span class="dot d-none"></span><span>${t("rNone")}</span></li></ul></div></div>
-   <p class="rules-ex">${t("rEx",{a:av(4.21),b:av(4.30),c:av(4.27),d:"−"+f2(0.09),e:"−"+f2(0.03),t:T})}</p>
-   <p class="rules-ex">${t(ly?"rNote_ly":"rNote_avg")} ${t("rArrows")}</p>`;
-  $("#rulesTg").textContent=$("#rules").open?t("hide"):t("show");
+  $("#rulesBody").innerHTML=`<p class="rules-intro">${t(ly?"rulesCmp_ly":"rulesCmp_avg")}</p>
+   <ul class="rule-chips"><li><span class="dot d-good"></span>${t("rGreen",{t:T})}</li><li><span class="dot d-mid"></span>${t("rWhite",{t:T})}</li><li><span class="dot d-bad"></span>${t("rRed",{t:T})}</li><li><span class="dot d-low"></span>${t("rGrey",{n:N})}</li><li><span class="dot d-closed"></span>${t("rClosed")}</li></ul>
+   <p class="rules-ex">${t("rArrows")}</p>`;
   $("#foot").innerHTML=["foot1","foot2","foot3","foot4"].map(k=>`<p>${t(k,{t:T,n:N})}</p>`).join("");
   if(META)buildFilters();
 }
 document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>{LANG=b.dataset.lang;lsSet("reviewcast-lang",LANG);applyStatic();if(DATA){setStatus();render();}}));
-(()=>{const r=$("#rules");if(lsGet("reviewcast-rules-open",null)===false)r.open=false;r.addEventListener("toggle",()=>{lsSet("reviewcast-rules-open",r.open);$("#rulesTg").textContent=r.open?t("hide"):t("show");});})();
+
+/* every ★ on the page in Google yellow */
+function paintStars(root){if(!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.nodeValue.indexOf("★")>-1&&n.parentNode&&!n.parentNode.closest(".gs,.stars,.mark,select,option,svg,title")?1:3});const L=[];while(w.nextNode())L.push(w.currentNode);
+  for(const n of L){const f=document.createDocumentFragment();n.nodeValue.split("★").forEach((p,i)=>{if(i){const e=document.createElement("span");e.className="gs";e.textContent="★";f.appendChild(e);}if(p)f.appendChild(document.createTextNode(p));});n.replaceWith(f);}}
+new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes){if(n.nodeType===1)paintStars(n);else if(n.nodeType===3&&n.parentNode)paintStars(n.parentNode);}}).observe(document.body,{childList:true,subtree:true});
 
 /* ================= filters ================= */
 function buildFilters(){
@@ -669,15 +663,6 @@ $("#rows").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.t
 
 /* ================= downloads ================= */
 function saveBlob(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800);}
-function statusText(m,which){const c=m[which];if(which==="c4"&&m.season.closed)return t("st_closed");return c.key==="none"?t("st_none"):stLabel(c);}
-$("#csv").addEventListener("click",()=>{
-  if(!META||!DATA)return;
-  const rows=visibleRows();const q=v=>{const s=v==null?"":String(v);return /[",\n;]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;};
-  const n2=v=>v==null?"":(LANG==="es"?v.toFixed(2).replace(".",","):v.toFixed(2));const sep=LANG==="es"?";":",";
-  const lines=[t("csvHead").map(q).join(sep)].concat(rows.map(({p,m})=>{const g=m.p&&m.p.google||{};const ti=topIssues(m.w4.th).map(([k,v])=>`${themeName(k)} (${v})`);
-    return [p.name,countryName(p.country),typeOne(p.type),g.rating!=null?n2(g.rating):"",g.count,n2(m.m12.avg),m.m12.n,n2(m.c12.delta),statusText(m,"c12"),n2(m.m3.avg),m.m3.n,n2(m.c3.delta),statusText(m,"c3"),n2(m.w4.avg),m.w4.n,n2(m.season.closed?null:m.c4.delta),statusText(m,"c4"),m.w4.neg,ti[0],ti[1],ti[2],summaryText(m.p)||""].map(q).join(sep);}));
-  try{saveBlob(new Blob(["﻿"+lines.join("\n")],{type:"text/csv;charset=utf-8"}),`reviewcast-${ASOF}.csv`);toast(t("csvDone",{n:rows.length}));}catch(e){toast(t("dlFail"));}
-});
 function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>rej(new Error(src));document.head.appendChild(s);});}
 const pdfSafe=s=>String(s==null?"":s).replace(/[−–—]/g,"-").replace(/★/g,"").replace(/☆/g,"").replace(/◔/g,"").replace(/↑/g,"(+)").replace(/↓/g,"(-)").replace(/▲/g,"").replace(/▼/g,"").replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/ø/g,"ø").trim();
 async function buildPdf(){
@@ -688,7 +673,7 @@ async function buildPdf(){
   const COL={good:[17,122,85],mid:[255,255,255],bad:[163,48,59],low:[203,211,221],none:[238,241,244],closed:[226,231,237],navy:[16,33,55],ink:[20,32,48],dim:[96,112,130]};
   // header band
   doc.setFillColor(...COL.navy);doc.rect(0,0,W,24,"F");
-  doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(18);doc.text("ReviewCast",M,11);
+  doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(18);doc.text("GuestPulse",M,11);
   doc.setFont("helvetica","normal");doc.setFontSize(12);doc.text(pdfSafe(t("pdfTitle")),M+38,11);
   doc.setFontSize(9);doc.setTextColor(200,214,228);
   doc.text(pdfSafe(t("pdfSub",{d:nice(ASOF),mode:t("mode_"+F.mode)})),M,18);
@@ -751,7 +736,7 @@ async function buildPdf(){
 }
 $("#pdf").addEventListener("click",async()=>{
   if(!META||!DATA)return;const b=$("#pdf");b.disabled=true;b.textContent=t("pdfBusy");
-  try{const doc=await buildPdf();saveBlob(doc.output("blob"),`reviewcast-report-${ASOF}-${LANG}.pdf`);toast(t("pdfDone"));}
+  try{const doc=await buildPdf();saveBlob(doc.output("blob"),`guestpulse-report-${ASOF}-${LANG}.pdf`);toast(t("pdfDone"));}
   catch(e){console.error(e);toast(t("pdfFail"));}
   finally{b.disabled=false;b.textContent=t("pdf");}
 });

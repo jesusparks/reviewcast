@@ -1,6 +1,6 @@
 {
   "_notes": {
-    "openMonths": "Months (1-12) in which the attraction normally operates. null means open all year. Approximate; edit to match each season's calendar."
+    "openMonths": "Months (1-12) in which the park normally operates. null means open all year. Checked in October 2026 against official park, Parques Reunidos and tourism-office calendars; review each season."
   },
   "countries": {
     "ES": "Spain",
@@ -37,13 +37,13 @@
     "aquarium": "Acuarios interiores"
   },
   "parks": [
-    {"id": "pwm", "name": "Parque Warner Madrid", "country": "ES", "type": "theme", "mapsQuery": "Parque Warner Madrid", "openMonths": [3,4,5,6,7,8,9,10,11,12]},
-    {"id": "pam", "name": "Parque de Atracciones Madrid", "country": "ES", "type": "theme", "mapsQuery": "Parque de Atracciones de Madrid", "openMonths": null},
+    {"id": "pwm", "name": "Parque Warner Madrid", "country": "ES", "type": "theme", "mapsQuery": "Parque Warner Madrid", "openMonths": null},
+    {"id": "pam", "name": "Parque de Atracciones Madrid", "country": "ES", "type": "theme", "mapsQuery": "Parque de Atracciones de Madrid", "openMonths": [2,3,4,5,6,7,8,9,10,11,12]},
     {"id": "tropical", "name": "Tropical Islands", "country": "DE", "type": "water_in", "mapsQuery": "Tropical Islands Krausnick", "openMonths": null},
     {"id": "moviepark", "name": "Movie Park Germany", "country": "DE", "type": "theme", "mapsQuery": "Movie Park Germany Bottrop", "openMonths": [4,5,6,7,8,9,10,11]},
-    {"id": "bobbejaanland", "name": "Bobbejaanland", "country": "BE", "type": "theme", "mapsQuery": "Bobbejaanland Lichtaart", "openMonths": [4,5,6,7,8,9,10,11]},
+    {"id": "bobbejaanland", "name": "Bobbejaanland", "country": "BE", "type": "theme", "mapsQuery": "Bobbejaanland Lichtaart", "openMonths": [1,4,5,6,7,8,9,10,11,12]},
     {"id": "slagharen", "name": "Slagharen", "country": "NL", "type": "theme", "mapsQuery": "Attractiepark Slagharen", "openMonths": [4,5,6,7,8,9,10]},
-    {"id": "mirabilandia", "name": "Mirabilandia", "country": "IT", "type": "theme", "mapsQuery": "Mirabilandia Ravenna", "openMonths": [4,5,6,7,8,9,10,11]},
+    {"id": "mirabilandia", "name": "Mirabilandia", "country": "IT", "type": "theme", "mapsQuery": "Mirabilandia Ravenna", "openMonths": [4,5,6,7,8,9,10]},
     {"id": "tusenfryd", "name": "Tusenfryd", "country": "NO", "type": "theme", "mapsQuery": "Tusenfryd Vinterbro", "openMonths": [5,6,7,8,9,10]},
     {"id": "bonbon", "name": "BonBon-Land", "country": "DK", "type": "theme", "mapsQuery": "BonBon-Land Holme-Olstrup", "openMonths": [4,5,6,7,8,9,10]},
     {"id": "aq-cartaya", "name": "Aquopolis Cartaya", "country": "ES", "type": "water_out", "mapsQuery": "Aquopolis Cartaya", "openMonths": [6,7,8,9]},
@@ -54,11 +54,11 @@
     {"id": "atlantis", "name": "Atlantis Madrid, Xanadú", "country": "ES", "type": "aquarium", "mapsQuery": "Atlantis Aquarium Madrid Xanadú", "openMonths": null},
     {"id": "faunia", "name": "Faunia", "country": "ES", "type": "nature", "mapsQuery": "Faunia Madrid", "openMonths": null},
     {"id": "zoo-madrid", "name": "Madrid Zoo", "country": "ES", "type": "nature", "mapsQuery": "Zoo Aquarium de Madrid", "openMonths": null},
-    {"id": "selwo-aventura", "name": "Selwo Aventura", "country": "ES", "type": "nature", "mapsQuery": "Selwo Aventura Estepona", "openMonths": null},
-    {"id": "selwo-marina", "name": "Selwo Marina", "country": "ES", "type": "nature", "mapsQuery": "Selwo Marina Benalmádena", "openMonths": null},
-    {"id": "teleferico", "name": "Teleférico Benalmádena", "country": "ES", "type": "nature", "mapsQuery": "Teleférico Benalmádena", "openMonths": null},
+    {"id": "selwo-aventura", "name": "Selwo Aventura", "country": "ES", "type": "nature", "mapsQuery": "Selwo Aventura Estepona", "openMonths": [2,3,4,5,6,7,8,9,10,11,12]},
+    {"id": "selwo-marina", "name": "Selwo Marina", "country": "ES", "type": "nature", "mapsQuery": "Selwo Marina Benalmádena", "openMonths": [2,3,4,5,6,7,8,9,10,11,12]},
+    {"id": "teleferico", "name": "Teleférico Benalmádena", "country": "ES", "type": "nature", "mapsQuery": "Teleférico Benalmádena", "openMonths": [2,3,4,5,6,7,8,9,10,11,12]},
     {"id": "warner-beach", "name": "Warner Beach", "country": "ES", "type": "water_out", "mapsQuery": "Parque Warner Beach", "openMonths": [6,7,8,9]},
-    {"id": "walsrode", "name": "Weltvogelpark Walsrode", "country": "DE", "type": "nature", "mapsQuery": "Weltvogelpark Walsrode", "openMonths": [3,4,5,6,7,8,9,10,11]},
+    {"id": "walsrode", "name": "Weltvogelpark Walsrode", "country": "DE", "type": "nature", "mapsQuery": "Weltvogelpark Walsrode", "openMonths": [3,4,5,6,7,8,9,10]},
     {"id": "mirabeach", "name": "Mirabeach", "country": "IT", "type": "water_out", "mapsQuery": "Mirabeach Mirabilandia", "openMonths": [6,7,8,9]},
     {"id": "bo", "name": "Bø Sommarland", "country": "NO", "type": "water_out", "mapsQuery": "Bø Sommarland", "openMonths": [6,7,8]},
     {"id": "blackpool-zoo", "name": "Blackpool Zoo", "country": "UK", "type": "nature", "mapsQuery": "Blackpool Zoo", "openMonths": null},
@@ -72,7 +72,7 @@
     "f": "Food & drink",
     "h": "Cleanliness & toilets",
     "s": "Staff & service",
-    "r": "Closed or broken attractions",
+    "r": "Closed or broken rides",
     "w": "Pools, slides & water temperature",
     "a": "Shade, loungers & lockers",
     "k": "Tickets, booking & refunds",

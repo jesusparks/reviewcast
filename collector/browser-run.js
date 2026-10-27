@@ -102,12 +102,14 @@
         const whenRaw = whenEl ? whenEl.textContent.trim() : "";
         if (/ on /.test(whenRaw) && !/ on Google/i.test(whenRaw)) { seen.set(id, null); return; } // lodging pages mix in other travel sites
         const body = card.querySelector(".MyEned .wiI7pd"); // review text only, not the owner reply
-        seen.set(id, { id, stars, when: whenRaw.replace(/ on .*/, ""), text: body ? body.textContent.trim().slice(0, 1200) : "" });
+        // Keep text only where it is used (3 stars or lower) and drop the card's images: long runs read thousands of cards.
+        seen.set(id, { id, stars, when: whenRaw.replace(/ on .*/, ""), text: body && stars <= 3 ? body.textContent.trim().slice(0, 1200) : "" });
+        card.querySelectorAll("img").forEach(i => i.remove());
       });
       return [...seen.values()].filter(Boolean);
     };
     let last = -1, still = 0, reachedEnd = false, reviews = [];
-    for (let i = 0; i < 4000; i++) {
+    for (let i = 0; i < 30000; i++) {
       feed.scrollTop = feed.scrollHeight;
       await sleep(1000 + Math.random() * 500);
       reviews = read();
@@ -124,7 +126,8 @@
   const RC = window.RC = {
     state: { done: 0, total: 0, finished: false, log: [] },
     results: {},
-    async runAll(list, stop, max) {
+    // opts.save: after each park, hand the browser a JSON file with every review read (for long backfills).
+    async runAll(list, stop, max, opts = {}) {
       RC.state = { done: 0, total: list.length, finished: false, log: [], started: Date.now() };
       for (const p of list) {
         RC.state.current = p.id;
@@ -135,6 +138,7 @@
           r.place = name;
           RC.results[p.id] = r;
           RC.state.log.push(`${p.id}: ${r.error || r.reviews.length + " reviews"} (${name}, ${Math.round((Date.now() - t0) / 1000)}s)`);
+          if (opts.save && !r.error) { RC.save(p.id, opts.tag || "backfill"); RC.state.saved = (RC.state.saved || 0) + 1; }
         } catch (e) {
           RC.results[p.id] = { error: String(e && e.message || e), reviews: [] };
           RC.state.log.push(`${p.id}: ERROR ${e && e.message || e}`);
@@ -167,6 +171,16 @@
       try { localStorage.setItem("reviewcast-seen-" + id, [...seen].slice(-20000).join(" ")); } catch (e) {}
       o.items = fresh.join(";"); o.read = all.length; o.fresh = fresh.length;
       return JSON.stringify(o);
+    },
+    save(id, tag) {
+      const raw = RC.pack(id); if (!raw) return false;
+      const o = JSON.parse(raw); o.id = id; o.collectedAt = new Date().toISOString().slice(0, 10); o.tag = tag;
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(o)], { type: "application/json" }));
+      a.download = `guestpulse-${tag}-${id}-${o.collectedAt}.json`;
+      document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 5000);
+      return a.download;
     },
     crit(id, max = 40) {
       const r = RC.results[id];
