@@ -63,7 +63,7 @@
       document.querySelector('[role="feed"] a[href*="/maps/place/"]').click();
       if (!await until(() => document.querySelector('button[role="tab"]') && title() !== before, 30000)) throw new Error("place page did not open");
     } else if (!got) throw new Error("search gave no place");
-    await sleep(1500);
+    await sleep(4000); // hotel-style pages (Slagharen, Tropical Islands) need longer to settle
     return title();
   }
 
@@ -76,9 +76,9 @@
     if (mr) { google.rating = parseFloat(mr[1].replace(",", ".")); google.count = parseInt(mr[2].replace(/[^\d]/g, ""), 10) || null; }
     const tab = [...document.querySelectorAll('button[role="tab"]')].find(b => /review/i.test((b.getAttribute("aria-label") || "") + b.innerText));
     if (!tab) return { error: "no Reviews tab", google, reviews: [] };
-    if (tab.getAttribute("aria-selected") !== "true") { tab.click(); await sleep(4000); }
+    if (tab.getAttribute("aria-selected") !== "true") { tab.click(); await sleep(6000); }
     // Attractions show a "Sort" button; places Google lists as lodging (Tropical Islands, Slagharen) show a "Most relevant" dropdown.
-    const sortBtn = await until(() => [...document.querySelectorAll("button")].find(b => b.offsetParent && (/^sort/i.test(((b.getAttribute("aria-label") || "") + " " + (b.innerText || "")).trim()) || /^most relevant$/i.test((b.getAttribute("aria-label") || "").trim()))), 25000);
+    const sortBtn = await until(() => [...document.querySelectorAll("button")].find(b => b.offsetParent && (/^sort/i.test(((b.getAttribute("aria-label") || "") + " " + (b.innerText || "")).trim()) || /^most relevant$/i.test((b.getAttribute("aria-label") || "").trim()) || /^most relevant$/i.test((b.innerText || "").trim()))), 25000);
     if (!sortBtn) return { error: "no Sort button (signed out?)", google, reviews: [] };
     sortBtn.click(); await sleep(1500);
     const opt = [...document.querySelectorAll('[role="menuitemradio"],[role="menuitem"],[role="option"]')].find(e => /newest/i.test(e.innerText));
