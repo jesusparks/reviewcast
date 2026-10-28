@@ -327,7 +327,7 @@ en:{
  foot2:"<b>Colours.</b> Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",
  foot3:"<b>Issues.</b> Reviews rated 3★ or lower are scanned for recurring topics in English, Spanish, German, Dutch, Italian, Norwegian and Danish. Arrows compare each topic's mentions with the previous 4 weeks.",
  foot4:"<b>Source.</b> Public Google Maps reviews, collected weekly. Google shows older reviews with approximate dates (“2 months ago”), so dates beyond a few weeks are estimates. No review text is published here.",
- dlFail:"The download could not start in this browser.",pdfDone:"PDF report downloaded",pdfFail:"The PDF could not be created. Check your connection and try again.",
+ dlFail:"The download could not start in this browser.",pdfDone:"PDF report downloaded",pdfFail:"The PDF could not be created. Check your connection and try again.",pdfErr:"The PDF could not be created. Reload the page and try again.",
  pdfTitle:"Guest review report",pdfSub:"Google Maps reviews · data up to {d} · {mode}",pdfSel:"Selection: {n} parks · {c} · {t}",pdfAllC:"all countries",pdfAllT:"all park types",pdfNotes:"Park notes",pdfPage:"Page {p} of {n}",pdfDemo:"EXAMPLE DATA - NOT REAL REVIEWS",pdfRules:"Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",pdfIssues:"Top issues (4 weeks)",pdfSummary:"Summary"
 },
 es:{
@@ -373,7 +373,7 @@ es:{
  foot2:"<b>Colores.</b> Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",
  foot3:"<b>Problemas.</b> Las reseñas de 3★ o menos se analizan buscando temas recurrentes en inglés, español, alemán, neerlandés, italiano, noruego y danés. Las flechas comparan las menciones de cada tema con las 4 semanas anteriores.",
  foot4:"<b>Fuente.</b> Reseñas públicas de Google Maps, recogidas cada semana. Google muestra las reseñas antiguas con fechas aproximadas (“hace 2 meses”), así que las fechas de más de unas semanas son estimadas. Aquí no se publica el texto de las reseñas.",
- dlFail:"La descarga no ha podido empezar en este navegador.",pdfDone:"Informe PDF descargado",pdfFail:"No se ha podido crear el PDF. Comprueba la conexión e inténtalo de nuevo.",
+ dlFail:"La descarga no ha podido empezar en este navegador.",pdfDone:"Informe PDF descargado",pdfFail:"No se ha podido crear el PDF. Comprueba la conexión e inténtalo de nuevo.",pdfErr:"No se ha podido crear el PDF. Recarga la página e inténtalo de nuevo.",
  pdfTitle:"Informe de reseñas de visitantes",pdfSub:"Reseñas de Google Maps · datos hasta {d} · {mode}",pdfSel:"Selección: {n} parques · {c} · {t}",pdfAllC:"todos los países",pdfAllT:"todos los tipos de parque",pdfNotes:"Notas por parque",pdfPage:"Página {p} de {n}",pdfDemo:"DATOS DE EJEMPLO - NO SON RESEÑAS REALES",pdfRules:"Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",pdfIssues:"Principales problemas (4 semanas)",pdfSummary:"Resumen"
 }};
 const TYPE_ONE={en:{theme:"Theme park",water_out:"Outdoor water park",water_in:"Indoor water park",nature:"Zoo, nature & cable car",aquarium:"Indoor aquarium"},es:{theme:"Parque temático",water_out:"Parque acuático exterior",water_in:"Parque acuático interior",nature:"Zoo, naturaleza y teleférico",aquarium:"Acuario interior"}};
@@ -688,7 +688,8 @@ $("#rows").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.t
 
 /* ================= downloads ================= */
 function saveBlob(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800);}
-function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>rej(new Error(src));document.head.appendChild(s);});}
+function statusText(m,which){const c=m[which];if(which==="c4"&&m.season.closed)return t("st_closed");return c.key==="none"?t("st_none"):stLabel(c);}
+function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>{const e=new Error(src);e.isLoad=true;rej(e);};document.head.appendChild(s);});}
 const pdfSafe=s=>String(s==null?"":s).replace(/[−–—]/g,"-").replace(/★/g,"").replace(/☆/g,"").replace(/◔/g,"").replace(/↑/g,"(+)").replace(/↓/g,"(-)").replace(/▲/g,"").replace(/▼/g,"").replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/ø/g,"ø").trim();
 async function buildPdf(){
   await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
@@ -762,7 +763,7 @@ async function buildPdf(){
 $("#pdf").addEventListener("click",async()=>{
   if(!META||!DATA)return;const b=$("#pdf");b.disabled=true;b.textContent=t("pdfBusy");
   try{const doc=await buildPdf();saveBlob(doc.output("blob"),`guestpulse-report-${ASOF}-${LANG}.pdf`);toast(t("pdfDone"));}
-  catch(e){console.error(e);toast(t("pdfFail"));}
+  catch(e){console.error(e);toast(t(e&&e.isLoad?"pdfFail":"pdfErr"));}
   finally{b.disabled=false;b.textContent=t("pdf");}
 });
 
