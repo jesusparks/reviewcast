@@ -55,6 +55,7 @@ select,button{border:1px solid var(--ctrl-line);border-radius:10px;padding:10px 
 button{cursor:pointer}
 button:disabled{opacity:.55;cursor:progress}
 button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
+#pdf:hover{filter:brightness(1.06)}
 :focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
 .toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:15px 2px 14px;align-items:stretch}
 .toolbar>*{min-width:0;height:46px;margin:0}
@@ -76,7 +77,7 @@ button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
 .toolbar2{display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center;padding:0 2px 12px}
 .check{display:flex;align-items:center;gap:9px;color:#DCE8F4;font-size:13.5px;padding:0 12px;border:1px solid var(--ctrl-line);border-radius:10px;background:var(--ctrl);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .check span{overflow:hidden;text-overflow:ellipsis}
-#pdf{width:100%;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 12px}
+#pdf{width:100%;font-size:14px;font-weight:800;background:linear-gradient(135deg,#FDD663,#F29900);border:0;color:#0B1728;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 12px}
 .check input{flex:none;width:18px;height:18px;margin:0;accent-color:var(--accent-hi)}
 .spacer{flex:1}
 .btn-ghost{background:transparent}
@@ -91,9 +92,9 @@ button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
 
 /* colour rules */
 .rules{margin:0 0 14px;background:var(--panel-2);border:1px solid #2F4760;border-radius:12px}
-.rules summary{cursor:pointer;list-style:none;padding:11px 15px;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:9px}
+.rules summary{cursor:pointer;list-style:none;padding:0 15px;height:46px;font-weight:700;font-size:13.5px;display:flex;align-items:center;justify-content:flex-start;gap:10px}
 .rules .rarrow{display:inline-block;color:var(--link);transition:transform .15s}
-.rules[open] .rarrow{transform:rotate(90deg)}
+.rules[open] .rarrow{transform:rotate(180deg)}
 .rule-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
 .rule-chips li{display:flex;align-items:center;gap:2px}
 .rules summary::-webkit-details-marker{display:none}
@@ -270,7 +271,7 @@ html,body{overscroll-behavior-y:contain}
     <label class="check"><input type="checkbox" id="hideClosed"> <span data-i="hideClosed"></span></label>
   </div>
   <div class="legend" id="legend"></div>
-  <details class="rules" id="rules"><summary><span class="rarrow" aria-hidden="true">▸</span><span data-i="rulesTitle"></span></summary><div class="rules-body" id="rulesBody"></div></details>
+  <details class="rules" id="rules"><summary><span class="rarrow" aria-hidden="true">▾</span><span data-i="rulesTitle"></span></summary><div class="rules-body" id="rulesBody"></div></details>
   <div id="banner"></div>
   <section class="summary" id="summary"></section>
   <div class="scroll"><table class="matrix" id="matrix">
@@ -474,8 +475,6 @@ function applyStatic(){
   document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t(e.dataset.i));
   document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===LANG)));
   $("#search").placeholder=t("search");$("#search").setAttribute("aria-label",t("search"));
-  $("#legend").innerHTML=[["d-good","lg_good"],["d-mid","lg_mid"],["d-bad","lg_bad"],["d-low","lg_low"],["d-none","lg_none"],["d-closed","lg_closed"]].map(([c,k])=>`<span><span class="dot ${c}"></span>${esc(t(k))}</span>`).join("")+
-    `<span><span style="color:var(--amber);font-weight:800">◔</span> ${esc(t("lg_part"))}</span><span><span class="tr-up">↑</span>/<span class="tr-down">↓</span> ${esc(t("lg_trend"))}</span>`;
   const ly=F.mode==="ly";
   $("#thead").innerHTML=`<th scope="col">${t("thAttr")}</th><th scope="col">${t("thGoogle")}<small>${t("thGoogleS")}</small></th><th scope="col">${t("th12")}<small>${t("th12S")}</small></th><th scope="col">${t("th3")}<small>${t(ly?"th3S_ly":"th3S_avg")}</small></th><th scope="col">${t("th4")}<small>${t(ly?"th4S_ly":"th4S_avg")}</small></th><th scope="col">${t("thIss")}<small>${t("thIssS")}</small></th>`;
   const T=f2(CFG.threshold),N=CFG.minN;
@@ -588,7 +587,19 @@ function render(){
       <td class="iss" data-l="${t("l_iss")}">${issuesCell(m)}</td></tr>`;
   }
   $("#rows").innerHTML=html||`<tr><td colspan="6" class="empty">${t("noMatch")}</td></tr>`;
+  renderLegend();
   renderDetail(selected);
+}
+// legend lists only the colours and marks visible in the table right now
+function renderLegend(){
+  const has=sel=>!!document.querySelector("#rows "+sel);
+  const items=[["good","d-good","lg_good"],["mid","d-mid","lg_mid"],["bad","d-bad","lg_bad"],["low","d-low","lg_low"],["none","d-none","lg_none"],["closed","d-closed","lg_closed"]]
+    .filter(([k])=>has(".tile."+k)).map(([,c,k])=>`<span><span class="dot ${c}"></span>${esc(t(k))}</span>`);
+  if(has(".tile .part"))items.push(`<span><span style="color:var(--amber);font-weight:800">◔</span> ${esc(t("lg_part"))}</span>`);
+  const up=has(".tr-up"),down=has(".tr-down");
+  if(up||down)items.push(`<span>${up?'<span class="tr-up">↑</span>':""}${up&&down?"/":""}${down?'<span class="tr-down">↓</span>':""} ${esc(t("lg_trend"))}</span>`);
+  if(has(".tr-new"))items.push(`<span><span class="tr-new">${esc(t("isNew"))}</span> ${esc(t("tipNew"))}</span>`);
+  $("#legend").innerHTML=items.join("");
 }
 function aggregate(rows){
   const g={w4:{sum:0,n:0,m:0,neg:0,th:{}},prev4:{neg:0,th:{}},m3:{sum:0,n:0},m12:{sum:0,n:0},p12:{sum:0,n:0},ly4:{sum:0,n:0},ly3:{sum:0,n:0}};const dist={good:0,mid:0,bad:0,other:0,closed:0};
@@ -610,10 +621,9 @@ function renderSummary(rows){
   const {g,dist,c12,c3,c4}=aggregate(rows);const ly=F.mode==="ly";
   const box=(label,st,c,ref)=>`<div class="stat ${KEYCLS(c.key)}"><span class="k">${label}</span><span class="v num">${av(st.avg)}<small>${st.avg==null?"":"★"}</small></span><span class="d num em-${KEYCLS(c.key)}">${c.delta!=null?signed(c.delta)+" "+t("vs")+" "+ref:esc(c.key==="none"?t("st_none"):stLabel(c))}</span><span class="s num">${t("rated",{n:fmtInt(st.n)})}</span></div>`;
   const tot=rows.length||1;const ti=topIssues(g.w4.th,3);
-  $("#summary").innerHTML=box(t("sel12"),g.m12,c12,t("r_g"))+box(t("sel3"),g.m3,c3,t(ly?"r_ly3":"r_12"))+box(t("sel4"),g.w4,c4,t(ly?"r_ly4":"r_3"))+
-   `<div class="stat wide"><span class="k">${t("distTitle",{n:rows.length})}</span>
+  $("#summary").innerHTML=`<div class="stat wide"><span class="k">${t("distTitle",{n:rows.length})}</span>
      <div class="distbar" role="img" aria-label="${dist.good} ${t("d_good")}, ${dist.mid} ${t("d_mid")}, ${dist.bad} ${t("d_bad")}, ${dist.other} ${t("d_other")}, ${dist.closed} ${t("d_closed")}">${[["good","var(--good)"],["mid","var(--mid)"],["bad","var(--bad)"],["other","var(--low)"],["closed","repeating-linear-gradient(135deg,#3A4B60 0 3px,#24364B 3px 6px)"]].map(([k,v])=>dist[k]?`<span style="width:${dist[k]/tot*100}%;background:${v}"></span>`:"").join("")}</div>
-     <div class="distleg"><span><b>${dist.good}</b> ${t("d_good")}</span><span><b>${dist.mid}</b> ${t("d_mid")}</span><span><b>${dist.bad}</b> ${t("d_bad")}</span><span><b>${dist.other}</b> ${t("d_other")}</span>${dist.closed?`<span><b>${dist.closed}</b> ${t("d_closed")}</span>`:""}</div></div>
+     <div class="distleg">${["good","mid","bad","other","closed"].filter(k=>dist[k]).map(k=>`<span><b>${dist[k]}</b> ${t("d_"+k)}</span>`).join("")}</div></div>
    <div class="stat wide"><span class="k">${t("topSel")}</span>${ti.length?`<ul class="mini">${ti.map(([k,v])=>`<li><span>${esc(themeName(k))} ${trend(k,g.w4,g.prev4)}</span><span class="c num">${t("ofN",{v,n:g.w4.neg})}</span></li>`).join("")}</ul>`:`<span class="s">${t("noCritPeriod")}</span>`}</div>`;
 }
 function setStatus(){
