@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Google review tracker for 27 Parques Reunidos parks: 12-month, 3-month and 4-week ratings against each park's normal, with the top guest complaints.">
+<meta name="description" content="Google review tracker for 29 Parques Reunidos parks: 12-month, 3-month and 4-week ratings against each park's normal, with the top guest complaints.">
 <style>
 /* Layout: ParkCast family. Navy header with language switch, filter toolbar, colour rules, summary strip, park-by-period matrix of coloured rating tiles (stacked cards on phones), detail panel. Single dark look by design. */
 :root{
@@ -285,7 +285,7 @@ html,body{overscroll-behavior-y:contain}
 /* ================= i18n ================= */
 const I18N={
 en:{
- tagline:"How guests rate 27 Parques Reunidos parks on Google, week by week. Each period is compared with the park's own normal.",
+ tagline:"How guests rate 29 Parques Reunidos parks on Google, week by week. Each period is compared with the park's own normal.",
  freshData:"Data up to <b>{d}</b><br>{n}/{t} parks with reviews · updated weekly",freshNone:"<b>No collection yet</b><br>{t} parks configured",freshFail:"Data unavailable",
  countries:"Countries",types:"Park types",selectAll:"Select all",clear:"Clear",all:"All",none:"None",
  search:"Search parks",sortAria:"Sort parks",modeAria:"What counts as normal",
@@ -331,7 +331,7 @@ en:{
  pdfTitle:"Guest review report",pdfSub:"Google Maps reviews · data up to {d} · {mode}",pdfSel:"Selection: {n} parks · {c} · {t}",pdfAllC:"all countries",pdfAllT:"all park types",pdfNotes:"Park notes",pdfPage:"Page {p} of {n}",pdfDemo:"EXAMPLE DATA - NOT REAL REVIEWS",pdfRules:"Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",pdfIssues:"Top issues (4 weeks)",pdfSummary:"Summary"
 },
 es:{
- tagline:"Cómo valoran los visitantes en Google 27 parques de Parques Reunidos, semana a semana. Cada periodo se compara con la normalidad del propio parque.",
+ tagline:"Cómo valoran los visitantes en Google 29 parques de Parques Reunidos, semana a semana. Cada periodo se compara con la normalidad del propio parque.",
  freshData:"Datos hasta <b>{d}</b><br>{n}/{t} parques con reseñas · actualización semanal",freshNone:"<b>Aún no hay recogida</b><br>{t} parques configurados",freshFail:"Datos no disponibles",
  countries:"Países",types:"Tipos de parque",selectAll:"Seleccionar todo",clear:"Borrar",all:"Todos",none:"Ninguno",
  search:"Buscar parques",sortAria:"Ordenar parques",modeAria:"Qué se considera normal",
@@ -515,7 +515,7 @@ function sums(){
   $("#countrySum").textContent=lab("countries",F.country,Object.keys(META.countries).length);
   $("#typeSum").textContent=lab("types",F.type,Object.keys(META.types).length);
 }
-function saveF(){lsSet("reviewcast-filters-v3",{country:[...F.country],type:[...F.type],sort:F.sort,mode:F.mode,hideEmpty:F.hideEmpty,hideClosed:F.hideClosed});}
+function saveF(){lsSet("reviewcast-filters-v3",{country:[...F.country],type:[...F.type],knownC:Object.keys(META.countries),knownT:Object.keys(META.types),sort:F.sort,mode:F.mode,hideEmpty:F.hideEmpty,hideClosed:F.hideClosed});}
 document.addEventListener("change",e=>{const g=e.target.dataset&&e.target.dataset.g;if(!g)return;e.target.checked?F[g].add(e.target.value):F[g].delete(e.target.value);sums();saveF();render();});
 document.addEventListener("click",e=>{
   const a=e.target.closest("[data-all]"),n=e.target.closest("[data-none]");
@@ -777,6 +777,9 @@ applyStatic();
     if(DATA.settings)CFG={threshold:+DATA.settings.threshold||0.05,minN:+DATA.settings.minN||5};
     const valid=(arr,src)=>{const s=new Set((arr||[]).filter(k=>k in src));return s.size?s:new Set(Object.keys(src));};
     F.country=valid(saved.country,META.countries);F.type=valid(saved.type,META.types);
+    // countries/types added after the filters were saved are switched on (old saves without the list: when all 8 old countries were on)
+    const addNew=(set,src,known,allOn)=>{for(const k of Object.keys(src))if(known?!known.includes(k):allOn)set.add(k);};
+    addNew(F.country,META.countries,saved.knownC,(saved.country||[]).length>=8);addNew(F.type,META.types,saved.knownT,false);
     $("#hideEmpty").checked=F.hideEmpty;$("#hideClosed").checked=F.hideClosed;
     applyStatic();setStatus();render();
     const hash=location.hash.slice(1);if(hash&&META.parks.some(p=>p.id===hash))select(hash,true);

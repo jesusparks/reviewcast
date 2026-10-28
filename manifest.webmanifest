@@ -1,7 +1,7 @@
 {
   "name": "GuestPulse",
   "short_name": "GuestPulse",
-  "description": "Google review tracker for 27 Parques Reunidos parks",
+  "description": "Google review tracker for 29 Parques Reunidos parks",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

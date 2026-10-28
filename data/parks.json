@@ -10,7 +10,8 @@
     "IT": "Italy",
     "NO": "Norway",
     "DK": "Denmark",
-    "UK": "United Kingdom"
+    "UK": "United Kingdom",
+    "FR": "France"
   },
   "countries_es": {
     "ES": "España",
@@ -20,7 +21,8 @@
     "IT": "Italia",
     "NO": "Noruega",
     "DK": "Dinamarca",
-    "UK": "Reino Unido"
+    "UK": "Reino Unido",
+    "FR": "Francia"
   },
   "types": {
     "theme": "Theme parks",
@@ -63,7 +65,9 @@
     {"id": "bo", "name": "Bø Sommarland", "country": "NO", "type": "water_out", "mapsQuery": "Bø Sommarland", "openMonths": [6,7,8]},
     {"id": "blackpool-zoo", "name": "Blackpool Zoo", "country": "UK", "type": "nature", "mapsQuery": "Blackpool Zoo", "openMonths": null},
     {"id": "bournemouth", "name": "Bournemouth Oceanarium", "country": "UK", "type": "aquarium", "mapsQuery": "Bournemouth Oceanarium", "openMonths": null},
-    {"id": "lakes", "name": "Lakes Aquarium", "country": "UK", "type": "aquarium", "mapsQuery": "Lakes Aquarium Lakeside", "openMonths": null}
+    {"id": "lakes", "name": "Lakes Aquarium", "country": "UK", "type": "aquarium", "mapsQuery": "Lakes Aquarium Lakeside", "openMonths": null},
+    {"id": "nick-lakeside", "name": "Nickelodeon Adventure Lakeside", "country": "UK", "type": "theme", "mapsQuery": "Nickelodeon Adventure Lakeside West Thurrock", "openMonths": null},
+    {"id": "aquasplash", "name": "Aquasplash Antibes", "country": "FR", "type": "water_out", "mapsQuery": "Aquasplash Antibes", "openMonths": [6,7,8,9]}
   ],
   "themes": {
     "q": "Queues & waiting times",

@@ -1,6 +1,6 @@
 # GuestPulse
 
-Guest review tracker for 27 Parques Reunidos parks. For each park it shows the average Google rating for the last 12 months, 3 months and 4 weeks, coloured against that park's own normal, plus the three most repeated complaints of the last 4 weeks.
+Guest review tracker for 29 Parques Reunidos parks. For each park it shows the average Google rating for the last 12 months, 3 months and 4 weeks, coloured against that park's own normal, plus the three most repeated complaints of the last 4 weeks.
 
 ## How the colours work
 
