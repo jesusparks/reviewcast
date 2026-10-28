@@ -56,9 +56,11 @@ button{cursor:pointer}
 button:disabled{opacity:.55;cursor:progress}
 button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
 :focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
-.toolbar{display:flex;gap:9px;flex-wrap:wrap;padding:15px 2px 12px;align-items:center}
-.filterpanel{position:relative;min-width:170px;flex:1 1 200px}
-.filterpanel summary{cursor:pointer;list-style:none;border:1px solid var(--ctrl-line);border-radius:10px;padding:12px;background:var(--ctrl);color:#fff;min-height:44px;font-size:14px}
+.toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:15px 2px 14px;align-items:stretch}
+.toolbar>*{min-width:0;height:46px;margin:0}
+.toolbar .check{grid-column:span 2}
+.filterpanel{position:relative}
+.filterpanel summary{cursor:pointer;list-style:none;border:1px solid var(--ctrl-line);border-radius:10px;padding:0 12px;background:var(--ctrl);color:#fff;height:46px;line-height:44px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .filterpanel summary::-webkit-details-marker{display:none}
 .filterpanel summary::after{content:" ▾";float:right}
 .filterpanel[open] summary::after{content:" ▴"}
@@ -69,11 +71,13 @@ button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
 .filteroptions label{display:flex;align-items:center;gap:10px;min-height:42px;padding:6px 3px;cursor:pointer;font-size:14px}
 .filteroptions input{width:19px;height:19px;accent-color:#67B8E8}
 .filteroptions .ct{margin-left:auto;color:var(--dim);font-size:12px;padding-left:12px}
-.search{flex:1 1 180px;min-width:0;border:1px solid var(--ctrl-line);border-radius:10px;padding:10px 12px;background:var(--ctrl);color:#fff;min-height:44px}
+.search{width:100%;border:1px solid var(--ctrl-line);border-radius:10px;padding:0 12px;background:var(--ctrl);color:#fff;font-size:14px}
 .search::placeholder{color:#8BA3BA}
 .toolbar2{display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center;padding:0 2px 12px}
-.check{display:inline-flex;align-items:center;gap:7px;color:#DCE8F4;font-size:13px;padding:0 5px;min-height:40px;cursor:pointer}
-.check input{width:18px;height:18px;accent-color:var(--accent-hi)}
+.check{display:flex;align-items:center;gap:9px;color:#DCE8F4;font-size:13.5px;padding:0 12px;border:1px solid var(--ctrl-line);border-radius:10px;background:var(--ctrl);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.check span{overflow:hidden;text-overflow:ellipsis}
+#pdf{width:100%;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 12px}
+.check input{flex:none;width:18px;height:18px;margin:0;accent-color:var(--accent-hi)}
 .spacer{flex:1}
 .btn-ghost{background:transparent}
 .btn-strong{background:var(--accent);border-color:var(--accent)}
@@ -111,7 +115,8 @@ button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
 .t tr:last-child td{border-bottom:0}
 
 /* summary strip */
-.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.35fr) minmax(0,1.35fr);gap:8px;margin-bottom:14px}
+.summary{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.summary .stat{grid-column:span 2}.summary .stat.wide{grid-column:span 3}
 .stat{background:var(--metric);border:1px solid #2C4762;border-radius:12px;padding:12px 13px;display:flex;flex-direction:column;gap:3px;min-width:0}
 .stat .k{font-size:11px;color:#B7C9DA;font-weight:600;letter-spacing:.02em}
 .stat .v{font-size:24px;font-weight:800;letter-spacing:-.5px}
@@ -158,7 +163,7 @@ button:hover,select:hover,.filterpanel summary:hover{border-color:#5C7A99}
 .tile .dl{font-size:12.5px;font-weight:750}
 .tile .meta{font-size:11px;font-weight:600;opacity:.9}
 .tile .part{font-size:10.5px;font-weight:700;color:var(--amber)}
-span.gs,.gs{color:var(--amber);display:inline!important;margin:0!important;padding:0!important;font-size:inherit!important;font-weight:inherit}
+span.gs,.gs{color:var(--amber)!important;display:inline!important;margin:0!important;padding:0!important;font-size:inherit!important;font-weight:inherit}
 .stars{color:var(--amber);font-size:11.5px;letter-spacing:1px}
 .issues{list-style:none;margin:0;padding:0 6px;display:flex;flex-direction:column;gap:5px;text-align:left;min-width:240px}
 .issues li{display:flex;gap:7px;align-items:baseline;font-size:12.5px;line-height:1.3}
@@ -174,7 +179,8 @@ span.gs,.gs{color:var(--amber);display:inline!important;margin:0!important;paddi
 .detail .sub{color:var(--soft);margin:0;font-size:13px}
 .detail h3{font-size:14px;margin:20px 0 9px;color:#DCE8F4}
 .maplink{font-size:13px;white-space:nowrap}
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:14px}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:14px}
+@media (max-width:760px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics>.metric:first-child{grid-column:span 2}}
 .metric{background:var(--metric-2);border-radius:9px;padding:12px;min-width:0}
 .metric span{font-size:11px;color:#B7C9DA;display:block}
 .metric strong{display:block;font-size:20px;margin:5px 0 2px}
@@ -189,6 +195,7 @@ span.gs,.gs{color:var(--amber);display:inline!important;margin:0!important;paddi
 .barrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;font-size:13px}
 .barrow .track{grid-column:1/3;height:7px;border-radius:4px;background:#22384F;overflow:hidden}
 .barrow .track span{display:block;height:100%;background:#C84950;border-radius:4px}
+@media (max-width:760px){.barrow{grid-template-columns:minmax(0,1fr);gap:2px}.barrow .track{grid-column:1}}
 .note{font-size:12px;line-height:1.5;color:#AABFD1;margin:8px 0 0}
 .empty{padding:20px;color:#BCD0E0}
 .foot{border-top:1px solid #2D435A;margin-top:10px;padding-block:20px 30px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));color:#9EB2C4;font-size:12px;line-height:1.6}
@@ -198,12 +205,13 @@ span.gs,.gs{color:var(--amber);display:inline!important;margin:0!important;paddi
 a{color:var(--link)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:#E9F2FB;color:#0B1728;padding:10px 16px;border-radius:10px;font-size:13.5px;font-weight:600;z-index:40;max-width:calc(100% - 32px)}
 
-@media (max-width:980px){.summary{grid-template-columns:repeat(3,minmax(0,1fr))}.summary .wide{grid-column:span 3}}
+@media (max-width:760px){.summary .stat.wide{grid-column:span 6}}
 @media (max-width:760px){
   header{padding-block:18px 13px}
   .hright{align-items:flex-start}
   .fresh{text-align:left}
-  .filterpanel{flex:1 1 calc(50% - 8px);min-width:0}
+  .toolbar{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .toolbar .check{grid-column:span 1;font-size:12.5px;padding:0 10px;white-space:normal;line-height:1.2}
   .filterbody{width:min(84vw,300px)}
   #typePanel .filterbody{left:auto;right:0}
   .summary{gap:6px}
@@ -257,14 +265,9 @@ html,body{overscroll-behavior-y:contain}
     <details class="filterpanel" id="countryPanel"><summary id="countrySum"></summary><div class="filterbody"><div class="filteractions"><button type="button" data-all="country" data-i="selectAll"></button><button type="button" data-none="country" data-i="clear"></button></div><div class="filteroptions" id="countryOpts"></div></div></details>
     <details class="filterpanel" id="typePanel"><summary id="typeSum"></summary><div class="filterbody"><div class="filteractions"><button type="button" data-all="type" data-i="selectAll"></button><button type="button" data-none="type" data-i="clear"></button></div><div class="filteroptions" id="typeOpts"></div></div></details>
     <input class="search" id="search" type="search">
-    <select id="mode"></select>
-    <select id="sort"></select>
-  </div>
-  <div class="toolbar2">
+    <button type="button" class="btn-strong" id="pdf" data-i="pdf"></button>
     <label class="check"><input type="checkbox" id="hideEmpty"> <span data-i="hideEmpty"></span></label>
     <label class="check"><input type="checkbox" id="hideClosed"> <span data-i="hideClosed"></span></label>
-    <span class="spacer"></span>
-    <button type="button" class="btn-strong" id="pdf" data-i="pdf"></button>
   </div>
   <div class="legend" id="legend"></div>
   <details class="rules" id="rules"><summary><span class="rarrow" aria-hidden="true">▸</span><span data-i="rulesTitle"></span></summary><div class="rules-body" id="rulesBody"></div></details>
@@ -321,14 +324,14 @@ en:{
  m_google:"Google rating, all time",reviewsChecked:"{n} reviews · checked {d}",m12:"Last 12 months",m3:"Last 3 months",m4:"Last 4 weeks",mLy:"Same 4 weeks last year",thisYear:"{d} this year",noCmp:"No comparison yet",
  mVol:"Review volume, 4 weeks",pace:"{p}% vs 3-month pace",noPace:"No 3-month pace yet",critLow:"{n} critical (3★ or lower)",
  sumH:"Summary of critical reviews, last 4 weeks",sumMeta:"Written automatically from the critical Google reviews of {a} – {b}. Guests’ words are not reproduced.",sumNone:"No summary yet. It is written each week when there are enough critical reviews.",
- weekH:"Weekly average rating, last 52 weeks",weekNote:"Line: average stars per week. Bars: number of rated reviews. Dashed line: 12-month average. Shaded area: the last 4 weeks.",chartRef:"12-month {v}",chartLast:"last 4 weeks",chartNone:"No rated reviews collected in the last 52 weeks yet.",
+ weekH:"Average rating every 4 weeks, last 12 months",weekNote:"Line: average stars per 4-week block. Bars: number of rated reviews. Dashed line: 12-month average. Shaded area: the last 4 weeks.",chartRef:"12-month {v}",chartLast:"last 4 weeks",chartNone:"No rated reviews collected in the last 12 months yet.",
  compH:"What guests complain about, last 4 weeks",mention:"mention",mentions:"mentions",pctCrit:"{p}% of critical reviews",prevN:"{n} in previous 4 weeks",unmatched:"{n} critical review(s) did not match any topic.",critNoTopicLong:"Critical reviews were found, but none mention a recurring topic.",noCrit4:"No critical reviews in the last 4 weeks.",
  foot1:"<b>Periods.</b> 4 weeks is the 28 days up to the data date. 3 months and 12 months are calendar periods ending on the same day. The 12-month average is compared with the park's all-time Google rating, which Google shows with one decimal only.",
  foot2:"<b>Colours.</b> Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",
  foot3:"<b>Issues.</b> Reviews rated 3★ or lower are scanned for recurring topics in English, Spanish, German, Dutch, Italian, Norwegian and Danish. Arrows compare each topic's mentions with the previous 4 weeks.",
  foot4:"<b>Source.</b> Public Google Maps reviews, collected weekly. Google shows older reviews with approximate dates (“2 months ago”), so dates beyond a few weeks are estimates. No review text is published here.",
  dlFail:"The download could not start in this browser.",pdfDone:"PDF report downloaded",pdfFail:"The PDF could not be created. Check your connection and try again.",pdfErr:"The PDF could not be created. Reload the page and try again.",
- pdfTitle:"Guest review report",pdfSub:"Google Maps reviews · data up to {d} · {mode}",pdfSel:"Selection: {n} parks · {c} · {t}",pdfAllC:"all countries",pdfAllT:"all park types",pdfNotes:"Park notes",pdfPage:"Page {p} of {n}",pdfDemo:"EXAMPLE DATA - NOT REAL REVIEWS",pdfRules:"Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",pdfIssues:"Top issues (4 weeks)",pdfSummary:"Summary"
+ pdfTitle:"Guest review report",pdfSub:"Google Maps reviews · data up to {d}",pdfSel:"Selection: {n} parks · {c} · {t}",pdfAllC:"all countries",pdfAllT:"all park types",pdfNotes:"Park notes",pdfPage:"Page {p} of {n}",pdfDemo:"EXAMPLE DATA - NOT REAL REVIEWS",pdfRules:"Green: more than {t} stars above the reference. White: within {t}. Red: more than {t} below. Grey: fewer than {n} rated reviews. Striped: closed for the season.",pdfIssues:"Top issues (4 weeks)",pdfSummary:"Summary"
 },
 es:{
  tagline:"Cómo valoran los visitantes en Google 29 parques de Parques Reunidos, semana a semana. Cada periodo se compara con la normalidad del propio parque.",
@@ -367,14 +370,14 @@ es:{
  m_google:"Nota en Google, histórica",reviewsChecked:"{n} reseñas · comprobada el {d}",m12:"Últimos 12 meses",m3:"Últimos 3 meses",m4:"Últimas 4 semanas",mLy:"Mismas 4 semanas del año anterior",thisYear:"{d} este año",noCmp:"Aún sin comparación",
  mVol:"Volumen de reseñas, 4 semanas",pace:"{p}% frente al ritmo de 3 meses",noPace:"Aún sin ritmo de 3 meses",critLow:"{n} críticas (3★ o menos)",
  sumH:"Resumen de las reseñas críticas, últimas 4 semanas",sumMeta:"Escrito automáticamente a partir de las reseñas críticas de Google del {a} al {b}. No se reproducen las palabras de los visitantes.",sumNone:"Aún no hay resumen. Se escribe cada semana cuando hay suficientes reseñas críticas.",
- weekH:"Nota media semanal, últimas 52 semanas",weekNote:"Línea: media de estrellas por semana. Barras: número de reseñas con nota. Línea discontinua: media de 12 meses. Zona sombreada: las últimas 4 semanas.",chartRef:"12 meses {v}",chartLast:"últimas 4 semanas",chartNone:"Aún no hay reseñas con nota recogidas en las últimas 52 semanas.",
+ weekH:"Nota media cada 4 semanas, últimos 12 meses",weekNote:"Línea: media de estrellas por bloque de 4 semanas. Barras: número de reseñas con nota. Línea discontinua: media de 12 meses. Zona sombreada: las últimas 4 semanas.",chartRef:"12 meses {v}",chartLast:"últimas 4 semanas",chartNone:"Aún no hay reseñas con nota recogidas en las últimos 12 meses.",
  compH:"De qué se quejan los visitantes, últimas 4 semanas",mention:"mención",mentions:"menciones",pctCrit:"{p}% de las reseñas críticas",prevN:"{n} en las 4 semanas anteriores",unmatched:"{n} reseña(s) crítica(s) no coinciden con ningún tema.",critNoTopicLong:"Hay reseñas críticas, pero ninguna menciona un tema recurrente.",noCrit4:"Sin reseñas críticas en las últimas 4 semanas.",
  foot1:"<b>Periodos.</b> 4 semanas son los 28 días hasta la fecha de los datos. 3 meses y 12 meses son periodos naturales que terminan ese mismo día. La media de 12 meses se compara con la nota total del parque en Google, que Google solo muestra con un decimal.",
  foot2:"<b>Colores.</b> Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",
  foot3:"<b>Problemas.</b> Las reseñas de 3★ o menos se analizan buscando temas recurrentes en inglés, español, alemán, neerlandés, italiano, noruego y danés. Las flechas comparan las menciones de cada tema con las 4 semanas anteriores.",
  foot4:"<b>Fuente.</b> Reseñas públicas de Google Maps, recogidas cada semana. Google muestra las reseñas antiguas con fechas aproximadas (“hace 2 meses”), así que las fechas de más de unas semanas son estimadas. Aquí no se publica el texto de las reseñas.",
  dlFail:"La descarga no ha podido empezar en este navegador.",pdfDone:"Informe PDF descargado",pdfFail:"No se ha podido crear el PDF. Comprueba la conexión e inténtalo de nuevo.",pdfErr:"No se ha podido crear el PDF. Recarga la página e inténtalo de nuevo.",
- pdfTitle:"Informe de reseñas de visitantes",pdfSub:"Reseñas de Google Maps · datos hasta {d} · {mode}",pdfSel:"Selección: {n} parques · {c} · {t}",pdfAllC:"todos los países",pdfAllT:"todos los tipos de parque",pdfNotes:"Notas por parque",pdfPage:"Página {p} de {n}",pdfDemo:"DATOS DE EJEMPLO - NO SON RESEÑAS REALES",pdfRules:"Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",pdfIssues:"Principales problemas (4 semanas)",pdfSummary:"Resumen"
+ pdfTitle:"Informe de reseñas de visitantes",pdfSub:"Reseñas de Google Maps · datos hasta {d}",pdfSel:"Selección: {n} parques · {c} · {t}",pdfAllC:"todos los países",pdfAllT:"todos los tipos de parque",pdfNotes:"Notas por parque",pdfPage:"Página {p} de {n}",pdfDemo:"DATOS DE EJEMPLO - NO SON RESEÑAS REALES",pdfRules:"Verde: más de {t} estrellas por encima de la referencia. Blanco: a menos de {t}. Rojo: más de {t} por debajo. Gris: menos de {n} reseñas con nota. Rayado: cerrado por temporada.",pdfIssues:"Principales problemas (4 semanas)",pdfSummary:"Resumen"
 }};
 const TYPE_ONE={en:{theme:"Theme park",water_out:"Outdoor water park",water_in:"Indoor water park",nature:"Zoo, nature & cable car",aquarium:"Indoor aquarium"},es:{theme:"Parque temático",water_out:"Parque acuático exterior",water_in:"Parque acuático interior",nature:"Zoo, naturaleza y teleférico",aquarium:"Acuario interior"}};
 
@@ -408,7 +411,7 @@ const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""
 /* ================= state ================= */
 let META=null,DATA=null,ASOF=today(),CFG={threshold:0.05,minN:5},selected=null;
 const saved=lsGet("reviewcast-filters-v3",{});
-const F={country:null,type:null,q:"",sort:saved.sort||"attention",mode:saved.mode||"avg",hideEmpty:!!saved.hideEmpty,hideClosed:!!saved.hideClosed};
+const F={country:null,type:null,q:"",sort:"attention",mode:"avg",hideEmpty:!!saved.hideEmpty,hideClosed:!!saved.hideClosed};
 const KEYCLS=k=>["good","mid","bad"].includes(k)?k:"none";
 const countryName=c=>(LANG==="es"&&META.countries_es?META.countries_es[c]:META.countries[c])||c;
 const typeName=c=>(LANG==="es"&&META.types_es?META.types_es[c]:META.types[c])||c;
@@ -471,9 +474,6 @@ function applyStatic(){
   document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t(e.dataset.i));
   document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===LANG)));
   $("#search").placeholder=t("search");$("#search").setAttribute("aria-label",t("search"));
-  $("#sort").setAttribute("aria-label",t("sortAria"));$("#mode").setAttribute("aria-label",t("modeAria"));
-  $("#sort").innerHTML=["attention","worst","best","volume","type","list"].map(k=>`<option value="${k}">${esc(t("sort_"+k))}</option>`).join("");$("#sort").value=F.sort;
-  $("#mode").innerHTML=["avg","ly"].map(k=>`<option value="${k}">${esc(t("mode_"+k))}</option>`).join("");$("#mode").value=F.mode;
   $("#legend").innerHTML=[["d-good","lg_good"],["d-mid","lg_mid"],["d-bad","lg_bad"],["d-low","lg_low"],["d-none","lg_none"],["d-closed","lg_closed"]].map(([c,k])=>`<span><span class="dot ${c}"></span>${esc(t(k))}</span>`).join("")+
     `<span><span style="color:var(--amber);font-weight:800">◔</span> ${esc(t("lg_part"))}</span><span><span class="tr-up">↑</span>/<span class="tr-down">↓</span> ${esc(t("lg_trend"))}</span>`;
   const ly=F.mode==="ly";
@@ -525,8 +525,6 @@ document.addEventListener("click",e=>{
 });
 document.querySelectorAll(".filterpanel").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)document.querySelectorAll(".filterpanel[open]").forEach(o=>{if(o!==d)o.open=false;});}));
 document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".filterpanel[open]").forEach(d=>{d.open=false;d.querySelector("summary").focus();});});
-$("#sort").addEventListener("change",e=>{F.sort=e.target.value;saveF();render();});
-$("#mode").addEventListener("change",e=>{F.mode=e.target.value;saveF();applyStatic();render();});
 $("#hideEmpty").addEventListener("change",e=>{F.hideEmpty=e.target.checked;saveF();render();});
 $("#hideClosed").addEventListener("change",e=>{F.hideClosed=e.target.checked;saveF();render();});
 $("#search").addEventListener("input",e=>{F.q=e.target.value;render();});
@@ -631,23 +629,24 @@ function setStatus(){
 }
 
 /* ================= detail ================= */
-function weekly(p,weeks){const out=[];for(let i=weeks-1;i>=0;i--){const to=addDays(ASOF,-7*i),from=addDays(to,-6);const s=stat(p,[from,to]);out.push({to,avg:s.avg,n:s.n});}return out;}
+// 13 blocks of 4 weeks: Google dates older reviews only by month, so weekly points would be mostly empty
+function weekly(p,blocks){const out=[];for(let i=blocks-1;i>=0;i--){const to=addDays(ASOF,-28*i),from=addDays(to,-27);const s=stat(p,[from,to]);out.push({to,avg:s.avg,n:s.n});}return out;}
 function chart(series,ref){
   const W=720,H=210,L=34,R=12,T=14,B=26;const pts=series.filter(s=>s.avg!=null);
   if(!pts.length)return `<p class="note">${t("chartNone")}</p>`;
   let lo=Math.min(...pts.map(s=>s.avg),ref==null?5:ref);lo=Math.max(1,Math.floor((lo-0.1)*2)/2);const hi=5;
   const x=i=>L+(W-L-R)*i/(series.length-1),y=v=>T+(H-T-B)*(hi-v)/(hi-lo||1);
   const step=hi-lo>2?1:0.5;const ticks=[];for(let v=Math.ceil(lo/step-1e-9)*step;v<=hi+1e-9;v+=step)ticks.push(v);
-  let path="",on=false;series.forEach((s,i)=>{if(s.avg==null){on=false;return;}path+=(on?"L":"M")+x(i).toFixed(1)+" "+y(s.avg).toFixed(1)+" ";on=true;});
-  const maxN=Math.max(...series.map(s=>s.n),1);const labs=[];series.forEach((s,i)=>{if(i%13===0||i===series.length-1)labs.push([i,s.to]);});
-  const x4=x(series.length-4)-6;
+  let path="",on=false;series.forEach((s,i)=>{if(s.avg==null)return;path+=(on?"L":"M")+x(i).toFixed(1)+" "+y(s.avg).toFixed(1)+" ";on=true;});
+  const maxN=Math.max(...series.map(s=>s.n),1);const labs=[];series.forEach((s,i)=>{if(i%3===0||i===series.length-1)labs.push([i,s.to]);});
+  const x4=x(series.length-1)-18;
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("weekH"))}">
     <rect x="${x4}" y="${T}" width="${W-R-x4}" height="${H-T-B}" fill="#1B3550"/>
     ${ticks.map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#2A3F55"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${f1(v)}</text>`).join("")}
-    ${series.map((s,i)=>s.n?`<rect x="${(x(i)-3.5).toFixed(1)}" y="${(H-B-(s.n/maxN)*28).toFixed(1)}" width="7" height="${((s.n/maxN)*28).toFixed(1)}" fill="#2E5072"/>`:"").join("")}
+    ${series.map((s,i)=>s.n?`<rect x="${(x(i)-9).toFixed(1)}" y="${(H-B-(s.n/maxN)*28).toFixed(1)}" width="18" height="${((s.n/maxN)*28).toFixed(1)}" fill="#2E5072"/>`:"").join("")}
     ${ref!=null?`<line x1="${L}" x2="${W-R}" y1="${y(ref)}" y2="${y(ref)}" stroke="#8FA8BF" stroke-dasharray="4 4"/><text x="${L+6}" y="${y(ref)-5}">${t("chartRef",{v:av(ref)})}</text>`:""}
     <path d="${path}" fill="none" stroke="#71C2EE" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
-    ${series.map((s,i)=>s.avg==null?"":`<circle cx="${x(i).toFixed(1)}" cy="${y(s.avg).toFixed(1)}" r="${i>=series.length-4?4:2.4}" fill="${i>=series.length-4?"#71C2EE":"#162B42"}" stroke="#71C2EE" stroke-width="1.5"><title>${nice(s.to)}: ${av(s.avg)} · ${s.n} ${plural(s.n)}</title></circle>`).join("")}
+    ${series.map((s,i)=>s.avg==null?"":`<circle cx="${x(i).toFixed(1)}" cy="${y(s.avg).toFixed(1)}" r="${i>=series.length-1?4.5:3.2}" fill="${i>=series.length-1?"#71C2EE":"#162B42"}" stroke="#71C2EE" stroke-width="1.5"><title>${nice(addDays(s.to,-27),true)} – ${nice(s.to)}: ${av(s.avg)} · ${s.n} ${plural(s.n)}</title></circle>`).join("")}
     <text x="${W-R-4}" y="${T+14}" text-anchor="end">${t("chartLast")}</text>
     ${labs.map(([i,d])=>`<text x="${x(i)}" y="${H-7}" text-anchor="${i===0?"start":i===series.length-1?"end":"middle"}">${pd(d).toLocaleDateString(LOC(),{month:"short",year:"2-digit",timeZone:"UTC"})}</text>`).join("")}
   </svg>`;
@@ -671,11 +670,10 @@ function renderDetail(pid){
      <div class="metric"><span>${t("m_google")}</span><strong class="num">${p&&p.google&&p.google.rating!=null?f1(p.google.rating)+" ★":"—"}</strong><span class="num">${p&&p.google?t("reviewsChecked",{n:fmtInt(p.google.count),d:nice(p.google.checked,true)}):t("notChecked")}</span></div>
      ${metricBox(t("m12"),m.m12,m.c12,t("r_g"),m.part.m12)}${metricBox(t("m3"),m.m3,m.c3,t(ly?"r_ly3":"r_12"),m.part.m3)}
      ${m.season.closed?`<div class="metric"><span>${t("m4")}</span><strong class="num">${m.w4.avg==null?"—":av(m.w4.avg)+" ★"}</strong><em class="em-none">${t("st_closed")}</em><span class="num">${t("rated",{n:fmtInt(m.w4.n)})}</span></div>`:metricBox(t("m4"),m.w4,m.c4,t(ly?"r_ly4":"r_3"),m.part.w4)}
-     <div class="metric ${lyc==null?"":lyc>CFG.threshold?"good":lyc<-CFG.threshold?"bad":"mid"}"><span>${t("mLy")}${m.part.ly4?' <span style="color:var(--amber)">◔</span>':""}</span><strong class="num">${m.ly4.avg==null?"—":av(m.ly4.avg)+" ★"}</strong><em class="num em-${lyc==null?"none":lyc>CFG.threshold?"good":lyc<-CFG.threshold?"bad":"mid"}">${lyc==null?t("noCmp"):t("thisYear",{d:signed(lyc)})}</em><span class="num">${t("rated",{n:fmtInt(m.ly4.n)})}</span></div>
      <div class="metric"><span>${t("mVol")}</span><strong class="num">${fmtInt(m.w4.m)}</strong><em class="num em-none">${pace?t("pace",{p:(m.w4.m>=pace?"+":"−")+Math.abs(Math.round((m.w4.m/pace-1)*100))}):t("noPace")}</em><span class="num">${t("critLow",{n:m.w4.neg})}</span></div>
    </div>
    <h3>${t("sumH")}</h3>${st?`<div class="sumtext"><p>${esc(st)}</p><span class="sm">${t("sumMeta",{a:nice(p.summary.from,true),b:nice(p.summary.to)})}</span></div>`:`<p class="note">${t("sumNone")}</p>`}
-   <h3>${t("weekH")}</h3>${chart(weekly(p,52),m.m12.avg)}<p class="note">${t("weekNote")}</p>
+   <h3>${t("weekH")}</h3>${chart(weekly(p,13),m.m12.avg)}<p class="note">${t("weekNote")}</p>
    <h3>${t("compH")}</h3>${top.length?`<div class="bars">${top.map(([k,v])=>`<div class="barrow"><span>${esc(themeName(k))} ${trend(k,m.w4,m.prev4)}</span><span class="num" style="color:var(--dim)">${v} ${v===1?t("mention"):t("mentions")} · ${t("pctCrit",{p:Math.round(v/m.w4.neg*100)})}${m.prev4.neg?" · "+t("prevN",{n:m.prev4.th[k]||0}):""}</span><div class="track"><span style="width:${Math.max(4,v/maxT*100)}%"></span></div></div>`).join("")}</div>${m.w4.th.x?`<p class="note">${t("unmatched",{n:m.w4.th.x})}</p>`:""}`:`<p class="note">${m.w4.neg?t("critNoTopicLong"):t("noCrit4")}</p>`}`;
 }
 function select(pid,scroll){
