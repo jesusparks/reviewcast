@@ -119,7 +119,7 @@
       const oldest = reviews.length ? ageDays(reviews[reviews.length - 1].when) : 0;
       if (reviews.length >= MAX_REVIEWS || (oldest != null && oldest > stopDays)) break;
       // Google sometimes stops loading; nudge the list up and down before giving up.
-      if (seen.size === last) { still++; if (still % 5 === 0) { feed.scrollTop = Math.max(0, feed.scrollTop - 1500); await sleep(1500); } if (still >= 25) { reachedEnd = true; break; } } else { still = 0; last = seen.size; }
+      if (seen.size === last) { still++; if (still % 5 === 0) { feed.scrollTop = Math.max(0, feed.scrollTop - 1500); await sleep(1500); } if (still >= 60) { reachedEnd = true; break; } } else { still = 0; last = seen.size; }
     }
     reviews = read();
     // drop the cards Google keeps for the previous place, if any slipped in
