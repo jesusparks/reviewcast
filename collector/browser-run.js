@@ -76,9 +76,9 @@
     if (mr) { google.rating = parseFloat(mr[1].replace(",", ".")); google.count = parseInt(mr[2].replace(/[^\d]/g, ""), 10) || null; }
     const tab = [...document.querySelectorAll('button[role="tab"]')].find(b => /review/i.test((b.getAttribute("aria-label") || "") + b.innerText));
     if (!tab) return { error: "no Reviews tab", google, reviews: [] };
-    if (tab.getAttribute("aria-selected") !== "true") { tab.click(); await sleep(2500); }
+    if (tab.getAttribute("aria-selected") !== "true") { tab.click(); await sleep(4000); }
     // Attractions show a "Sort" button; places Google lists as lodging (Tropical Islands, Slagharen) show a "Most relevant" dropdown.
-    const sortBtn = await until(() => [...document.querySelectorAll("button")].find(b => b.offsetParent && (/^sort/i.test(((b.getAttribute("aria-label") || "") + " " + (b.innerText || "")).trim()) || /^most relevant$/i.test((b.getAttribute("aria-label") || "").trim()))), 10000);
+    const sortBtn = await until(() => [...document.querySelectorAll("button")].find(b => b.offsetParent && (/^sort/i.test(((b.getAttribute("aria-label") || "") + " " + (b.innerText || "")).trim()) || /^most relevant$/i.test((b.getAttribute("aria-label") || "").trim()))), 25000);
     if (!sortBtn) return { error: "no Sort button (signed out?)", google, reviews: [] };
     sortBtn.click(); await sleep(1500);
     const opt = [...document.querySelectorAll('[role="menuitemradio"],[role="menuitem"],[role="option"]')].find(e => /newest/i.test(e.innerText));
@@ -110,9 +110,12 @@
     };
     let last = -1, still = 0, reachedEnd = false, reviews = [];
     for (let i = 0; i < 30000; i++) {
+      if (RC.stopPark) { RC.stopPark = false; break; } // set by hand to end a slow park early
       feed.scrollTop = feed.scrollHeight;
       await sleep(1000 + Math.random() * 500);
       reviews = read();
+      // Cards already read are removed from the page: with thousands of cards Google Maps slows to a crawl.
+      const cards = document.querySelectorAll(".jJc9Ad"); for (let k = 0; k < cards.length - 40; k++) cards[k].remove();
       const oldest = reviews.length ? ageDays(reviews[reviews.length - 1].when) : 0;
       if (reviews.length >= MAX_REVIEWS || (oldest != null && oldest > stopDays)) break;
       // Google sometimes stops loading; nudge the list up and down before giving up.
@@ -130,14 +133,14 @@
     async runAll(list, stop, max, opts = {}) {
       RC.state = { done: 0, total: list.length, finished: false, log: [], started: Date.now() };
       for (const p of list) {
-        RC.state.current = p.id;
+        RC.state.current = p.id; RC.state.parkStarted = Date.now();
         const t0 = Date.now();
         try {
           const name = await openPlace(p.q);
           const r = await scrape(stop, max);
           r.place = name;
           RC.results[p.id] = r;
-          RC.state.log.push(`${p.id}: ${r.error || r.reviews.length + " reviews"} (${name}, ${Math.round((Date.now() - t0) / 1000)}s)`);
+          RC.state.log.push(`${p.id}: ${r.error || r.reviews.length + " reviews, oldest " + (r.reviews.length ? r.reviews[r.reviews.length - 1].when : "-")} (${name}, ${Math.round((Date.now() - t0) / 60000)} min)`);
           if (opts.save && !r.error) { RC.save(p.id, opts.tag || "backfill"); RC.state.saved = (RC.state.saved || 0) + 1; r.reviews = []; } // saved: free the memory
         } catch (e) {
           RC.results[p.id] = { error: String(e && e.message || e), reviews: [] };
