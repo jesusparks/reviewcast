@@ -710,30 +710,34 @@ async function buildPdf(){
   doc.setTextColor(255,255,255);doc.setFont("helvetica","bold");doc.setFontSize(18);doc.text("GuestPulse",M,11);
   doc.setFont("helvetica","normal");doc.setFontSize(12);doc.text(pdfSafe(t("pdfTitle")),M+38,11);
   doc.setFontSize(9);doc.setTextColor(200,214,228);
-  doc.text(pdfSafe(t("pdfSub",{d:nice(ASOF),mode:t("mode_"+F.mode)})),M,18);
+  doc.text(pdfSafe(t("pdfSub",{d:nice(ASOF)})),M,18);
   const allC=F.country.size===Object.keys(META.countries).length,allT=F.type.size===Object.keys(META.types).length;
   doc.text(pdfSafe(t("pdfSel",{n:rows.length,c:allC?t("pdfAllC"):[...F.country].map(countryName).join(", "),t:allT?t("pdfAllT"):[...F.type].map(typeName).join(", ")})),W-M,18,{align:"right",maxWidth:150});
   let y=30;
   if(DATA.demo){doc.setFillColor(255,236,200);doc.rect(M,y-4,W-2*M,7,"F");doc.setTextColor(120,70,0);doc.setFont("helvetica","bold");doc.setFontSize(9);doc.text(t("pdfDemo"),W/2,y+0.8,{align:"center"});y+=8;}
-  // summary boxes
-  const boxes=[[t("sel12"),g.m12,c12,t("r_g")],[t("sel3"),g.m3,c3,t(ly?"r_ly3":"r_12")],[t("sel4"),g.w4,c4,t(ly?"r_ly4":"r_3")]];
-  const bw=(W-2*M-3*4)/4;
-  boxes.forEach(([lab,st,c,ref],i)=>{const x=M+i*(bw+4);doc.setDrawColor(210,218,228);doc.setFillColor(247,249,251);doc.roundedRect(x,y,bw,22,2,2,"FD");
-    const col=c.key==="good"?COL.good:c.key==="bad"?COL.bad:c.key==="mid"?[150,160,172]:COL.low;doc.setFillColor(...col);doc.rect(x,y,bw,1.6,"F");
-    doc.setTextColor(...COL.dim);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.text(pdfSafe(lab),x+4,y+6);
-    doc.setTextColor(...COL.ink);doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text(st.avg==null?"-":av(st.avg),x+4,y+14);
-    doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(...(c.key==="good"?COL.good:c.key==="bad"?COL.bad:COL.dim));
-    doc.text(pdfSafe(c.delta!=null?signed(c.delta)+" "+t("vs")+" "+ref:(c.key==="none"?t("st_none"):stLabel(c))),x+4,y+19);
-    doc.setTextColor(...COL.dim);doc.text(pdfSafe(t("rated",{n:fmtInt(st.n)})),x+bw-4,y+14,{align:"right"});});
-  {const x=M+3*(bw+4);doc.setDrawColor(210,218,228);doc.setFillColor(247,249,251);doc.roundedRect(x,y,bw,22,2,2,"FD");
-    doc.setTextColor(...COL.dim);doc.setFontSize(8);doc.text(pdfSafe(t("distTitle",{n:rows.length})),x+4,y+6,{maxWidth:bw-8});
-    doc.setFontSize(9);doc.setTextColor(...COL.ink);
-    const parts=[[dist.good,t("d_good"),COL.good],[dist.mid,t("d_mid"),[150,160,172]],[dist.bad,t("d_bad"),COL.bad],[dist.other,t("d_other"),COL.low],[dist.closed,t("d_closed"),[170,180,192]]].filter(p=>p[0]);
-    let yy=y+12;parts.forEach(([n,l,c],i)=>{const cx=x+4+(i%2)*(bw/2-2),cy=yy+Math.floor(i/2)*4.5;doc.setFillColor(...c);doc.rect(cx,cy-2.4,2.6,2.6,"F");doc.setDrawColor(150,160,172);if(c===COL.mid)doc.rect(cx,cy-2.4,2.6,2.6,"S");doc.text(pdfSafe(n+" "+l),cx+4,cy);});}
-  y+=27;
-  const ti=topIssues(g.w4.th,3);
-  if(ti.length){doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(...COL.ink);doc.text(pdfSafe(t("topSel")),M,y);doc.setFont("helvetica","normal");
-    doc.text(pdfSafe(ti.map(([k,v],i)=>`${i+1}. ${themeName(k)} (${t("ofN",{v,n:g.w4.neg})})${trendKey(k,g.w4,g.prev4)==="up"?" (+)":trendKey(k,g.w4,g.prev4)==="new"?" ("+t("isNew")+")":""}`).join("    ")),M,y+5);y+=9;}
+  // same two cards as the web page: parks vs their normal, top issues
+  const bw=(W-2*M-4)/2,bh=27,tot=rows.length||1;
+  const card=(x,title)=>{doc.setDrawColor(210,218,228);doc.setFillColor(247,249,251);doc.roundedRect(x,y,bw,bh,2,2,"FD");doc.setTextColor(...COL.dim);doc.setFont("helvetica","bold");doc.setFontSize(8);doc.text(pdfSafe(title),x+4,y+6);};
+  const DC={good:COL.good,mid:[205,212,222],bad:COL.bad,other:COL.low,closed:[170,180,192]};
+  card(M,t("distTitle",{n:rows.length}));
+  {let bx=M+4;const bwid=bw-8;for(const k of ["good","mid","bad","other","closed"])if(dist[k]){const w=bwid*dist[k]/tot;doc.setFillColor(...DC[k]);doc.rect(bx,y+9,w,3.2,"F");bx+=w;}
+   let lx=M+4;doc.setFont("helvetica","normal");doc.setFontSize(8.5);
+   for(const k of ["good","mid","bad","other","closed"])if(dist[k]){const lab=dist[k]+" "+t("d_"+k);doc.setFillColor(...DC[k]);doc.rect(lx,y+16.6,2.6,2.6,"F");doc.setTextColor(...COL.ink);doc.text(pdfSafe(lab),lx+4,y+18.9);lx+=doc.getTextWidth(pdfSafe(lab))+10;}}
+  card(M+bw+4,t("topSel"));
+  {const ti=topIssues(g.w4.th,3);doc.setFont("helvetica","normal");doc.setFontSize(8.5);
+   if(!ti.length){doc.setTextColor(...COL.dim);doc.text(pdfSafe(t("noCritPeriod")),M+bw+8,y+13);}
+   ti.forEach(([k,v],i)=>{const yy=y+12.5+i*4.8;const tk=trendKey(k,g.w4,g.prev4);doc.setTextColor(...COL.ink);
+     doc.text(pdfSafe(themeName(k)+(tk==="up"?" (+)":tk==="down"?" (-)":tk==="new"?" ("+t("isNew")+")":"")),M+bw+8,yy);
+     doc.setTextColor(...COL.dim);doc.text(pdfSafe(t("ofN",{v,n:g.w4.neg})),M+2*bw,yy,{align:"right"});});}
+  y+=bh+5;
+  // legend: only the colours used in the table, as on the web page
+  {const used=new Set();rows.forEach(({m})=>{used.add(m.c12.key);used.add(m.c3.key);used.add(m.season.closed?"closed":m.c4.key);});
+   const LG=[["good",COL.good,"lg_good"],["mid",[205,212,222],"lg_mid"],["bad",COL.bad,"lg_bad"],["low",COL.low,"lg_low"],["none",COL.none,"lg_none"],["closed",COL.closed,"lg_closed"]].filter(([k])=>used.has(k));
+   let lx=M;doc.setFont("helvetica","normal");doc.setFontSize(8);
+   LG.forEach(([k,c,lab])=>{doc.setFillColor(...c);doc.setDrawColor(170,180,192);doc.rect(lx,y-2.6,3,3,"FD");doc.setTextColor(...COL.ink);doc.text(pdfSafe(t(lab)),lx+4.5,y);lx+=doc.getTextWidth(pdfSafe(t(lab)))+11;});
+   const anyT=rows.some(({m})=>topIssues(m.w4.th).some(([k])=>["up","down"].includes(trendKey(k,m.w4,m.prev4))));
+   if(anyT){doc.text(pdfSafe("(+)/(-) "+t("lg_trend")),lx,y);}
+   y+=5;}
   // main table
   const cell=(st,c,part)=>c.key==="none"?t("noReviews"):`${av(st.avg)}\n${c.delta!=null?signed(c.delta):stLabel(c)} · ${fmtInt(st.n)}${part?" *":""}`;
   const body=rows.map(({p,m})=>{const gg=m.p&&m.p.google;return[
@@ -764,7 +768,7 @@ async function buildPdf(){
   // footers
   const n=doc.getNumberOfPages();
   for(let i=1;i<=n;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(...COL.dim);
-    doc.text(pdfSafe(t("pdfRules",{t:f2(CFG.threshold),n:CFG.minN})+"  * "+t("lg_part")+"."),M,203,{maxWidth:220});
+    doc.text(pdfSafe(t("pdfRules",{t:f2(CFG.threshold),n:CFG.minN})),M,203,{maxWidth:220});
     doc.text(pdfSafe(t("pdfPage",{p:i,n})),W-M,203,{align:"right"});}
   return doc;
 }
