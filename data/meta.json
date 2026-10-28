@@ -37,8 +37,8 @@
   },
   "atlantis": {
    "rating": 4.4,
-   "count": 8294,
-   "checked": "2026-10-27"
+   "count": 8296,
+   "checked": "2026-10-28"
   },
   "moviepark": {
    "rating": 4,
@@ -133,6 +133,16 @@
   "slagharen": {
    "rating": 4.2,
    "count": 19164,
+   "checked": "2026-10-28"
+  },
+  "nick-lakeside": {
+   "rating": 3.9,
+   "count": 1748,
+   "checked": "2026-10-28"
+  },
+  "aquasplash": {
+   "rating": 3.2,
+   "count": 4964,
    "checked": "2026-10-28"
   }
  },
@@ -270,6 +280,9 @@
   "aq-costadorada": "2026-10-27",
   "bonbon": "2026-10-27",
   "slagharen": "2026-10-28",
-  "zoo-madrid": "2026-10-28"
+  "zoo-madrid": "2026-10-28",
+  "atlantis": "2026-10-28",
+  "nick-lakeside": "2026-10-28",
+  "aquasplash": "2026-10-28"
  }
 }
