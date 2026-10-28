@@ -71,6 +71,12 @@ function ingest(files, report) {
     const rows = touched[id] || (touched[id] = loadHistory(id));
     const known = new Set(rows.map(r => r.hash));
     let added = 0, dup = 0, skipped = 0;
+    // A run that read on until Google's "a year ago" has every review of the last ~12 months
+    // ("11 months ago" covers roughly days 335-365), so the park's 12-month window counts as complete.
+    if (/(^|;)[^,;]*,[^,;]*,\d+y(,|;|$)/.test(String(pr.items || ""))) {
+      meta.complete = meta.complete || {};
+      if (!meta.complete[id] || meta.complete[id] < ref) meta.complete[id] = ref;
+    }
     for (const s of String(pr.items || "").split(";").filter(Boolean)) {
       const [hash, st, wc, tp] = s.split(",");
       if (!hash) continue;
@@ -120,6 +126,8 @@ function build() {
       if (!lastSeen || r.first_seen > lastSeen) lastSeen = r.first_seen;
     }
     if (first) P.coverageFrom = first;
+    // complete 12 months (see ingest): report coverage from 12 months before that collection
+    if (meta.complete && meta.complete[id]) { const c = addDays(meta.complete[id], -365); if (!P.coverageFrom || c < P.coverageFrom) P.coverageFrom = c; }
     if (meta.google[id]) P.google = meta.google[id];
     if (meta.summaries[id]) P.summary = meta.summaries[id];
     P.reviews = rows.length;
