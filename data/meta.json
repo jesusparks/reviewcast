@@ -2,274 +2,280 @@
  "google": {
   "lakes": {
    "rating": 4.2,
-   "count": 4772,
-   "checked": "2026-10-27"
+   "count": 4781,
+   "checked": "2026-11-01"
   },
   "pwm": {
    "rating": 4.2,
-   "count": 90737,
-   "checked": "2026-10-28"
+   "count": 90731,
+   "checked": "2026-11-01"
   },
   "pam": {
    "rating": 4.1,
-   "count": 41594,
-   "checked": "2026-10-28"
+   "count": 41621,
+   "checked": "2026-11-01"
   },
   "tropical": {
    "rating": 3.5,
-   "count": 5944,
-   "checked": "2026-10-28"
+   "count": 5943,
+   "checked": "2026-11-01"
   },
   "mirabilandia": {
    "rating": 4.3,
-   "count": 55173,
-   "checked": "2026-10-28"
+   "count": 55211,
+   "checked": "2026-11-01"
   },
   "aq-cartaya": {
    "rating": 3.6,
    "count": 2782,
-   "checked": "2026-10-27"
+   "checked": "2026-11-01"
   },
   "aq-costadorada": {
    "rating": 3.9,
-   "count": 14533,
-   "checked": "2026-10-27"
+   "count": 14532,
+   "checked": "2026-11-01"
   },
   "atlantis": {
    "rating": 4.4,
-   "count": 8296,
-   "checked": "2026-10-28"
+   "count": 8307,
+   "checked": "2026-11-01"
   },
   "moviepark": {
    "rating": 4,
-   "count": 63778,
-   "checked": "2026-10-28"
+   "count": 63761,
+   "checked": "2026-11-01"
   },
   "bobbejaanland": {
    "rating": 4.1,
-   "count": 23881,
-   "checked": "2026-10-28"
+   "count": 23901,
+   "checked": "2026-11-01"
   },
   "tusenfryd": {
    "rating": 4.2,
-   "count": 9091,
-   "checked": "2026-10-27"
+   "count": 9095,
+   "checked": "2026-11-01"
   },
   "bonbon": {
    "rating": 4.1,
-   "count": 7505,
-   "checked": "2026-10-27"
+   "count": 7509,
+   "checked": "2026-11-01"
   },
   "aq-cullera": {
    "rating": 3.3,
    "count": 6505,
-   "checked": "2026-10-27"
+   "checked": "2026-11-01"
   },
   "aq-torrevieja": {
    "rating": 3.7,
-   "count": 6884,
-   "checked": "2026-10-27"
+   "count": 6882,
+   "checked": "2026-11-01"
   },
   "aq-villanueva": {
    "rating": 3.6,
-   "count": 16823,
-   "checked": "2026-10-28"
+   "count": 16824,
+   "checked": "2026-11-01"
   },
   "faunia": {
    "rating": 4.1,
-   "count": 26085,
-   "checked": "2026-10-28"
+   "count": 26100,
+   "checked": "2026-11-01"
   },
   "zoo-madrid": {
    "rating": 4.2,
-   "count": 42902,
-   "checked": "2026-10-28"
+   "count": 42932,
+   "checked": "2026-11-01"
   },
   "selwo-aventura": {
    "rating": 4.1,
-   "count": 9810,
-   "checked": "2026-10-27"
+   "count": 9823,
+   "checked": "2026-11-01"
   },
   "selwo-marina": {
    "rating": 4,
-   "count": 12591,
-   "checked": "2026-10-27"
+   "count": 12603,
+   "checked": "2026-11-01"
   },
   "teleferico": {
    "rating": 4.5,
-   "count": 6744,
-   "checked": "2026-10-27"
+   "count": 6774,
+   "checked": "2026-11-01"
   },
   "warner-beach": {
    "rating": 3.6,
-   "count": 12040,
-   "checked": "2026-10-27"
+   "count": 12050,
+   "checked": "2026-11-01"
   },
   "walsrode": {
    "rating": 4.6,
-   "count": 16194,
-   "checked": "2026-10-27"
+   "count": 16206,
+   "checked": "2026-11-01"
   },
   "mirabeach": {
    "rating": 4,
    "count": 5730,
-   "checked": "2026-10-27"
+   "checked": "2026-11-01"
   },
   "bo": {
    "rating": 4,
    "count": 3837,
-   "checked": "2026-10-27"
+   "checked": "2026-11-01"
   },
   "blackpool-zoo": {
    "rating": 4.6,
-   "count": 18425,
-   "checked": "2026-10-28"
+   "count": 18448,
+   "checked": "2026-11-01"
   },
   "bournemouth": {
    "rating": 4.2,
-   "count": 7250,
-   "checked": "2026-10-27"
+   "count": 7256,
+   "checked": "2026-11-01"
   },
   "slagharen": {
    "rating": 4.2,
-   "count": 19164,
-   "checked": "2026-10-28"
+   "count": 19179,
+   "checked": "2026-11-01"
   },
   "nick-lakeside": {
    "rating": 3.9,
-   "count": 1748,
-   "checked": "2026-10-28"
+   "count": 1749,
+   "checked": "2026-11-01"
   },
   "aquasplash": {
    "rating": 3.2,
    "count": 4964,
-   "checked": "2026-10-28"
+   "checked": "2026-11-01"
   }
  },
  "summaries": {
   "lakes": {
-   "en": "Critical reviews say the aquarium is smaller than expected and quick to see, which makes the ticket plus parking feel expensive; one guest also notes there are no toilets inside the building. Most visitors still rate it well as a rainy-day option for families. Suggested focus: setting expectations on visit length and value.",
-   "es": "Las rese\u00f1as cr\u00edticas dicen que el acuario es m\u00e1s peque\u00f1o de lo esperado y se ve r\u00e1pido, lo que hace que la entrada m\u00e1s el aparcamiento parezcan caros; un visitante se\u00f1ala adem\u00e1s que no hay aseos dentro del edificio. Aun as\u00ed, la mayor\u00eda lo valora bien como plan familiar para d\u00edas de lluvia. Foco recomendado: ajustar las expectativas sobre la duraci\u00f3n de la visita y el precio.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Mild criticism only: guests find the aquarium small and quick to see, which makes ticket plus parking feel pricey, and one notes there are no toilets inside the building. Suggested focus: setting expectations on visit length and value.",
+   "es": "Solo críticas suaves: los visitantes encuentran el acuario pequeño y rápido de ver, lo que hace que la entrada más el aparcamiento parezcan caros, y uno señala que no hay aseos dentro del edificio. Foco recomendado: ajustar expectativas sobre la duración de la visita y el valor.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "pwm": {
-   "en": "The strongest theme is accessibility: several guests using wheelchairs or with disabilities say they were refused access to rides under a new policy and were not told before buying tickets. Others report closed restaurants, rides and shows on quieter days, long queues on busy Halloween dates, and extra charges for the haunted houses. Suggested focus: explain the accessibility rules clearly at the point of sale.",
-   "es": "El tema m\u00e1s repetido es la accesibilidad: varios visitantes en silla de ruedas o con discapacidad cuentan que no les dejaron subir a atracciones por una norma nueva de la que no se les avis\u00f3 al comprar la entrada. Tambi\u00e9n se quejan de restaurantes, atracciones y espect\u00e1culos cerrados en d\u00edas tranquilos, de colas largas en las fechas de Halloween y del cobro aparte de los pasajes del terror. Foco recomendado: explicar con claridad las normas de accesibilidad en el momento de la compra.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Google is showing few recent reviews for this park. Among them, complaints mention long waits per ride, a wheelchair-access policy that keeps some guests off attractions, restrictions and lack of clarity around the Halloween season, and restaurants and shows closed on quieter days. Suggested focus: clear accessibility and Halloween rules at the point of sale.",
+   "es": "Google muestra pocas reseñas recientes de este parque. Entre ellas, las quejas hablan de esperas largas por atracción, una política de acceso en silla de ruedas que deja a algunos visitantes sin subir a atracciones, restricciones y poca claridad sobre la temporada de Halloween, y restaurantes y espectáculos cerrados en días tranquilos. Foco recomendado: normas claras de accesibilidad y de Halloween en el momento de la compra.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "pam": {
-   "en": "Halloween weekends dominate the complaints: guests describe overcrowding, queues of one to two hours, and only managing a handful of rides in a full day, with criticism of the express pass system. Many also say the park looks old and poorly maintained, with rides closed without notice, and some mention slow exits from the car park. Suggested focus: capacity control and queue management on peak days.",
-   "es": "Las quejas se concentran en los fines de semana de Halloween: los visitantes hablan de aglomeraciones, colas de una a dos horas y de subir solo a unas pocas atracciones en todo el d\u00eda, con cr\u00edticas al sistema de pase r\u00e1pido. Muchos dicen tambi\u00e9n que el parque se ve antiguo y mal mantenido, con atracciones cerradas sin aviso, y algunos mencionan salidas muy lentas del aparcamiento. Foco recomendado: control de aforo y gesti\u00f3n de colas en d\u00edas punta.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Halloween weeks dominate the complaints: guests describe one- to two-hour queues, overcrowding with no apparent capacity control, and slow-running rides. Many also say several attractions were closed without notice and that the park feels old, poorly maintained and dirty; a few mention disorder at the children's rides and a reduced-mobility queue rule. Suggested focus: queue and capacity management on peak event days, plus communicating ride closures.",
+   "es": "Las semanas de Halloween concentran las quejas: los visitantes hablan de colas de una a dos horas, aglomeraciones sin control aparente de aforo y atracciones que funcionan despacio. Muchos dicen además que varias atracciones estaban cerradas sin aviso y que el parque se ve viejo, mal mantenido y sucio; algunos mencionan desorden en las atracciones infantiles y una norma de cola para movilidad reducida. Foco recomendado: gestión de colas y aforo en los días punta de eventos y avisar de los cierres de atracciones.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "tropical": {
-   "en": "Critical reviews focus on value for money: guests feel prices for entry, accommodation and food are high for what they get. Recurring problems are overcrowding during the autumn holidays, loungers reserved with towels, broken lockers, cleanliness, and unhelpful or hard-to-find staff, plus a strict cancellation policy and a shuttle gap at lunchtime. Suggested focus: lounger reservation rules, locker maintenance and cleaning on peak days.",
-   "es": "Las rese\u00f1as cr\u00edticas se centran en la relaci\u00f3n calidad-precio: los visitantes ven caros la entrada, el alojamiento y la comida para lo que reciben. Los problemas recurrentes son las aglomeraciones en las vacaciones de oto\u00f1o, las hamacas reservadas con toallas, taquillas rotas, la limpieza y un personal poco resolutivo o dif\u00edcil de encontrar, adem\u00e1s de una pol\u00edtica de cancelaci\u00f3n muy estricta y un hueco en el servicio de lanzadera a mediod\u00eda. Foco recomendado: normas de reserva de hamacas, mantenimiento de taquillas y limpieza en d\u00edas punta.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Critical reviews are numerous: guests report broken or hard-to-find lockers, overcrowding, cleanliness problems and staff described as unhelpful, and many feel the price for entry and accommodation is too high for what they get. Others mention rooms missing basics, strict cancellation terms and the shuttle not running at lunchtime. Suggested focus: locker availability and cleanliness, then value for money of stays.",
+   "es": "Las reseñas críticas son numerosas: los visitantes cuentan taquillas rotas o difíciles de encontrar, aglomeraciones, problemas de limpieza y personal poco servicial, y muchos sienten que el precio de la entrada y el alojamiento es demasiado alto para lo que reciben. Otros mencionan habitaciones sin lo básico, condiciones de cancelación estrictas y que el autobús lanzadera no funciona a mediodía. Foco recomendado: disponibilidad de taquillas y limpieza, y después la relación calidad-precio de las estancias.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "mirabilandia": {
-   "en": "The main complaint is rides closed for maintenance or opening only in the afternoon, with nothing on the website when booking, which feels unfair at full ticket price. Guests also report long queues on Halloween weekends, many restaurants closed, high prices inside the park and \u20ac9 parking, and season ticket holders object to paying extra for the Halloween event. Suggested focus: publish ride availability and keep key attractions running all day.",
-   "es": "La queja principal son las atracciones cerradas por mantenimiento o que solo abren por la tarde, sin aviso en la web al comprar, algo que parece injusto con la entrada a precio completo. Los visitantes mencionan tambi\u00e9n colas largas en los fines de semana de Halloween, muchos restaurantes cerrados, precios altos dentro del parque y el aparcamiento de 9 \u20ac, y los abonados se quejan de pagar aparte el evento de Halloween. Foco recomendado: publicar qu\u00e9 atracciones funcionan y mantener abiertas las principales todo el d\u00eda.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Complaints centre on the Halloween dates: queues of 90 minutes to two hours for most rides, so guests managed only a few attractions despite paying full price, plus extra-charge event areas they could not use. Others mention rides closed for maintenance without notice, high in-park and parking prices, and a sense that service has slipped. Suggested focus: crowd and queue management on Halloween days and flagging closed rides before purchase.",
+   "es": "Las quejas se centran en las fechas de Halloween: colas de 90 minutos a dos horas en casi todas las atracciones, de modo que los visitantes solo pudieron subir a unas pocas pagando la entrada completa, además de zonas del evento con pago extra que no pudieron usar. Otros mencionan atracciones cerradas por mantenimiento sin aviso, precios altos dentro del parque y en el aparcamiento, y la sensación de que el servicio ha empeorado. Foco recomendado: gestión de aforo y colas en los días de Halloween y avisar de las atracciones cerradas antes de la compra.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "atlantis": {
-   "en": "The recurring criticism is price against visit length: several guests say the tour takes about an hour and feels expensive, especially since the penguin area was removed. Others dislike the entrance photo sales without prices being mentioned, and weekends are described as crowded. Suggested focus: value for money and transparency on the photo service.",
-   "es": "La cr\u00edtica recurrente es el precio frente a la duraci\u00f3n de la visita: varios visitantes dicen que el recorrido dura en torno a una hora y resulta caro, sobre todo desde que se retir\u00f3 la zona de ping\u00fcinos. A otros les molesta la venta de fotos en la entrada sin informar del precio, y los fines de semana se describen como muy concurridos. Foco recomendado: relaci\u00f3n calidad-precio y transparencia en el servicio de fotos.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Most critical guests feel the visit is short and expensive for what is on show, and several miss the penguins that used to be there. One complains about entrance photographers not explaining photo prices. Suggested focus: value perception (visit length and exhibits versus ticket price).",
+   "es": "La mayoría de los visitantes críticos sienten que la visita es corta y cara para lo que se ve, y varios echan de menos los pingüinos que había antes. Uno se queja de que los fotógrafos de la entrada no explican los precios de las fotos. Foco recomendado: percepción de valor (duración de la visita y contenidos frente al precio).",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "moviepark": {
-   "en": "Most criticism comes from the Halloween Horror Festival: guests describe an overcrowded park, waits of an hour or more even with Fastpass, and frustration that paid fast-track access makes ordinary queues longer. Prices are a second theme, especially the \u20ac9 parking, food and drinks, and extra charges for haunted houses; a few mention run-down areas and slow car park exits. Suggested focus: crowd and queue management during Halloween events.",
-   "es": "La mayor\u00eda de las cr\u00edticas vienen del Halloween Horror Festival: los visitantes describen un parque abarrotado, esperas de una hora o m\u00e1s incluso con Fastpass y malestar porque el acceso r\u00e1pido de pago alarga las colas normales. Los precios son el segundo tema, sobre todo el aparcamiento de 9 \u20ac, la comida y la bebida, y el pago extra de los pasajes del terror; algunos mencionan zonas deterioradas y salidas lentas del aparcamiento. Foco recomendado: gesti\u00f3n de aforo y colas durante los eventos de Halloween.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Halloween Horror Festival days brought heavy overcrowding: guests report waits of an hour or more even with Fastpass and only a few rides per visit, and feel the high ticket price is not justified. Parking fees, overpriced food and outlets opening late are also mentioned. Suggested focus: capacity limits and queue management on festival days.",
+   "es": "Los días del Halloween Horror Festival trajeron grandes aglomeraciones: los visitantes hablan de esperas de una hora o más incluso con Fastpass y de solo unas pocas atracciones por visita, y sienten que el precio alto de la entrada no se justifica. También se mencionan el pago del aparcamiento, la comida cara y puntos de venta que abren tarde. Foco recomendado: límites de aforo y gestión de colas en los días del festival.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "bobbejaanland": {
-   "en": "Guests most often criticise food quality and prices (cold or poor food, expensive coffee and sauces) and attractions not running at opening time or closed altogether. Several feel the park is ageing and needs maintenance, and some mention long Halloween queues while speed-pass holders skip ahead, plus extra fees for haunted houses. Suggested focus: having rides and outlets open at the advertised opening time.",
-   "es": "Lo m\u00e1s criticado es la comida, por calidad y por precio (comida fr\u00eda o mala, caf\u00e9 y salsas caros), y las atracciones que no funcionan a la hora de apertura o est\u00e1n cerradas. Varios visitantes ven el parque envejecido y falto de mantenimiento, y algunos mencionan colas largas en Halloween mientras los clientes con pase r\u00e1pido se adelantan, adem\u00e1s del pago extra de los pasajes del terror. Foco recomendado: tener atracciones y puntos de venta abiertos a la hora anunciada.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Halloween visits drew complaints about very long queues for haunted houses with no time slots, fast-pass holders being let ahead, and confusion over event hours and extra charges. Guests also find food, coffee and parking expensive, note rides opening later than the gates, and describe the park as dated with some areas closed. Suggested focus: haunted-house queue management and clear communication of opening times and extra fees.",
+   "es": "Las visitas de Halloween generaron quejas por colas muy largas en los pasajes del terror sin franjas horarias, por dejar pasar antes a quienes tienen fast pass y por confusión con los horarios del evento y los cargos extra. Los visitantes también ven caros la comida, el café y el aparcamiento, señalan que las atracciones abren más tarde que las puertas y describen el parque como anticuado y con zonas cerradas. Foco recomendado: gestión de colas en los pasajes del terror y comunicar con claridad horarios y suplementos.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "tusenfryd": {
-   "en": "The few critical reviews of the last weeks focus on value for money: a high ticket price for short autumn opening hours, expensive food and drinks, and a park that some guests find outdated. Long queues and an entry dispute with staff are also mentioned. Suggested focus: value for money during the short-hours autumn season.",
-   "es": "Las pocas rese\u00f1as cr\u00edticas de las \u00faltimas semanas se centran en la relaci\u00f3n calidad-precio: entrada cara para el horario reducido de oto\u00f1o, comida y bebida caras y un parque que algunos visitantes ven anticuado. Tambi\u00e9n se mencionan colas largas y un problema con el personal en la entrada. Foco recomendado: relaci\u00f3n calidad-precio durante la temporada de oto\u00f1o con horario corto.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "A small number of critical reviews mention long queues, short opening hours on the last weekends of the season, some attractions not running, and expensive food and drinks for the ticket price. A few describe the park as dated. Suggested focus: value for money late in the season (hours and rides open versus ticket price).",
+   "es": "Un número reducido de reseñas críticas menciona colas largas, horarios cortos en los últimos fines de semana de la temporada, algunas atracciones paradas y comida y bebida caras para lo que cuesta la entrada. Algunos describen el parque como anticuado. Foco recomendado: la relación calidad-precio al final de temporada (horario y atracciones abiertas frente al precio).",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "faunia": {
-   "en": "Guests most often say Faunia is expensive for what it offers, with entry, food and extras such as animal feeding charged separately. Many describe a park that is ageing and partly closed: empty or unfinished exhibits, weaker shows and few sheltered rest areas, and some are concerned about small animal enclosures. Parking payment and validation queues are a recurring irritation. Suggested focus: reopen or refresh closed exhibits.",
-   "es": "Lo que m\u00e1s se repite es que Faunia resulta caro para lo que ofrece, con entrada, comida y extras como dar de comer a los animales cobrados aparte. Muchos describen un parque envejecido y en parte cerrado: exhibiciones vac\u00edas o sin terminar, espect\u00e1culos m\u00e1s pobres y pocas zonas de descanso a cubierto, y a algunos les preocupa el tama\u00f1o de los recintos de los animales. El pago y la validaci\u00f3n del aparcamiento generan colas y molestias. Foco recomendado: reabrir o renovar las zonas cerradas.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Critical reviews say the park is getting run-down, with several exhibits closed or empty and simpler animal presentations than before, which makes the ticket feel expensive. A few mention crowded seating at the bird show, the wellbeing of some animals and little shelter when it rains. Suggested focus: reopening or refreshing closed exhibits and keeping shows well organised.",
+   "es": "Las reseñas críticas dicen que el parque se está deteriorando, con varias instalaciones cerradas o vacías y exhibiciones de animales más simples que antes, lo que hace que la entrada parezca cara. Algunos mencionan gradas abarrotadas en el espectáculo de aves, el bienestar de algunos animales y poco refugio cuando llueve. Foco recomendado: reabrir o renovar las zonas cerradas y mantener bien organizados los espectáculos.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "zoo-madrid": {
-   "en": "Animal welfare is the most frequent complaint: guests say some animals look stressed or kept in small or dirty enclosures, and several object to animal shows. Many also report closed areas, including the dolphinarium and parts under construction, without notice before buying, which makes the ticket price feel high. Other points are pricing for children, broken vending machines and long traffic queues when leaving. Suggested focus: tell visitors what is closed before they buy.",
-   "es": "El bienestar animal es la queja m\u00e1s frecuente: los visitantes dicen que algunos animales parecen estresados o est\u00e1n en recintos peque\u00f1os o sucios, y varios rechazan los espect\u00e1culos con animales. Muchos mencionan adem\u00e1s zonas cerradas, como el delfinario o \u00e1reas en obras, sin aviso previo a la compra, lo que hace que la entrada parezca cara. Otros puntos son el precio para ni\u00f1os, m\u00e1quinas expendedoras que fallan y atascos largos a la salida. Foco recomendado: avisar de lo que est\u00e1 cerrado antes de la compra.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Critical guests point to animal welfare concerns and visitors behaving badly near enclosures without staff stepping in, some areas closed, and prices seen as high (including a child charged the adult rate). Others mention a chaotic entrance queue, restrooms in need of improvement and heavy traffic when leaving. Suggested focus: staff presence around enclosures and smoother entry.",
+   "es": "Los visitantes críticos señalan preocupación por el bienestar animal y comportamientos incívicos junto a los recintos sin que intervenga el personal, algunas zonas cerradas y precios vistos como altos (incluido el cobro de tarifa de adulto a una niña). Otros mencionan una cola de entrada caótica, aseos mejorables y mucho tráfico a la salida. Foco recomendado: presencia de personal en los recintos y un acceso más fluido.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "selwo-aventura": {
-   "en": "Critical reviews describe a park that feels smaller and more neglected than before, with sections closed without notice and areas shutting from 5 pm, while the price stays the same. The extra charge for the safari is a frequent complaint, and some guests mention small enclosures, unfriendly staff and paths that are hard with a stroller. Suggested focus: publish closures in advance and review the safari pricing.",
-   "es": "Las rese\u00f1as cr\u00edticas describen un parque m\u00e1s peque\u00f1o y descuidado que antes, con zonas cerradas sin aviso y \u00e1reas que cierran desde las 17:00, sin que baje el precio. El suplemento del safari es una queja frecuente, y algunos visitantes mencionan recintos peque\u00f1os, personal poco amable y caminos dif\u00edciles con carrito. Foco recomendado: publicar los cierres con antelaci\u00f3n y revisar el precio del safari.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Guests say the park feels neglected and smaller than it used to be, with sections closed without notice (some from 5 pm) while the price stays the same. The extra charge for the safari, limited space for some animals and unfriendly staff also come up. Suggested focus: communicating closures and value for money, especially the safari supplement.",
+   "es": "Los visitantes dicen que el parque se ve descuidado y más pequeño que antes, con zonas cerradas sin aviso (algunas desde las 17:00) mientras el precio sigue igual. También aparecen el suplemento del safari, el poco espacio de algunos animales y personal poco amable. Foco recomendado: comunicar los cierres y la relación calidad-precio, sobre todo el suplemento del safari.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "selwo-marina": {
-   "en": "The main complaint is that the visit is too short for the price: several guests say they saw everything in 30 to 45 minutes and that there were no shows. Others object to keeping marine animals for shows, and one family found the sea lion area overcrowded and the dolphinarium poorly organised. Suggested focus: value for money and what is included in the visit.",
-   "es": "La queja principal es que la visita es demasiado corta para lo que cuesta: varios visitantes dicen que lo vieron todo en 30 a 45 minutos y que no hab\u00eda espect\u00e1culos. Otros rechazan tener animales marinos para espect\u00e1culos, y una familia encontr\u00f3 la zona de los leones marinos abarrotada y el delfinario mal organizado. Foco recomendado: relaci\u00f3n calidad-precio y qu\u00e9 incluye la visita.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Critical reviews say the park is small and quick to see, with no dolphin or sea lion shows in October, so the ticket and paid animal encounters feel overpriced. A few also mention crowding at the sea lions and dated facilities. Suggested focus: telling visitors in advance which shows run off-season and adjusting off-season value.",
+   "es": "Las reseñas críticas dicen que el parque es pequeño y se ve rápido, sin espectáculos de delfines ni leones marinos en octubre, por lo que la entrada y los encuentros con animales de pago parecen caros. Algunos mencionan aglomeraciones en los leones marinos e instalaciones anticuadas. Foco recomendado: avisar antes de la visita qué espectáculos funcionan fuera de temporada y ajustar el valor en temporada baja.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "teleferico": {
-   "en": "Nearly all recent critical reviews are about the cable car being closed for wind with no notice on the website, so guests who booked online or travelled specially found it shut; some are still waiting for refunds. Other complaints are the price for a short ride, dirty or blurry cabin windows and unhelpful ticket office staff. Suggested focus: publish real-time operating status on the website and handle refunds quickly.",
-   "es": "Casi todas las rese\u00f1as cr\u00edticas recientes se deben a que el telef\u00e9rico estaba cerrado por viento sin aviso en la web, as\u00ed que quienes hab\u00edan comprado online o se hab\u00edan desplazado lo encontraron cerrado; algunos siguen esperando el reembolso. Otras quejas son el precio para un trayecto corto, los cristales sucios o empa\u00f1ados de las cabinas y la poca ayuda en taquilla. Foco recomendado: publicar en la web el estado de funcionamiento en tiempo real y agilizar los reembolsos.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Most complaints concern closures for wind: guests arrived, some with online tickets, to find the cable car not running and no warning on the website. Others mention long waits caused by half-empty cabins, a pending refund, and dirty viewing panels. Suggested focus: real-time closure notices on the website and to ticket holders.",
+   "es": "La mayoría de las quejas se refieren a cierres por viento: los visitantes llegaron, algunos con entrada comprada online, y el teleférico no funcionaba sin ningún aviso en la web. Otros mencionan esperas largas por cabinas que salen medio vacías, un reembolso pendiente y cristales sucios. Foco recomendado: avisos de cierre en tiempo real en la web y a quienes tienen entrada.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "warner-beach": {
-   "en": "Long queues are the recurring complaint, both for the slides and for food, made worse by the ban on bringing your own food and by crowded days. Guests also find it expensive for the number of attractions, and one mentions cold water in the children's area. Suggested focus: queue times for rides and food outlets on busy days.",
-   "es": "Las colas largas son la queja recurrente, tanto en los toboganes como para comer, agravadas por la prohibici\u00f3n de entrar con comida propia y por los d\u00edas de mucha afluencia. Los visitantes tambi\u00e9n lo ven caro para el n\u00famero de atracciones, y uno menciona agua fr\u00eda en la zona infantil. Foco recomendado: tiempos de espera en atracciones y restauraci\u00f3n en d\u00edas punta.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "The few recent critical reviews mention overcrowding, long waits for food, not being allowed to bring your own food, an online food purchase that could not be used because the restaurant closed early, and cold water in the children's area. Suggested focus: catering capacity and clear conditions for pre-paid food.",
+   "es": "Las pocas reseñas críticas recientes hablan de aglomeraciones, esperas largas para comer, la prohibición de entrar con comida propia, una compra de comida online que no se pudo usar porque el restaurante cerró antes y agua fría en la zona infantil. Foco recomendado: capacidad de la restauración y condiciones claras para la comida prepagada.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "walsrode": {
-   "en": "Ratings remain high, but the critical reviews share one concern: many aviaries feel too small for the birds, and several guests call for more open flight space. Others mention value for money, an ageing park in need of investment, poor restaurant quality and uneven paths for wheelchair users. Suggested focus: aviary size and visible investment in the park.",
-   "es": "La valoraci\u00f3n sigue siendo alta, pero las rese\u00f1as cr\u00edticas coinciden en una preocupaci\u00f3n: muchos aviarios parecen demasiado peque\u00f1os para las aves, y varios visitantes piden m\u00e1s espacio abierto de vuelo. Otros mencionan la relaci\u00f3n calidad-precio, un parque envejecido que necesita inversi\u00f3n, la mala calidad del restaurante y caminos irregulares para sillas de ruedas. Foco recomendado: tama\u00f1o de los aviarios e inversi\u00f3n visible en el parque.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Critical guests mostly question the size of some aviaries, wanting more room for the birds, and say parts of the park need renovation. Others mention food only orderable by code and not served after 5 pm, weak coffee for the price, uneven paths for wheelchairs and value for money. Suggested focus: catering hours and service, and accessibility of paths.",
+   "es": "Los visitantes críticos cuestionan sobre todo el tamaño de algunos aviarios y piden más espacio para las aves, y dicen que partes del parque necesitan renovación. Otros mencionan que la comida solo se pide por código y no se sirve después de las 17:00, un café flojo para su precio, caminos irregulares para sillas de ruedas y la relación calidad-precio. Foco recomendado: horario y servicio de restauración y accesibilidad de los caminos.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "blackpool-zoo": {
-   "en": "Very few critical reviews in the last four weeks. The ones there are mention some animals in small enclosures looking withdrawn and one guest unhappy with how a complaint was handled; others praise how close visitors can get to the animals. Suggested focus: keep monitoring enclosure size comments.",
-   "es": "Muy pocas rese\u00f1as cr\u00edticas en las \u00faltimas cuatro semanas. Las que hay mencionan animales en recintos peque\u00f1os que parecen apagados y un visitante descontento con la gesti\u00f3n de una reclamaci\u00f3n; otros destacan lo cerca que se ven los animales. Foco recomendado: seguir de cerca los comentarios sobre el tama\u00f1o de los recintos.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Only a few critical reviews: one feels the zoo is expensive, one reports poor handling of a complaint, and one thinks some animals have small enclosures. Suggested focus: complaint handling.",
+   "es": "Pocas reseñas críticas: una considera el zoo caro, otra cuenta que una queja se gestionó mal y otra cree que algunos animales tienen recintos pequeños. Foco recomendado: la gestión de reclamaciones.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "slagharen": {
-   "en": "Guests most often complain that many rides are closed or not running at full capacity, even at opening time, and that some attractions feel old. Food quality, prices and dirty toilets in the food outlets are recurring, along with grumpy staff, \u20ac12.50 parking and maintenance issues in the holiday cottages. Suggested focus: ride availability and cleaning of toilets and food outlets.",
-   "es": "Lo que m\u00e1s se repite es que muchas atracciones est\u00e1n cerradas o no funcionan a plena capacidad, incluso a la hora de apertura, y que algunas est\u00e1n anticuadas. Tambi\u00e9n son recurrentes la calidad y el precio de la comida, los aseos sucios en la zona de restauraci\u00f3n, el personal poco amable, el aparcamiento de 12,50 \u20ac y problemas de mantenimiento en las casas vacacionales. Foco recomendado: disponibilidad de atracciones y limpieza de aseos y restauraci\u00f3n.",
-   "from": "2026-09-30",
-   "to": "2026-10-27"
+   "en": "Critical guests mention dirty toilets and food outlets, weak and pricey catering, and attractions that open late or are closed for maintenance on busy days. Some holiday-home guests report musty or poorly equipped cottages, and parking is seen as expensive. Suggested focus: cleanliness of toilets and catering areas and having all rides running from opening time.",
+   "es": "Los visitantes críticos hablan de aseos y puntos de comida sucios, una restauración floja y cara, y atracciones que abren tarde o están cerradas por mantenimiento en días de mucha afluencia. Algunos huéspedes de los alojamientos cuentan que las casas olían a humedad o estaban mal equipadas, y el aparcamiento se ve caro. Foco recomendado: limpieza de aseos y zonas de restauración y tener todas las atracciones funcionando desde la apertura.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "nick-lakeside": {
-   "en": "The most common criticism is value for money: guests find the venue small, with little to do for the entry price, and say a visit can be done in an hour or less. Several mention static or broken ride vehicles and buttons in the Paw Patrol area, a dark and uninviting space, and fewer characters to meet than expected, with SpongeBob no longer offered and character photos not always handed over. Suggested focus: maintenance of the play equipment and clear information on which characters appear.",
-   "es": "La cr\u00edtica m\u00e1s repetida es la relaci\u00f3n calidad-precio: los visitantes ven el espacio peque\u00f1o, con poco que hacer para lo que cuesta la entrada, y dicen que se recorre en una hora o menos. Varios mencionan veh\u00edculos y botones parados o averiados en la zona de Paw Patrol, un espacio oscuro y poco acogedor y menos personajes de lo esperado, ya que Bob Esponja ya no est\u00e1 y no siempre se entregan las fotos con los personajes. Foco recomendado: mantenimiento de los juegos e informaci\u00f3n clara sobre qu\u00e9 personajes salen.",
-   "from": "2026-09-28",
-   "to": "2026-10-28"
+   "en": "Only a handful of critical reviews, without a clear common theme; one finds it a fun but small area for the price paid. Suggested focus: keep monitoring.",
+   "es": "Solo unas pocas reseñas críticas, sin un tema común claro; una lo ve como una zona divertida pero pequeña para lo que se paga. Foco recomendado: seguir observando.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   },
   "aquasplash": {
-   "en": "Covers the 2026 summer season (the park is now closed). The dominant complaint is queues of 30\u201360 minutes or more per slide due to crowding, made worse by priority and VIP passes, some new attractions closed or breaking down and slides running with few tubes. Guests also object to extra charges on top of the ticket (parking, lockers, sun loungers, the now-paid lagoon area), and to dirty changing rooms, toilets and pools and an ageing park; several criticise the neighbouring animal facility. Suggested focus: capacity and queue management, ride availability and cleaning.",
-   "es": "Recoge la temporada de verano 2026 (el parque ya est\u00e1 cerrado). La queja dominante son colas de 30 a 60 minutos o m\u00e1s por tobog\u00e1n por la masificaci\u00f3n, agravadas por los pases prioritarios y VIP, atracciones nuevas cerradas o averiadas y toboganes funcionando con pocos flotadores. Tambi\u00e9n molestan los cargos extra sobre la entrada (aparcamiento, taquillas, tumbonas, la laguna ahora de pago), la suciedad de vestuarios, aseos y piscinas y un parque envejecido; varios critican adem\u00e1s la instalaci\u00f3n de animales vecina. Foco recomendado: aforo y gesti\u00f3n de colas, disponibilidad de atracciones y limpieza.",
+   "en": "Covers the 2026 summer season (the park is now closed). The dominant complaint is queues of 30–60 minutes or more per slide due to crowding, made worse by priority and VIP passes, some new attractions closed or breaking down and slides running with few tubes. Guests also object to extra charges on top of the ticket (parking, lockers, sun loungers, the now-paid lagoon area), and to dirty changing rooms, toilets and pools and an ageing park; several criticise the neighbouring animal facility. Suggested focus: capacity and queue management, ride availability and cleaning.",
+   "es": "Recoge la temporada de verano 2026 (el parque ya está cerrado). La queja dominante son colas de 30 a 60 minutos o más por tobogán por la masificación, agravadas por los pases prioritarios y VIP, atracciones nuevas cerradas o averiadas y toboganes funcionando con pocos flotadores. También molestan los cargos extra sobre la entrada (aparcamiento, taquillas, tumbonas, la laguna ahora de pago), la suciedad de vestuarios, aseos y piscinas y un parque envejecido; varios critican además la instalación de animales vecina. Foco recomendado: aforo y gestión de colas, disponibilidad de atracciones y limpieza.",
    "from": "2026-07-01",
    "to": "2026-09-30"
+  },
+  "bonbon": {
+   "en": "Only a few critical reviews: guests like the all-inclusive concept but say the park is worn, with peeling paint and rides that look dirty. Suggested focus: visible upkeep and repainting of rides.",
+   "es": "Pocas reseñas críticas: a los visitantes les gusta el concepto de entrada con todo incluido, pero dicen que el parque está desgastado, con pintura descascarillada y atracciones con aspecto sucio. Foco recomendado: mantenimiento visible y repintado de las atracciones.",
+   "from": "2026-10-05",
+   "to": "2026-11-01"
   }
  },
  "complete": {
-  "aq-villanueva": "2026-10-28",
+  "aq-villanueva": "2026-11-01",
   "mirabilandia": "2026-10-28",
   "tusenfryd": "2026-10-27",
   "selwo-aventura": "2026-10-27",
